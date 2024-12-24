@@ -1,20 +1,62 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import HomeScreen from './src/screens/HomeScreen';
+import LoginScreen from './src/screens/LoginScreen';
+import RoadTripsScreen from './src/screens/RoadTripsScreen';
+import RoadTripScreen from './src/screens/RoadTripScreen';
+import EditRoadTripScreen from './src/screens/EditRoadTripScreen';
+import Icon from 'react-native-vector-icons/MaterialIcons'; // Importer l'icône
+
+type RootStackParamList = {
+  Home: undefined;
+  Login: undefined;
+  RoadTrips: { refresh?: () => void };
+  RoadTrip: { roadtripId: string };
+  EditRoadTrip: { roadtripId?: string };
+};
+
+const Stack = createStackNavigator<RootStackParamList>();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="Login" component={LoginScreen} options={{ title: 'Se connecter' }} />
+        <Stack.Screen
+          name="RoadTrips"
+          component={RoadTripsScreen}
+          options={({ navigation, route }) => ({
+            headerTitle: 'MES ROADTRIPS',
+            headerTitleAlign: 'center', // Centrer le titre
+            headerRight: () => (
+              <Icon
+                name="logout"
+                size={24}
+                color="#007BFF"
+                onPress={() => navigation.navigate('Home')}
+                style={{ marginRight: 16 }}
+              />
+            ),
+            headerLeft: () => (
+              <Icon
+                name="refresh"
+                size={24}
+                color="#007BFF"
+                onPress={() => {
+                  if (route.params?.refresh) {
+                    route.params.refresh();
+                  }
+                }}
+                style={{ marginLeft: 16 }}
+              />
+            ),
+          })}
+        />
+        <Stack.Screen name="RoadTrip" component={RoadTripScreen} options={{ title: 'Mes RoadTrips' }} />
+        <Stack.Screen name="EditRoadTrip" component={EditRoadTripScreen} options={{ title: 'Modifier le RoadTrip' }} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
