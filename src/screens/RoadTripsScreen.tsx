@@ -28,7 +28,8 @@ type Roadtrip = {
   endDateTime: Date;
   currency: string;
   notes: string;
-  photoUrl: any; // Ajoutez cette propriété
+  photos: string[]; // Ajoutez cette propriété
+  photoUrl?: string; // Ajoutez cette propriété
 };
 
 export default function RoadTripsScreen({ navigation, route }: Props) {
@@ -42,10 +43,10 @@ export default function RoadTripsScreen({ navigation, route }: Props) {
     try {
       const response = await fetch('https://mon-petit-roadtrip.vercel.app/roadtrips');
       const data = await response.json();
-      // Assignez les images aux roadtrips
-      const roadtripsWithPhotos = data.map((roadtrip: Roadtrip, index: number) => ({
+      // Utilisez la première photo du tableau de photos pour la vignette
+      const roadtripsWithPhotos = data.map((roadtrip: Roadtrip) => ({
         ...roadtrip,
-        photoUrl: index % 2 === 0 ? image1 : image2, // Alternez entre les deux images
+        photoUrl: roadtrip.photos && roadtrip.photos.length > 0 ? roadtrip.photos[0] : null,
       }));
       setRoadtrips(roadtripsWithPhotos);
     } catch (error) {
@@ -117,13 +118,19 @@ export default function RoadTripsScreen({ navigation, route }: Props) {
             onPress={() => navigation.navigate('RoadTrip', { roadtripId: item._id })}
             onLongPress={() => handleLongPress(item)} // Ajoutez une action de long press pour afficher le modal
           >
-            <Image source={item.photoUrl} style={styles.cardImage} />
+            {item.photoUrl ? (
+              <Image source={{ uri: item.photoUrl }} style={styles.cardImage} />
+            ) : (
+              <View style={styles.cardImagePlaceholder}>
+                <Text style={styles.cardImagePlaceholderText}>No Image</Text>
+              </View>
+            )}
             <Text style={styles.cardTitle}>{item.name}</Text>
             <Text style={styles.cardText}>{item.days} jours</Text>
             <Text style={styles.cardText}>
-              {new Date(item.startDateTime).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: '2-digit' })} - 
-              {new Date(item.endDateTime).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: '2-digit' })}
+              {`${new Date(item.startDateTime).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: '2-digit' })} - ${new Date(item.endDateTime).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: '2-digit' })}`}
             </Text>
+            <Text style={styles.cardText}>{item.notes}</Text>
           </Pressable>
         )}
         contentContainerStyle={styles.grid}
@@ -182,6 +189,19 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 8,
   },
+  cardImagePlaceholder: {
+    width: '100%',
+    height: 100,
+    borderRadius: 10,
+    marginBottom: 8,
+    backgroundColor: '#ccc',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cardImagePlaceholderText: {
+    color: '#fff',
+    fontSize: 16,
+  },
   cardTitle: {
     fontSize: 18,
     fontWeight: 'bold',
@@ -189,6 +209,7 @@ const styles = StyleSheet.create({
   },
   cardText: {
     fontSize: 16,
+    paddingBottom: 10,
   },
   loadingContainer: {
     flex: 1,

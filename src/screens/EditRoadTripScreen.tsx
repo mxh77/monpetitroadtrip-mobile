@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, TextInput, Text, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, View, TextInput, Text, TouchableOpacity, Alert, Platform } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 type RootStackParamList = {
   Home: undefined;
@@ -15,11 +16,11 @@ type RoadTrip = {
   _id?: string;
   name: string;
   startLocation: string;
-  startDate: string;
+  startDate: Date;
   endLocation: string;
-  endDate: string;
-  days: number;
+  endDate: Date;
   notes: string;
+  days?: number;
 };
 
 export default function EditRoadTripScreen({ route, navigation }: Props) {
@@ -27,12 +28,14 @@ export default function EditRoadTripScreen({ route, navigation }: Props) {
   const [roadtrip, setRoadTrip] = useState<RoadTrip>({
     name: '',
     startLocation: '',
-    startDate: '',
+    startDate: new Date(),
     endLocation: '',
-    endDate: '',
-    days: 0,
+    endDate: new Date(),
     notes: '',
   });
+
+  const [showStartDatePicker, setShowStartDatePicker] = useState(false);
+  const [showEndDatePicker, setShowEndDatePicker] = useState(false);
 
   useEffect(() => {
     if (roadtripId) {
@@ -41,7 +44,11 @@ export default function EditRoadTripScreen({ route, navigation }: Props) {
         try {
           const response = await fetch(`https://mon-petit-roadtrip.vercel.app/roadtrips/${roadtripId}`);
           const data = await response.json();
-          setRoadTrip(data);
+          setRoadTrip({
+            ...data,
+            startDate: new Date(data.startDateTime),
+            endDate: new Date(data.endDateTime),
+          });
         } catch (error) {
           console.error('Erreur lors de la récupération du roadtrip:', error);
         }
@@ -77,6 +84,23 @@ export default function EditRoadTripScreen({ route, navigation }: Props) {
     }
   };
 
+  const onStartDateChange = (event: any, selectedDate?: Date) => {
+    const currentDate = selectedDate || roadtrip.startDate;
+    setShowStartDatePicker(Platform.OS === 'ios');
+    setRoadTrip({ ...roadtrip, startDate: currentDate });
+  };
+
+  const onEndDateChange = (event: any, selectedDate?: Date) => {
+    const currentDate = selectedDate || roadtrip.endDate;
+    setShowEndDatePicker(Platform.OS === 'ios');
+    setRoadTrip({ ...roadtrip, endDate: currentDate });
+  };
+
+  const handleDaysChange = (text: string) => {
+    const days = parseInt(text);
+    setRoadTrip({ ...roadtrip, days: isNaN(days) ? 0 : days });
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{roadtripId ? 'Modifier le RoadTrip' : 'Ajouter un RoadTrip'}</Text>
@@ -92,31 +116,44 @@ export default function EditRoadTripScreen({ route, navigation }: Props) {
         value={roadtrip.startLocation}
         onChangeText={(text) => setRoadTrip({ ...roadtrip, startLocation: text })}
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Date de départ"
-        value={roadtrip.startDate}
-        onChangeText={(text) => setRoadTrip({ ...roadtrip, startDate: text })}
-      />
+      <TouchableOpacity onPress={() => setShowStartDatePicker(true)}>
+        <TextInput
+          style={styles.input}
+          placeholder="Date de départ"
+          value={roadtrip.startDate.toLocaleDateString('fr-FR')}
+          editable={false}
+        />
+      </TouchableOpacity>
+      {showStartDatePicker && (
+        <DateTimePicker
+          value={roadtrip.startDate}
+          mode="date"
+          display="default"
+          onChange={onStartDateChange}
+        />
+      )}
       <TextInput
         style={styles.input}
         placeholder="Lieu d'arrivée"
         value={roadtrip.endLocation}
         onChangeText={(text) => setRoadTrip({ ...roadtrip, endLocation: text })}
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Date d'arrivée"
-        value={roadtrip.endDate}
-        onChangeText={(text) => setRoadTrip({ ...roadtrip, endDate: text })}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Nombre de jours"
-        value={roadtrip.days.toString()}
-        onChangeText={(text) => setRoadTrip({ ...roadtrip, days: parseInt(text) })}
-        keyboardType="numeric"
-      />
+      <TouchableOpacity onPress={() => setShowEndDatePicker(true)}>
+        <TextInput
+          style={styles.input}
+          placeholder="Date d'arrivée"
+          value={roadtrip.endDate.toLocaleDateString('fr-FR')}
+          editable={false}
+        />
+      </TouchableOpacity>
+      {showEndDatePicker && (
+        <DateTimePicker
+          value={roadtrip.endDate}
+          mode="date"
+          display="default"
+          onChange={onEndDateChange}
+        />
+      )}
       <TextInput
         style={styles.input}
         placeholder="Notes"
