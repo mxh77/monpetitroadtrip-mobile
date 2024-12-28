@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, FlatList, Image, ActivityIndicator, Alert, Modal, Pressable } from 'react-native';
+import { StyleSheet, View, Text, FlatList, Image, ActivityIndicator, Alert, Modal, Pressable, RefreshControl } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/MaterialIcons'; // Importer l'icône
-
-// Importez les images depuis le dossier assets
-import image1 from '../../assets/roadtrip2023.webp';
-import image2 from '../../assets/roadtrip2025.webp';
 
 type RootStackParamList = {
   Home: undefined;
@@ -16,6 +12,14 @@ type RootStackParamList = {
 };
 
 type Props = StackScreenProps<RootStackParamList, 'RoadTrips'>;
+
+type File = {
+  _id: string;
+  url: string;
+  type: string;
+  fileId: string;
+  createdAt: string;
+};
 
 type Roadtrip = {
   _id: string;
@@ -28,13 +32,14 @@ type Roadtrip = {
   endDateTime: Date;
   currency: string;
   notes: string;
-  photos: string[]; // Ajoutez cette propriété
-  photoUrl?: string; // Ajoutez cette propriété
+  photos: File[]; // Ajoutez cette propriété
+  thumbnail?: File; // Ajoutez cette propriété
 };
 
 export default function RoadTripsScreen({ navigation, route }: Props) {
   const [roadtrips, setRoadtrips] = useState<Roadtrip[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false); // État pour gérer le rafraîchissement
   const [selectedRoadtrip, setSelectedRoadtrip] = useState<Roadtrip | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -43,12 +48,7 @@ export default function RoadTripsScreen({ navigation, route }: Props) {
     try {
       const response = await fetch('https://mon-petit-roadtrip.vercel.app/roadtrips');
       const data = await response.json();
-      // Utilisez la première photo du tableau de photos pour la vignette
-      const roadtripsWithPhotos = data.map((roadtrip: Roadtrip) => ({
-        ...roadtrip,
-        photoUrl: roadtrip.photos && roadtrip.photos.length > 0 ? roadtrip.photos[0] : null,
-      }));
-      setRoadtrips(roadtripsWithPhotos);
+      setRoadtrips(data);
     } catch (error) {
       console.error('Erreur lors de la récupération des roadtrips:', error);
     } finally {
@@ -98,6 +98,12 @@ export default function RoadTripsScreen({ navigation, route }: Props) {
     setModalVisible(true);
   };
 
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchRoadtrips();
+    setRefreshing(false);
+  };
+
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -118,8 +124,8 @@ export default function RoadTripsScreen({ navigation, route }: Props) {
             onPress={() => navigation.navigate('RoadTrip', { roadtripId: item._id })}
             onLongPress={() => handleLongPress(item)} // Ajoutez une action de long press pour afficher le modal
           >
-            {item.photoUrl ? (
-              <Image source={{ uri: item.photoUrl }} style={styles.cardImage} />
+            {item.thumbnail ? (
+              <Image source={{ uri: item.thumbnail.url }} style={styles.cardImage} />
             ) : (
               <View style={styles.cardImagePlaceholder}>
                 <Text style={styles.cardImagePlaceholderText}>No Image</Text>
@@ -134,6 +140,9 @@ export default function RoadTripsScreen({ navigation, route }: Props) {
           </Pressable>
         )}
         contentContainerStyle={styles.grid}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       />
       <Pressable style={styles.fab} onPress={handleAddRoadtrip}>
         <Icon name="add" size={24} color="#fff" />
