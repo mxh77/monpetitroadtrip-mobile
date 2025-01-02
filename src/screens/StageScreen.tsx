@@ -137,10 +137,7 @@ export default function StageScreen({ route, navigation }: Props) {
 
     return (
         <View style={styles.container}>
-            <View style={styles.content}>
-                <Text style={styles.title}>{stageTitle}</Text>
-                {/* Ajoutez ici le contenu supplémentaire que vous souhaitez afficher sous la carte */}
-            </View>
+
             <MapView
                 ref={mapRef}
                 style={styles.map}
@@ -165,7 +162,10 @@ export default function StageScreen({ route, navigation }: Props) {
                     </Marker>
                 ))}
             </MapView>
-
+            <View style={styles.content}>
+                <Text style={styles.title}>{stageTitle}</Text>
+                {/* Ajoutez ici le contenu supplémentaire que vous souhaitez afficher sous la carte */}
+            </View>
         </View>
     );
 }
