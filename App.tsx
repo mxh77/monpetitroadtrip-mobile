@@ -3,7 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './src/screens/HomeScreen';
 import LoginScreen from './src/screens/LoginScreen';
-import RoadTripsScreen from './src/screens/RoadTripsScreen';
+import RoadTripsScreen from './src/screens/RoadTripsScreen'; // Assurez-vous que le nom du fichier est correct
 import RoadTripScreen from './src/screens/RoadTripScreen';
 import EditRoadTripScreen from './src/screens/EditRoadTripScreen';
 import StageScreen from './src/screens/StageScreen';
@@ -15,6 +15,7 @@ type RootStackParamList = {
   RoadTrips: { refresh?: () => void };
   RoadTrip: { roadtripId: string };
   EditRoadTrip: { roadtripId?: string };
+  Stage: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
