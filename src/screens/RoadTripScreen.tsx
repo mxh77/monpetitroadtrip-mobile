@@ -143,6 +143,7 @@ export default function RoadTripScreen({ route, navigation }: Props) {
                 day: 'numeric',
                 hour: '2-digit',
                 minute: '2-digit',
+                timeZone: 'UTC' // Afficher la date/heure en UTC
               })}
             </Text>
           </TouchableOpacity>
