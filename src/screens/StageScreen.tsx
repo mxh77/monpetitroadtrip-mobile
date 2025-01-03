@@ -1,64 +1,53 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { StyleSheet, View, Text, ActivityIndicator, Dimensions } from 'react-native';
+import { StyleSheet, View, Text, ActivityIndicator, Dimensions, ScrollView, Image } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
-import MapView, { Marker, LatLng, Region } from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 import Geocoder from 'react-native-geocoding';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import Constants from 'expo-constants';
+import { Button, Card } from 'react-native-paper';
+import { openInGoogleMaps, openWebsite } from '../utils/utils';
+import { formatDateTimeUTC2Digits,formatDateJJMMAA } from '../utils/dateUtils';
+import { TouchableOpacity } from 'react-native';
 
 const GOOGLE_API_KEY = Constants.expoConfig?.extra?.GOOGLE_API_KEY;
 console.log("Clé API dans l'application :", GOOGLE_API_KEY);
+
+// Initialiser le géocodeur avec votre clé API Google Maps
+Geocoder.init(GOOGLE_API_KEY);
 
 type RootStackParamList = {
     Home: undefined;
     Login: undefined;
     RoadTrips: undefined;
     RoadTripStack: { roadtripId: string };
-    Stage: { stageId: string; stageTitle: string; stageAddress: string; stageCoordinates?: { latitude: number; longitude: number }; accommodations?: { address: string; coordinates?: { latitude: number; longitude: number } }[]; activities?: { address: string; coordinates?: { latitude: number; longitude: number } }[] };
+    Stage: { stageId: string; stageTitle: string; stageAddress: string; stageCoordinates?: { latitude: number; longitude: number }; accommodations?: { name: string; address: string; website: string; coordinates?: { latitude: number; longitude: number }; thumbnail?: { url: string } }[]; activities?: { address: string; coordinates?: { latitude: number; longitude: number } }[]; stageArrivalDateTime: string; stageDepartureDateTime: string; stageNotes: string };
 };
 
 type Props = StackScreenProps<RootStackParamList, 'Stage'>;
 
 export default function StageScreen({ route, navigation }: Props) {
-    const { stageTitle, stageAddress, stageCoordinates, accommodations = [], activities = [] } = route.params;
+    const { stageTitle, stageAddress, stageCoordinates, accommodations = [], activities = [], stageArrivalDateTime, stageDepartureDateTime, stageNotes } = route.params;
+    console.log('route.params:', route.params); // Ajout de débogage pour vérifier les paramètres
     const [loading, setLoading] = useState(true);
     const [coordinates, setCoordinates] = useState<{ latitude: number; longitude: number } | null>(stageCoordinates || null);
     const [markers, setMarkers] = useState<{ latitude: number; longitude: number; title: string; type: string }[]>([]);
-    const [hasFetched, setHasFetched] = useState(false);
     const mapRef = useRef<MapView>(null);
+    const [index, setIndex] = useState(0);
+    const [routes] = useState([
+        { key: 'general', title: 'Infos Générales' },
+        { key: 'accommodations', title: 'Hébergements' },
+        { key: 'activities', title: 'Activités' },
+    ]);
 
     useEffect(() => {
-        if (hasFetched) return;
-
-        console.log('Accommodations:', accommodations);
-        console.log('Activities:', activities);
-
-        // Initialiser le géocodeur avec votre clé API Google Maps
-        Geocoder.init(GOOGLE_API_KEY);
-
-        // Fonction pour géocoder une adresse
-        const geocodeAddress = async (address: string) => {
-            try {
-                const json = await Geocoder.from(address);
-                if (json.results.length > 0) {
-                    const location = json.results[0].geometry.location;
-                    return { latitude: location.lat, longitude: location.lng };
-                } else {
-                    console.error('Erreur : aucune coordonnée trouvée pour cette adresse.');
-                    return null;
-                }
-            } catch (error) {
-                console.error('Erreur lors du géocodage:', error);
-                return null;
-            }
-        };
-
-        // Géocoder l'adresse du stage si les coordonnées ne sont pas disponibles
         const fetchCoordinates = async () => {
             try {
+                let stageCoords = coordinates;
                 if (!coordinates) {
                     console.log('Géocodage de l\'adresse du stage...');
-                    const stageCoords = await geocodeAddress(stageAddress);
+                    stageCoords = await geocodeAddress(stageAddress);
                     if (stageCoords) {
                         setCoordinates(stageCoords);
                         console.log('Coordonnées du stage:', stageCoords);
@@ -109,7 +98,6 @@ export default function StageScreen({ route, navigation }: Props) {
                 }
 
                 setLoading(false);
-                setHasFetched(true);
             } catch (error) {
                 console.error('Erreur lors de la récupération des coordonnées:', error);
                 setLoading(false);
@@ -117,7 +105,100 @@ export default function StageScreen({ route, navigation }: Props) {
         };
 
         fetchCoordinates();
-    }, [stageAddress, accommodations, activities, coordinates, hasFetched]);
+    }, [route.params]);
+
+    const geocodeAddress = async (address: string) => {
+        try {
+            const json = await Geocoder.from(address);
+            if (json.results.length > 0) {
+                const location = json.results[0].geometry.location;
+                return { latitude: location.lat, longitude: location.lng };
+            } else {
+                console.error('Erreur : aucune coordonnée trouvée pour cette adresse.');
+                return null;
+            }
+        } catch (error) {
+            console.error('Erreur lors du géocodage:', error);
+            return null;
+        }
+    };
+
+
+    const GeneralInfo = () => {
+        console.log('arrivalDateTime:', stageArrivalDateTime);
+        console.log('departureDateTime:', stageDepartureDateTime);
+        const formattedArrivalDateTime = formatDateTimeUTC2Digits(stageArrivalDateTime);
+        const formattedDepartureDateTime = formatDateTimeUTC2Digits(stageDepartureDateTime);
+        console.log('formattedArrivalDateTime:', formattedArrivalDateTime);
+        console.log('formattedDepartureDateTime:', formattedDepartureDateTime);
+
+        return (
+            <View style={styles.generalInfoContainer}>
+                <View style={styles.infoRow}>
+                    <Text style={styles.infoLabel}>Nom de l'étape :</Text>
+                    <Text style={styles.infoValue}>{stageTitle}</Text>
+                </View>
+                <View style={styles.infoRow}>
+                    <Text style={styles.infoLabel}>Adresse :</Text>
+                    <Text style={styles.infoValue}>{stageAddress}</Text>
+                </View>
+                <View style={styles.infoRow}>
+                    <Text style={styles.infoLabel}>Date et heure d'arrivée :</Text>
+                    <Text style={styles.infoValue}>{formattedArrivalDateTime}</Text>
+                </View>
+                <View style={styles.infoRow}>
+                    <Text style={styles.infoLabel}>Date et heure de départ :</Text>
+                    <Text style={styles.infoValue}>{formattedDepartureDateTime}</Text>
+                </View>
+                <View style={styles.infoRow}>
+                    <Text style={styles.infoLabel}>Notes :</Text>
+                    <Text style={styles.infoValue}>{stageNotes}</Text>
+                </View>
+            </View>
+        );
+    };
+
+    const Accommodations = () => (
+        <ScrollView style={styles.tabContent}>
+            {accommodations.map((accommodation, index) => (
+                <Card key={index} style={styles.card}>
+                    <Card.Title titleStyle={styles.cardTitle} title={accommodation.name} />
+                    <Card.Content>
+                        <Text style={styles.infoText}>Du {formatDateJJMMAA(stageArrivalDateTime)} au {formatDateJJMMAA(stageDepartureDateTime)}</Text>
+                    </Card.Content>
+                    <Card.Content>
+                        {accommodation.thumbnail && (
+                            <TouchableOpacity onPress={() => accommodation.website && openWebsite(accommodation.website)}>
+                                <Image source={{ uri: accommodation.thumbnail.url }} style={styles.thumbnail} />
+                            </TouchableOpacity>
+                        )}
+                        <Text style={styles.infoText}>{accommodation.address}</Text>
+                        <Button
+                            mode="contained"
+                            onPress={() => openInGoogleMaps(accommodation.address)}
+                            style={styles.mapButton}
+                        >
+                            Ouvrir dans Google Maps
+                        </Button>
+                    </Card.Content>
+                </Card>
+            ))}
+        </ScrollView>
+    );
+
+    const Activities = () => (
+        <View style={styles.tabContent}>
+            {activities.map((activity, index) => (
+                <Text key={index} style={styles.infoText}>{index + 1}. {activity.address}</Text>
+            ))}
+        </View>
+    );
+
+    const renderScene = SceneMap({
+        general: GeneralInfo,
+        accommodations: Accommodations,
+        activities: Activities,
+    });
 
     if (loading) {
         return (
@@ -137,7 +218,6 @@ export default function StageScreen({ route, navigation }: Props) {
 
     return (
         <View style={styles.container}>
-
             <MapView
                 ref={mapRef}
                 style={styles.map}
@@ -162,10 +242,24 @@ export default function StageScreen({ route, navigation }: Props) {
                     </Marker>
                 ))}
             </MapView>
-            <View style={styles.content}>
-                <Text style={styles.title}>{stageTitle}</Text>
-                {/* Ajoutez ici le contenu supplémentaire que vous souhaitez afficher sous la carte */}
-            </View>
+            <TabView
+                navigationState={{ index, routes }}
+                renderScene={renderScene}
+                onIndexChange={setIndex}
+                initialLayout={{ width: Dimensions.get("window").width }}
+                renderTabBar={(props) => (
+                    <TabBar
+                        {...props}
+                        indicatorStyle={styles.indicator}
+                        style={styles.tabBar}
+                        renderLabel={({ route, focused, color }: { route: any; focused: boolean; color: string }) => (
+                            <Text style={[styles.tabLabel, { color: focused ? 'white' : 'gray' }]}>
+                                {route.title}
+                            </Text>
+                        )}
+                    />
+                )}
+            />
         </View>
     );
 }
@@ -175,13 +269,53 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     map: {
-        width: Dimensions.get('window').width,
-        height: Dimensions.get('window').height / 3,
+        height: Dimensions.get("window").height * 0.4,
     },
-    content: {
+    tabContent: {
         flex: 1,
-        padding: 16,
-        backgroundColor: '#fff',
+        padding: 20,
+        backgroundColor: "#f9f9f9",
+    },
+    generalInfoContainer: {
+        padding: 20,
+        backgroundColor: "#fff",
+        borderRadius: 10,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+        elevation: 5,
+        marginBottom: 20,
+    },
+    sectionTitle: {
+        fontSize: 18,
+        fontWeight: "bold",
+        marginBottom: 10,
+    },
+    infoRow: {
+        flexDirection: 'row',
+        marginBottom: 8,
+    },
+    infoLabel: {
+        fontWeight: 'bold',
+        marginRight: 5,
+    },
+    infoValue: {
+        flex: 1,
+    },
+    infoText: {
+        fontSize: 16,
+        marginBottom: 8,
+    },
+    tabBar: {
+        backgroundColor: "#6200ee",
+    },
+    tabLabel: {
+        fontWeight: "bold",
+    },
+    indicator: {
+        backgroundColor: "white",
+        height: 3,
     },
     loadingContainer: {
         flex: 1,
@@ -193,5 +327,19 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         textAlign: 'center',
         marginVertical: 16,
+    },
+    card: {
+        marginBottom: 16,
+    },
+    cardTitle: {
+        fontWeight: 'bold',
+    },
+    mapButton: {
+        marginTop: 8,
+    },
+    thumbnail: {
+        width: '100%',
+        height: 150,
+        marginBottom: 8,
     },
 });

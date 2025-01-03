@@ -8,7 +8,7 @@ type RootStackParamList = {
   Login: undefined;
   RoadTrips: undefined;
   RoadTrip: { roadtripId: string };
-  Stage: { stageId: string; stageTitle: string; stageAddress: string; accommodations: Accommodation[]; activities: Activity[] };
+  Stage: { stageId: string; stageTitle: string; stageAddress: string; stageArrivalDateTime: string; stageDepartureDateTime: string; stageNotes: string; accommodations: Accommodation[]; activities: Activity[] };
 };
 
 type Props = StackScreenProps<RootStackParamList, 'RoadTrip'>;
@@ -17,8 +17,10 @@ type Stage = {
   _id: string;
   name: string;
   description: string;
-  arrivalDateTime: string;
   address: string;
+  arrivalDateTime: string;
+  departureDateTime: string;
+  notes: string;
   accommodations: Accommodation[];
   activities: Activity[];
 };
@@ -27,8 +29,10 @@ type Stop = {
   _id: string;
   name: string;
   description: string;
-  arrivalDateTime: string;
   address: string;
+  arrivalDateTime: string;
+  departureDateTime: string;
+  notes: string;
 };
 
 type Accommodation = {
@@ -74,6 +78,7 @@ export default function RoadTripScreen({ route, navigation }: Props) {
       try {
         const response = await fetch(`https://mon-petit-roadtrip.vercel.app/roadtrips/${roadtripId}`);
         const data = await response.json();
+        console.log("Roadtrip data:", data);
         setRoadtrip(data);
       } catch (error) {
         console.error('Erreur lors de la récupération du roadtrip:', error);
@@ -90,6 +95,9 @@ export default function RoadTripScreen({ route, navigation }: Props) {
       stageId: stage._id,
       stageTitle: stage.name,
       stageAddress: stage.address,
+      stageArrivalDateTime: stage.arrivalDateTime,
+      stageDepartureDateTime: stage.departureDateTime,
+      stageNotes: stage.notes,
       accommodations: stage.accommodations,
       activities: stage.activities,
     });
@@ -143,7 +151,7 @@ export default function RoadTripScreen({ route, navigation }: Props) {
                 day: 'numeric',
                 hour: '2-digit',
                 minute: '2-digit',
-                timeZone: 'UTC' // Afficher la date/heure en UTC
+                timeZone: 'UTC'
               })}
             </Text>
           </TouchableOpacity>

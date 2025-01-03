@@ -58,7 +58,7 @@ export default function App() {
         />
         <Stack.Screen name="RoadTrip" component={RoadTripScreen} options={{ title: 'Mes RoadTrips' }} />
         <Stack.Screen name="EditRoadTrip" component={EditRoadTripScreen} options={{ title: 'Modifier le RoadTrip' }} />
-        <Stack.Screen name="Stage" component={StageScreen} options={{ title: 'Etape' }} />
+        <Stack.Screen name="Stage" component={StageScreen} options={{ title: 'Liste des étapes' }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
