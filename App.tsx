@@ -7,6 +7,7 @@ import RoadTripsScreen from './src/screens/RoadTripsScreen'; // Assurez-vous que
 import RoadTripScreen from './src/screens/RoadTripScreen';
 import EditRoadTripScreen from './src/screens/EditRoadTripScreen';
 import StageScreen from './src/screens/StageScreen';
+import EditStageInfoScreen from './src/screens/EditStageInfoScreen';
 import Icon from 'react-native-vector-icons/MaterialIcons'; // Importer l'icône
 
 type RootStackParamList = {
@@ -16,6 +17,7 @@ type RootStackParamList = {
   RoadTrip: { roadtripId: string };
   EditRoadTrip: { roadtripId?: string };
   Stage: undefined;
+  EditStageInfo: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -59,6 +61,7 @@ export default function App() {
         <Stack.Screen name="RoadTrip" component={RoadTripScreen} options={{ title: 'Mes RoadTrips' }} />
         <Stack.Screen name="EditRoadTrip" component={EditRoadTripScreen} options={{ title: 'Modifier le RoadTrip' }} />
         <Stack.Screen name="Stage" component={StageScreen} options={{ title: 'Liste des étapes' }} />
+        <Stack.Screen name="EditStageInfo" component={EditStageInfoScreen} options={{ title: 'Etape' }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
