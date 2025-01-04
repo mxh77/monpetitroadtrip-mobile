@@ -49,6 +49,8 @@ type Activity = {
   address: string;
   latitude: number;
   longitude: number;
+  startDateTime: string;
+  endDateTime: string;
 };
 
 type Roadtrip = {

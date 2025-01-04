@@ -20,3 +20,10 @@ export const formatDateJJMMAA = (dateString: string): string => {
     });
   };
 
+export const formatTimeHHMM = (dateString: string): string => {
+    const date = new Date(dateString);
+    return date.toLocaleTimeString('fr-FR', {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  }
