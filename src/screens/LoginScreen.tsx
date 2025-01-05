@@ -2,12 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, View, TextInput, Text, TouchableOpacity, Alert } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
-
-type RootStackParamList = {
-  Home: undefined;
-  Login: undefined;
-  RoadTrips: undefined;
-};
+import { RootStackParamList } from '../../types';
 
 type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
 type LoginScreenRouteProp = RouteProp<RootStackParamList, 'Login'>;

@@ -2,14 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/FontAwesome'; // Importer les icônes
-
-type RootStackParamList = {
-  Home: undefined;
-  Login: undefined;
-  RoadTrips: undefined;
-  RoadTrip: { roadtripId: string };
-  Stage: { stageId: string; stageTitle: string; stageAddress: string; stageArrivalDateTime: string; stageDepartureDateTime: string; stageNotes: string; accommodations: Accommodation[]; activities: Activity[] };
-};
+import { RootStackParamList } from '../../types';
 
 type Props = StackScreenProps<RootStackParamList, 'RoadTrip'>;
 
@@ -80,7 +73,7 @@ export default function RoadTripScreen({ route, navigation }: Props) {
       try {
         const response = await fetch(`https://mon-petit-roadtrip.vercel.app/roadtrips/${roadtripId}`);
         const data = await response.json();
-        console.log("Roadtrip data:", data);
+        console.log("Retour API GET Roadtrip data:", data);
         setRoadtrip(data);
       } catch (error) {
         console.error('Erreur lors de la récupération du roadtrip:', error);
@@ -92,19 +85,33 @@ export default function RoadTripScreen({ route, navigation }: Props) {
     fetchRoadtrip();
   }, [roadtripId]);
 
-  const handleStagePress = (stage: Stage) => {
-    navigation.navigate('Stage', {
-      stageId: stage._id,
-      stageTitle: stage.name,
-      stageAddress: stage.address,
-      stageArrivalDateTime: stage.arrivalDateTime,
-      stageDepartureDateTime: stage.departureDateTime,
-      stageNotes: stage.notes,
-      accommodations: stage.accommodations,
-      activities: stage.activities,
-    });
+  //Fonction pour gérer la navigation vers la page de détails de l'étape ou de l'arrêt
+  const handleStagePress = (item: Stage | Stop) => {
+    if ('accommodations' in item) {
+      navigation.navigate('Stage', {
+        type: 'stage',
+        roadtripId,
+        stageId: item._id,
+        stageTitle: item.name,
+        stageAddress: item.address,
+        stageArrivalDateTime: item.arrivalDateTime,
+        stageDepartureDateTime: item.departureDateTime,
+        stageNotes: item.notes,
+      });
+    } else {
+      navigation.navigate('Stage', {
+        type: 'stop',
+        roadtripId,
+        stageId: item._id,
+        stageTitle: item.name,
+        stageAddress: item.address,
+        stageArrivalDateTime: item.arrivalDateTime,
+        stageDepartureDateTime: item.departureDateTime,
+        stageNotes: item.notes,
+      });
+    }
   };
-
+  
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -135,7 +142,7 @@ export default function RoadTripScreen({ route, navigation }: Props) {
         renderItem={({ item }) => (
           <TouchableOpacity
             style={styles.item}
-            onPress={() => handleStagePress(item as Stage)}
+            onPress={() => handleStagePress(item)}
           >
             <View style={styles.itemHeader}>
               <Icon

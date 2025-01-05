@@ -3,13 +3,7 @@ import { StyleSheet, View, TextInput, Text, TouchableOpacity, Alert, Platform, I
 import { StackScreenProps } from '@react-navigation/stack';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';
-
-type RootStackParamList = {
-  Home: undefined;
-  Login: undefined;
-  RoadTrips: undefined;
-  EditRoadTrip: { roadtripId?: string }; // Ajoutez cette route
-};
+import { RootStackParamList } from '../../types';
 
 type Props = StackScreenProps<RootStackParamList, 'EditRoadTrip'>;
 
@@ -133,7 +127,7 @@ export default function EditRoadTripScreen({ route, navigation }: Props) {
 
       if (response.ok) {
         Alert.alert('Succès', 'Le roadtrip a été sauvegardé.');
-        navigation.navigate('RoadTrips');
+        navigation.navigate('RoadTrips', { refresh: () => {} });
       } else {
         const data = await response.json();
         Alert.alert('Erreur', data.message || 'Une erreur est survenue.');

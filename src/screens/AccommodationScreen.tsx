@@ -3,23 +3,7 @@ import { StyleSheet, View, Text, ScrollView } from 'react-native';
 import { Button } from 'react-native-paper';
 import { StackScreenProps } from '@react-navigation/stack';
 import { formatDateJJMMAA, formatTimeHHMM } from '../utils/dateUtils';
-
-type RootStackParamList = {
-  Accommodation: {
-    name: string;
-    address: string;
-    website?: string;
-    phone?: string;
-    email?: string;
-    reservationNumber?: string;
-    confirmationDateTime?: string;
-    arrivalDateTime: string;
-    departureDateTime: string;
-    nights?: number;
-    price?: string;
-    notes?: string;
-  };
-};
+import { RootStackParamList } from '../../types';
 
 type Props = StackScreenProps<RootStackParamList, 'Accommodation'>;
 

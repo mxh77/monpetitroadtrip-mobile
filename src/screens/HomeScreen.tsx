@@ -3,14 +3,7 @@ import { StyleSheet, View, Image, Dimensions, SafeAreaView, Platform, StatusBar 
 import { StatusBar } from 'expo-status-bar';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
-import { StackScreenProps } from '@react-navigation/stack';
-import { ParamListBase } from '@react-navigation/native';
-
-
-type RootStackParamList = {
-  Home: undefined;
-  Login: undefined;
-};
+import { RootStackParamList } from '../../types';
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
 type HomeScreenRouteProp = RouteProp<RootStackParamList, 'Home'>;

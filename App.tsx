@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { RootStackParamList } from './types'; // Importer le type
 import HomeScreen from './src/screens/HomeScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import RoadTripsScreen from './src/screens/RoadTripsScreen'; // Assurez-vous que le nom du fichier est correct
@@ -10,17 +11,6 @@ import StageScreen from './src/screens/StageScreen';
 import EditStageInfoScreen from './src/screens/EditStageInfoScreen';
 import AccommodationScreen from './src/screens/AccommodationScreen';
 import Icon from 'react-native-vector-icons/MaterialIcons'; // Importer l'icône
-
-type RootStackParamList = {
-  Home: undefined;
-  Login: undefined;
-  RoadTrips: { refresh?: () => void };
-  RoadTrip: { roadtripId: string };
-  EditRoadTrip: { roadtripId?: string };
-  Stage: undefined;
-  EditStageInfo: undefined;
-  Accommodation: undefined;
-};
 
 const Stack = createStackNavigator<RootStackParamList>();
 

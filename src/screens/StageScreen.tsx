@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { StyleSheet, View, Text, ActivityIndicator, Dimensions, ScrollView, Image } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import MapView, { Marker } from 'react-native-maps';
@@ -10,139 +10,99 @@ import { Button, Card } from 'react-native-paper';
 import { openInGoogleMaps, openWebsite } from '../utils/utils';
 import { formatDateTimeUTC2Digits, formatDateJJMMAA } from '../utils/dateUtils';
 import { TouchableOpacity } from 'react-native';
+import { RootStackParamList } from '../../types';
+import { useFocusEffect } from '@react-navigation/native';
 
 const GOOGLE_API_KEY = Constants.expoConfig?.extra?.GOOGLE_API_KEY;
-console.log("Clé API dans l'application :", GOOGLE_API_KEY);
-
-// Initialiser le géocodeur avec votre clé API Google Maps
 Geocoder.init(GOOGLE_API_KEY);
-
-type RootStackParamList = {
-    Home: undefined;
-    Login: undefined;
-    RoadTrips: undefined;
-    RoadTripStack: { roadtripId: string };
-    Stage: {
-        stageId: string;
-        stageTitle: string;
-        stageAddress: string;
-        stageArrivalDateTime: string;
-        stageDepartureDateTime: string;
-        stageNotes: string
-        stageCoordinates?: {
-            latitude: number;
-            longitude: number
-        };
-        accommodations?: {
-            name: string;
-            address: string;
-            website: string;
-            coordinates?: {
-                latitude: number;
-                longitude: number
-            };
-            arrivalDateTime: string;
-            departureDateTime: string;
-            thumbnail?: {
-                url: string
-            }
-        }[];
-        activities?: {
-            name: string;
-            address: string;
-            website: string;
-            startDateTime: string;
-            endDateTime: string;
-            coordinates?: {
-                latitude: number;
-                longitude: number
-            };
-            thumbnail?: {
-                url: string
-            }
-        }[];
-
-    };
-    EditStageInfo: {
-        stageTitle: string;
-        stageAddress: string;
-        stageArrivalDateTime: string;
-        stageDepartureDateTime: string;
-        stageNotes: string
-    };
-    Accommodation: {
-        name: string;
-        address: string;
-        website?: string;
-        phone?: string;
-        email?: string;
-        reservationNumber?: string;
-        confirmationDateTime?: string;
-        arrivalDateTime: string;
-        departureDateTime: string;
-        nights?: number;
-        price?: string;
-        notes?: string
-    };
-
-};
 
 type Props = StackScreenProps<RootStackParamList, 'Stage'>;
 
 export default function StageScreen({ route, navigation }: Props) {
-    const { stageTitle, stageAddress, stageCoordinates, accommodations = [], activities = [], stageArrivalDateTime, stageDepartureDateTime, stageNotes } = route.params;
-    console.log('route.params:', route.params); // Ajout de débogage pour vérifier les paramètres
+    const { type, stageId } = route.params;
     const [loading, setLoading] = useState(true);
-    const [coordinates, setCoordinates] = useState<{ latitude: number; longitude: number } | null>(stageCoordinates || null);
+    const [stageTitle, setStageTitle] = useState(route.params.stageTitle);
+    const [stageAddress, setStageAddress] = useState(route.params.stageAddress);
+    const [stageArrivalDateTime, setStageArrivalDateTime] = useState(route.params.stageArrivalDateTime);
+    const [stageDepartureDateTime, setStageDepartureDateTime] = useState(route.params.stageDepartureDateTime);
+    const [stageNotes, setStageNotes] = useState(route.params.stageNotes);
+    const [coordinates, setCoordinates] = useState<{ latitude: number; longitude: number } | null>(route.params.stageCoordinates || null);
     const [markers, setMarkers] = useState<{ latitude: number; longitude: number; title: string; type: string }[]>([]);
+    const [accommodations, setAccommodations] = useState<{ name: string; address: string; coordinates?: { latitude: number; longitude: number }; thumbnail?: { url: string }; arrivalDateTime: string; departureDateTime: string; website: string }[]>([]);
+    const [activities, setActivities] = useState<{ name: string; address: string; coordinates?: { latitude: number; longitude: number }; thumbnail?: { url: string }; startDateTime: string; endDateTime: string; website: string }[]>([]);
     const mapRef = useRef<MapView>(null);
     const [index, setIndex] = useState(0);
-    const [routes] = useState([
+    const [routes, setRoutes] = useState([
         { key: 'general', title: 'Infos Générales' },
-        { key: 'accommodations', title: 'Hébergements' },
-        { key: 'activities', title: 'Activités' },
+        ...(type === 'stage' ? [{ key: 'accommodations', title: 'Hébergements' }, { key: 'activities', title: 'Activités' }] : []),
     ]);
+
+    const fetchStageDetails = async () => {
+        try {
+            const url = type === 'stage'
+                ? `https://mon-petit-roadtrip.vercel.app/stages/${stageId}`
+                : `https://mon-petit-roadtrip.vercel.app/stops/${stageId}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            console.log('Stage data:', data);
+            setStageTitle(data.name);
+            setStageAddress(data.address);
+            setStageArrivalDateTime(data.arrivalDateTime);
+            setStageDepartureDateTime(data.departureDateTime);
+            setStageNotes(data.notes);
+            setAccommodations(data.accommodations || []);
+            setActivities(data.activities || []);
+            setCoordinates(data.coordinates || null);
+            setLoading(false);
+        } catch (error) {
+            console.error('Erreur lors de la récupération des détails du stage:', error);
+            setLoading(false);
+        }
+    };
+
+    useFocusEffect(
+        useCallback(() => {
+            fetchStageDetails();
+        }, [stageId])
+    );
 
     useEffect(() => {
         const fetchCoordinates = async () => {
             try {
                 let stageCoords = coordinates;
                 if (!coordinates) {
-                    console.log('Géocodage de l\'adresse du stage...');
-                    stageCoords = await geocodeAddress(stageAddress);
+                    if (stageAddress) {
+                        console.log('Adresse du stage:', stageAddress);
+                        stageCoords = await geocodeAddress(stageAddress);
+                    } else {
+                        console.log('Adresse du stage:', stageAddress);
+                        console.error('Erreur : l\'adresse du stage est indéfinie.');
+                    }
                     if (stageCoords) {
                         setCoordinates(stageCoords);
-                        console.log('Coordonnées du stage:', stageCoords);
                     }
                 }
 
-                // Géocoder les adresses des hébergements
-                console.log('Géocodage des adresses des hébergements...');
                 const accommodationMarkers = await Promise.all(
                     accommodations.map(async (accommodation) => {
                         const coords = accommodation.coordinates || await geocodeAddress(accommodation.address);
                         if (coords) {
-                            console.log('Coordonnées de l\'hébergement:', coords);
                             return { ...coords, title: 'Hébergement', type: 'bed' };
                         }
                         return null;
                     })
                 );
 
-                // Géocoder les adresses des activités
-                console.log('Géocodage des adresses des activités...');
                 const activityMarkers = await Promise.all(
                     activities.map(async (activity) => {
                         const coords = activity.coordinates || await geocodeAddress(activity.address);
                         if (coords) {
-                            console.log('Coordonnées de l\'activité:', coords);
                             return { ...coords, title: 'Activité', type: 'flag' };
                         }
                         return null;
                     })
                 );
 
-                // Filtrer les marqueurs valides et les ajouter à l'état
                 const validMarkers = [
                     ...accommodationMarkers.filter(marker => marker !== null),
                     ...activityMarkers.filter(marker => marker !== null),
@@ -150,7 +110,6 @@ export default function StageScreen({ route, navigation }: Props) {
 
                 setMarkers(validMarkers);
 
-                // Ajuster automatiquement le zoom de la carte pour afficher tous les marqueurs
                 if (mapRef.current && validMarkers.length > 0) {
                     const coordinates = validMarkers.map(marker => ({ latitude: marker.latitude, longitude: marker.longitude }));
                     mapRef.current.fitToCoordinates(coordinates, {
@@ -167,7 +126,7 @@ export default function StageScreen({ route, navigation }: Props) {
         };
 
         fetchCoordinates();
-    }, [route.params]);
+    }, [accommodations, activities, stageAddress]);
 
     const geocodeAddress = async (address: string) => {
         try {
@@ -186,12 +145,8 @@ export default function StageScreen({ route, navigation }: Props) {
     };
 
     const GeneralInfo = () => {
-        console.log('arrivalDateTime:', stageArrivalDateTime);
-        console.log('departureDateTime:', stageDepartureDateTime);
-        const formattedArrivalDateTime = formatDateTimeUTC2Digits(stageArrivalDateTime);
-        const formattedDepartureDateTime = formatDateTimeUTC2Digits(stageDepartureDateTime);
-        console.log('formattedArrivalDateTime:', formattedArrivalDateTime);
-        console.log('formattedDepartureDateTime:', formattedDepartureDateTime);
+        const formattedArrivalDateTime = stageArrivalDateTime ? formatDateTimeUTC2Digits(stageArrivalDateTime) : 'N/A';
+        const formattedDepartureDateTime = stageDepartureDateTime ? formatDateTimeUTC2Digits(stageDepartureDateTime) : 'N/A';
 
         return (
             <ScrollView style={styles.tabContent}>
@@ -219,11 +174,15 @@ export default function StageScreen({ route, navigation }: Props) {
                     <Button
                         mode="contained"
                         onPress={() => navigation.navigate('EditStageInfo', {
+                            type,
+                            roadtripId: route.params.roadtripId,
+                            stageId: route.params.stageId,
                             stageTitle,
                             stageAddress,
                             stageArrivalDateTime,
                             stageDepartureDateTime,
-                            stageNotes
+                            stageNotes,
+                            refresh: fetchStageDetails
                         })}
                         style={styles.editButton}
                     >
@@ -271,7 +230,6 @@ export default function StageScreen({ route, navigation }: Props) {
         </ScrollView>
     );
 
-    //Présenter les activités de la même manière que les hébergements
     const Activities = () => (
         <ScrollView style={styles.tabContent}>
             {activities.map((activity, index) => (
@@ -300,7 +258,6 @@ export default function StageScreen({ route, navigation }: Props) {
                             >
                                 Ouvrir dans Google Maps
                             </Button>
-
                         </View>
                     </Card.Content>
                 </Card>

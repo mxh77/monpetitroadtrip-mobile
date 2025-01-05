@@ -2,14 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, FlatList, Image, ActivityIndicator, Alert, Modal, Pressable, RefreshControl } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/MaterialIcons'; // Importer l'icône
-
-type RootStackParamList = {
-  Home: undefined;
-  Login: undefined;
-  RoadTrips: { refresh?: () => void };
-  RoadTrip: { roadtripId: string };
-  EditRoadTrip: { roadtripId?: string }; // Ajoutez cette route
-};
+import { RootStackParamList } from '../../types';
 
 type Props = StackScreenProps<RootStackParamList, 'RoadTrips'>;
 
