@@ -1,0 +1,22 @@
+{
+    "build": {
+        "preview": {
+            "env": {
+                "GOOGLE_API_KEY": "${GOOGLE_API_KEY}",
+                "API_URL": "${API_URL}"
+            },
+            "android": {
+                "buildType": "apk"
+            }
+        },
+        "production": {
+            "env": {
+                "GOOGLE_API_KEY": "${GOOGLE_API_KEY}",
+                "API_URL": "${API_URL}"
+            },
+            "android": {
+                "buildType": "apk"
+            }
+        }
+    }
+}

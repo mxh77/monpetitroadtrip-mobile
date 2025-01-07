@@ -14,6 +14,9 @@ import { RootStackParamList } from '../../types';
 import { useFocusEffect } from '@react-navigation/native';
 
 const GOOGLE_API_KEY = Constants.expoConfig?.extra?.GOOGLE_API_KEY;
+
+console.log('Logging GOOGLE_API_KEY :', GOOGLE_API_KEY);
+
 Geocoder.init(GOOGLE_API_KEY);
 
 type Props = StackScreenProps<RootStackParamList, 'Stage'>;
@@ -39,9 +42,11 @@ export default function StageScreen({ route, navigation }: Props) {
 
     const fetchStageDetails = async () => {
         try {
+            console.log('Fetching stage details for stageId:', stageId);
             const url = type === 'stage'
                 ? `https://mon-petit-roadtrip.vercel.app/stages/${stageId}`
                 : `https://mon-petit-roadtrip.vercel.app/stops/${stageId}`;
+            console.log('Fetching URL:', url);
             const response = await fetch(url);
             const data = await response.json();
             console.log('Stage data:', data);
@@ -62,6 +67,7 @@ export default function StageScreen({ route, navigation }: Props) {
 
     useFocusEffect(
         useCallback(() => {
+            console.log('useFocusEffect triggered for stageId:', stageId);
             fetchStageDetails();
         }, [stageId])
     );
@@ -69,6 +75,7 @@ export default function StageScreen({ route, navigation }: Props) {
     useEffect(() => {
         const fetchCoordinates = async () => {
             try {
+                console.log('Fetching coordinates for stage');
                 let stageCoords = coordinates;
                 if (!coordinates) {
                     if (stageAddress) {
@@ -130,9 +137,11 @@ export default function StageScreen({ route, navigation }: Props) {
 
     const geocodeAddress = async (address: string) => {
         try {
+            console.log('Geocoding address:', address);
             const json = await Geocoder.from(address);
             if (json.results.length > 0) {
                 const location = json.results[0].geometry.location;
+                console.log('Geocoded coordinates:', location);
                 return { latitude: location.lat, longitude: location.lng };
             } else {
                 console.error('Erreur : aucune coordonnée trouvée pour cette adresse.');
