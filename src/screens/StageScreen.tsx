@@ -14,6 +14,7 @@ import { RootStackParamList } from '../../types';
 import { useFocusEffect } from '@react-navigation/native';
 
 const GOOGLE_API_KEY = Constants.expoConfig?.extra?.GOOGLE_API_KEY;
+const API_URL = Constants.expoConfig?.extra?.API_URL;
 
 console.log('Logging GOOGLE_API_KEY :', GOOGLE_API_KEY);
 
@@ -40,28 +41,41 @@ export default function StageScreen({ route, navigation }: Props) {
         ...(type === 'stage' ? [{ key: 'accommodations', title: 'Hébergements' }, { key: 'activities', title: 'Activités' }] : []),
     ]);
 
+    const isMounted = useRef(true);
+    const [fetchingCoordinates, setFetchingCoordinates] = useState(false);
+
+    useEffect(() => {
+        return () => {
+            isMounted.current = false;
+        };
+    }, []);
+
     const fetchStageDetails = async () => {
         try {
             console.log('Fetching stage details for stageId:', stageId);
             const url = type === 'stage'
-                ? `https://mon-petit-roadtrip.vercel.app/stages/${stageId}`
-                : `https://mon-petit-roadtrip.vercel.app/stops/${stageId}`;
+                ? `${API_URL}/stages/${stageId}`
+                : `${API_URL}/stops/${stageId}`;
             console.log('Fetching URL:', url);
             const response = await fetch(url);
             const data = await response.json();
             console.log('Stage data:', data);
-            setStageTitle(data.name);
-            setStageAddress(data.address);
-            setStageArrivalDateTime(data.arrivalDateTime);
-            setStageDepartureDateTime(data.departureDateTime);
-            setStageNotes(data.notes);
-            setAccommodations(data.accommodations || []);
-            setActivities(data.activities || []);
-            setCoordinates(data.coordinates || null);
-            setLoading(false);
+            if (isMounted.current) {
+                setStageTitle(data.name);
+                setStageAddress(data.address);
+                setStageArrivalDateTime(data.arrivalDateTime);
+                setStageDepartureDateTime(data.departureDateTime);
+                setStageNotes(data.notes);
+                setAccommodations(data.accommodations || []);
+                setActivities(data.activities || []);
+                setCoordinates(data.coordinates || null);
+                setLoading(false);
+            }
         } catch (error) {
             console.error('Erreur lors de la récupération des détails du stage:', error);
-            setLoading(false);
+            if (isMounted.current) {
+                setLoading(false);
+            }
         }
     };
 
@@ -76,6 +90,7 @@ export default function StageScreen({ route, navigation }: Props) {
         const fetchCoordinates = async () => {
             try {
                 console.log('Fetching coordinates for stage');
+                setFetchingCoordinates(true);
                 let stageCoords = coordinates;
                 if (!coordinates) {
                     if (stageAddress) {
@@ -85,7 +100,7 @@ export default function StageScreen({ route, navigation }: Props) {
                         console.log('Adresse du stage:', stageAddress);
                         console.error('Erreur : l\'adresse du stage est indéfinie.');
                     }
-                    if (stageCoords) {
+                    if (stageCoords && isMounted.current) {
                         setCoordinates(stageCoords);
                     }
                 }
@@ -115,20 +130,26 @@ export default function StageScreen({ route, navigation }: Props) {
                     ...activityMarkers.filter(marker => marker !== null),
                 ];
 
-                setMarkers(validMarkers);
+                if (isMounted.current) {
+                    setMarkers(validMarkers);
 
-                if (mapRef.current && validMarkers.length > 0) {
-                    const coordinates = validMarkers.map(marker => ({ latitude: marker.latitude, longitude: marker.longitude }));
-                    mapRef.current.fitToCoordinates(coordinates, {
-                        edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
-                        animated: true,
-                    });
+                    if (mapRef.current && validMarkers.length > 0) {
+                        const coordinates = validMarkers.map(marker => ({ latitude: marker.latitude, longitude: marker.longitude }));
+                        mapRef.current.fitToCoordinates(coordinates, {
+                            edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
+                            animated: true,
+                        });
+                    }
+
+                    setLoading(false);
                 }
-
-                setLoading(false);
             } catch (error) {
                 console.error('Erreur lors de la récupération des coordonnées:', error);
-                setLoading(false);
+                if (isMounted.current) {
+                    setLoading(false);
+                }
+            } finally {
+                setFetchingCoordinates(false);
             }
         };
 
@@ -280,7 +301,7 @@ export default function StageScreen({ route, navigation }: Props) {
         activities: Activities,
     });
 
-    if (loading) {
+    if (loading || fetchingCoordinates) {
         return (
             <View style={styles.loadingContainer}>
                 <ActivityIndicator size="large" color="#007BFF" />
