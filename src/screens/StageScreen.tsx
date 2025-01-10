@@ -16,8 +16,6 @@ import { useFocusEffect } from '@react-navigation/native';
 const GOOGLE_API_KEY = Constants.expoConfig?.extra?.GOOGLE_API_KEY;
 const API_URL = Constants.expoConfig?.extra?.API_URL;
 
-console.log('Logging GOOGLE_API_KEY :', GOOGLE_API_KEY);
-
 Geocoder.init(GOOGLE_API_KEY);
 
 type Props = StackScreenProps<RootStackParamList, 'Stage'>;
@@ -43,23 +41,27 @@ export default function StageScreen({ route, navigation }: Props) {
 
     const isMounted = useRef(true);
     const [fetchingCoordinates, setFetchingCoordinates] = useState(false);
+    const [dataFetched, setDataFetched] = useState(false);
 
     useEffect(() => {
+        console.log('StageScreen mounted');
         return () => {
+            console.log('StageScreen unmounted');
             isMounted.current = false;
         };
     }, []);
 
     const fetchStageDetails = async () => {
+        console.log('Fetching stage details...');
+        setLoading(true); // Commencez le chargement
         try {
-            console.log('Fetching stage details for stageId:', stageId);
             const url = type === 'stage'
                 ? `${API_URL}/stages/${stageId}`
                 : `${API_URL}/stops/${stageId}`;
-            console.log('Fetching URL:', url);
+            console.log(`Fetching from URL: ${url}`);
             const response = await fetch(url);
             const data = await response.json();
-            console.log('Stage data:', data);
+            //console.log('Stage details fetched:', data);
             if (isMounted.current) {
                 setStageTitle(data.name);
                 setStageAddress(data.address);
@@ -69,35 +71,36 @@ export default function StageScreen({ route, navigation }: Props) {
                 setAccommodations(data.accommodations || []);
                 setActivities(data.activities || []);
                 setCoordinates(data.coordinates || null);
-                setLoading(false);
+                setLoading(false); // Terminez le chargement
+                setDataFetched(true); // Marquez les données comme récupérées
             }
         } catch (error) {
             console.error('Erreur lors de la récupération des détails du stage:', error);
             if (isMounted.current) {
-                setLoading(false);
+                setLoading(false); // Terminez le chargement
             }
         }
     };
 
     useFocusEffect(
         useCallback(() => {
-            console.log('useFocusEffect triggered for stageId:', stageId);
-            fetchStageDetails();
-        }, [stageId])
+            console.log('StageScreen focused');
+            if (!dataFetched) {
+                fetchStageDetails();
+            }
+        }, [stageId, dataFetched])
     );
 
     useEffect(() => {
         const fetchCoordinates = async () => {
+            console.log('Fetching coordinates...');
+            setFetchingCoordinates(true);
             try {
-                console.log('Fetching coordinates for stage');
-                setFetchingCoordinates(true);
                 let stageCoords = coordinates;
                 if (!coordinates) {
                     if (stageAddress) {
-                        console.log('Adresse du stage:', stageAddress);
                         stageCoords = await geocodeAddress(stageAddress);
                     } else {
-                        console.log('Adresse du stage:', stageAddress);
                         console.error('Erreur : l\'adresse du stage est indéfinie.');
                     }
                     if (stageCoords && isMounted.current) {
@@ -153,16 +156,16 @@ export default function StageScreen({ route, navigation }: Props) {
             }
         };
 
-        fetchCoordinates();
-    }, [accommodations, activities, stageAddress]);
+        if (dataFetched) {
+            fetchCoordinates();
+        }
+    }, [accommodations, activities, stageAddress, dataFetched]);
 
     const geocodeAddress = async (address: string) => {
         try {
-            console.log('Geocoding address:', address);
             const json = await Geocoder.from(address);
             if (json.results.length > 0) {
                 const location = json.results[0].geometry.location;
-                console.log('Geocoded coordinates:', location);
                 return { latitude: location.lat, longitude: location.lng };
             } else {
                 console.error('Erreur : aucune coordonnée trouvée pour cette adresse.');
@@ -302,6 +305,7 @@ export default function StageScreen({ route, navigation }: Props) {
     });
 
     if (loading || fetchingCoordinates) {
+        console.log('Loading or fetching coordinates...');
         return (
             <View style={styles.loadingContainer}>
                 <ActivityIndicator size="large" color="#007BFF" />
@@ -310,12 +314,15 @@ export default function StageScreen({ route, navigation }: Props) {
     }
 
     if (!coordinates) {
+        console.log('No coordinates found');
         return (
             <View style={styles.container}>
                 <Text>Erreur : impossible de récupérer les coordonnées de l'adresse.</Text>
             </View>
         );
     }
+
+    console.log('Rendering StageScreen with data');
 
     return (
         <View style={styles.container}>
@@ -445,5 +452,8 @@ const styles = StyleSheet.create({
     },
     editButton: {
         marginTop: 16,
+    },
+    listButton: {
+        margin: 20,
     },
 });

@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, FlatList, Image, ActivityIndicator, Alert, Moda
 import { StackScreenProps } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/MaterialIcons'; // Importer l'icône
 import { RootStackParamList } from '../../types';
+import { FAB } from 'react-native-paper'; // Importer le bouton flottant
 
 type Props = StackScreenProps<RootStackParamList, 'RoadTrips'>;
 
@@ -137,9 +138,12 @@ export default function RoadTripsScreen({ navigation, route }: Props) {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       />
-      <Pressable style={styles.fab} onPress={handleAddRoadtrip}>
-        <Icon name="add" size={24} color="#fff" />
-      </Pressable>
+      <FAB
+        style={styles.fab}
+        small
+        icon="plus"
+        onPress={handleAddRoadtrip}
+      />
 
       <Modal
         animationType="slide"
@@ -220,15 +224,10 @@ const styles = StyleSheet.create({
   },
   fab: {
     position: 'absolute',
-    right: 16,
-    bottom: 16,
-    width: 56,
-    height: 56,
-    borderRadius: 28,
+    margin: 16,
+    right: 0,
+    bottom: 0,
     backgroundColor: '#007BFF',
-    justifyContent: 'center',
-    alignItems: 'center',
-    elevation: 8,
   },
   modalContainer: {
     flex: 1,

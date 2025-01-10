@@ -20,6 +20,7 @@ export type RootStackParamList = {
       latitude: number;
       longitude: number;
     };
+    refresh?: () => void; // Ajout de la propriété refresh ici
     accommodations?: {
       name: string;
       address: string;

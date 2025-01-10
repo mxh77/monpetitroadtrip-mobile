@@ -8,7 +8,7 @@ export default ({ config }) => ({
   slug: "monpetitroadtrip",
   version: "1.0.0",
   orientation: "portrait",
-  icon: "./assets/icon.png",
+  icon: "./assets/logo_icone_monpetitroadtrip.png",
   userInterfaceStyle: "light",
   newArchEnabled: true,
   splash: {
