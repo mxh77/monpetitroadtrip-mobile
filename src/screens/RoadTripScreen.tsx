@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, FlatList, ActivityIndicator, TouchableOpacity, Alert } from 'react-native';
+import {Button, StyleSheet, View, Text, FlatList, ActivityIndicator, TouchableOpacity, Alert } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/FontAwesome'; // Importer les icônes
 import { RootStackParamList } from '../../types';
@@ -179,6 +179,10 @@ export default function RoadTripScreen({ route, navigation }: Props) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{roadtrip.name}</Text>
+      <Button
+        title="Voir sur la carte"
+        onPress={() => navigation.navigate('Maps')}
+      />
       <FlatList
         data={combinedList}
         keyExtractor={(item) => item._id}

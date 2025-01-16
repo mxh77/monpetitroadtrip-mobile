@@ -22,6 +22,8 @@ export type RootStackParamList = {
     };
     refresh?: () => void; // Ajout de la propriété refresh ici
     accommodations?: {
+      longitude: any;
+      latitude: any;
       name: string;
       address: string;
       website: string;
@@ -76,6 +78,7 @@ export type RootStackParamList = {
     notes?: string;
   };
   WebView: { url: string };
+  Maps: undefined;
 };
 
 // Types pour les props de navigation et de route
@@ -87,6 +90,10 @@ export type EditStageInfoScreenRouteProp = RouteProp<RootStackParamList, 'EditSt
 
 export type AccommodationScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Accommodation'>;
 export type AccommodationScreenRouteProp = RouteProp<RootStackParamList, 'Accommodation'>;
+
+//Gérer les props de navigation et de route de MapsScreen
+export type MapsScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Maps'>;
+export type MapsScreenRouteProp = RouteProp<RootStackParamList, 'Maps'>;
 
 export type StageScreenProps = {
   navigation: StageScreenNavigationProp;

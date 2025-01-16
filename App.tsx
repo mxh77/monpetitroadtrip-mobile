@@ -1,3 +1,4 @@
+import 'react-native-get-random-values';
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -11,6 +12,7 @@ import StageScreen from './src/screens/StageScreen';
 import EditStageInfoScreen from './src/screens/EditStageInfoScreen';
 import AccommodationScreen from './src/screens/AccommodationScreen';
 import Icon from 'react-native-vector-icons/MaterialIcons'; // Importer l'icône
+import MapsScreen from './src/screens/MapsScreen';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -55,6 +57,7 @@ export default function App() {
         <Stack.Screen name="Stage" component={StageScreen} options={{ title: 'Liste des étapes' }} />
         <Stack.Screen name="EditStageInfo" component={EditStageInfoScreen} options={{ title: 'Etape' }} />
         <Stack.Screen name="Accommodation" component={AccommodationScreen} options={{ title: 'Etape' }} />
+        <Stack.Screen name="Maps" component={MapsScreen} options={{ title: 'Carte' }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

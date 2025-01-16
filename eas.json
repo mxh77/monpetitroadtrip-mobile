@@ -1,32 +1,13 @@
 {
     "build": {
         "development": {
-            "developmentClient": true,
-            "distribution": "internal",
-            "env": {
-                "GOOGLE_API_KEY": "${GOOGLE_API_KEY}",
-                "API_URL": "${API_URL}"
-            },
             "android": {
-                "buildType": "apk"
-            }
-        },
-        "preview": {
-            "env": {
-                "GOOGLE_API_KEY": "${GOOGLE_API_KEY}",
-                "API_URL": "${API_URL}"
-            },
-            "android": {
-                "buildType": "apk"
-            }
-        },
-        "production": {
-            "env": {
-                "GOOGLE_API_KEY": "${GOOGLE_API_KEY}",
-                "API_URL": "${API_URL}"
-            },
-            "android": {
-                "buildType": "apk"
+                "buildType": "apk",
+                "distribution": "internal",
+                "env": {
+                    "GOOGLE_API_KEY": "${GOOGLE_API_KEY}",
+                    "API_URL": "${API_URL}"
+                }
             }
         }
     }

@@ -1,4 +1,3 @@
-import 'react-native-get-random-values'; // Importer react-native-get-random-values
 import React, { useState, useLayoutEffect, useRef } from 'react';
 import { StyleSheet, View, Text, Alert, FlatList } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
@@ -8,6 +7,8 @@ import { format, parseISO } from 'date-fns';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'; // Importer Google Places Autocomplete
 import Constants from 'expo-constants';
+
+const GOOGLE_API_KEY = 'AIzaSyBYC-Mamm9LrqrbBPR7jcZ1ZnnwWiRIXQw';
 
 type Props = StackScreenProps<RootStackParamList, 'EditStageInfo'>;
 
@@ -133,7 +134,7 @@ export default function EditStageInfoScreen({ route, navigation }: Props) {
                 );
             case 'stageAddress':
                 return (
-                    <View style={styles.inputContainer}>
+                    <View style={styles.input}>
                         <GooglePlacesAutocomplete
                             ref={googlePlacesRef}
                             placeholder="Adresse"
@@ -141,23 +142,8 @@ export default function EditStageInfoScreen({ route, navigation }: Props) {
                                 setEditableStageAddress(data.description);
                             }}
                             query={{
-                                key: Constants.expoConfig?.extra?.GOOGLE_API_KEY,
+                                key: GOOGLE_API_KEY,
                                 language: 'fr',
-                            }}
-                            styles={{
-                                textInputContainer: {
-                                    backgroundColor: '#fff',
-                                    borderTopWidth: 0,
-                                    borderBottomWidth: 0,
-                                },
-                                textInput: {
-                                    height: 38,
-                                    color: '#5d5d5d',
-                                    fontSize: 16,
-                                },
-                                predefinedPlacesDescription: {
-                                    color: '#1faadb',
-                                },
                             }}
                             textInputProps={{
                                 value: editableStageAddress,

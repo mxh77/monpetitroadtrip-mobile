@@ -1,7 +1,3 @@
-import 'dotenv/config';
-
-//console.log("Clé API chargée :", process.env.GOOGLE_API_KEY);
-
 export default ({ config }) => ({
   ...config,
   name: "monpetitroadtrip",
@@ -10,36 +6,31 @@ export default ({ config }) => ({
   orientation: "portrait",
   icon: "./assets/logo_icone_monpetitroadtrip.png",
   userInterfaceStyle: "light",
-  newArchEnabled: true,
+  newArchEnabled: false, // Activez la nouvelle architecture si nécessaire
   splash: {
     image: "./assets/splash-icon.png",
     resizeMode: "contain",
-    backgroundColor: "#ffffff"
-  },
-  ios: {
-    supportsTablet: true
+    backgroundColor: "#ffffff",
   },
   android: {
-    adaptiveIcon: {
-      foregroundImage: "./assets/adaptive-icon.png",
-      backgroundColor: "#ffffff"
-    },
-    package: "com.maxime.heron.monpetitroadtrip", // Ajoutez cette ligne avec votre identifiant unique
-    permissions: ["INTERNET"], // Ajoutez cette ligne
     config: {
       googleMaps: {
-        apiKey: process.env.GOOGLE_API_KEY
+        apiKey: "AIzaSyBYC-Mamm9LrqrbBPR7jcZ1ZnnwWiRIXQw"
       }
-    }
+    },
+    adaptiveIcon: {
+      foregroundImage: "./assets/adaptive-icon.png",
+      backgroundColor: "#ffffff",
+    },
+    package: "com.maxime.heron.monpetitroadtrip",
+    permissions: [
+      "INTERNET", // Nécessaire pour Google Maps et API Places
+      "ACCESS_FINE_LOCATION", // Permission de localisation si nécessaire
+      "ACCESS_COARSE_LOCATION",
+    ]
+
   },
   web: {
-    favicon: "./assets/favicon.png"
-  },
-  extra: {
-    GOOGLE_API_KEY: process.env.GOOGLE_API_KEY,
-    API_URL: process.env.API_URL,
-    eas: {
-      projectId: "547f7eb3-324d-4060-91c6-924ef3f69de8"
-    }
-  },
+    favicon: "./assets/favicon.png",
+  }
 });
