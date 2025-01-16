@@ -17,7 +17,6 @@ export default function EditStageInfoScreen({ route, navigation }: Props) {
     const { type, roadtripId, stageId, stageTitle, stageAddress, stageArrivalDateTime, stageDepartureDateTime, stageNotes, refresh } = route.params;
     const [addressInput, setAddressInput] = useState(stageAddress || '');
     const [showPicker, setShowPicker] = useState({ type: '', isVisible: false });
-    const [isInitialized, setIsInitialized] = useState(false);
 
     const [formState, setFormState] = useState({
         title: stageTitle || '',
@@ -103,7 +102,7 @@ export default function EditStageInfoScreen({ route, navigation }: Props) {
     }, [navigation, handleSave]);
 
     useEffect(() => {
-        if (isInitialized && addressInput !== formState.address) {
+        if (addressInput !== formState.address) {
             console.log('Updating formState.address ', formState.address, 'with addressInput:', addressInput);
             setFormState((prevState) => ({ ...prevState, address: addressInput }));
         }
