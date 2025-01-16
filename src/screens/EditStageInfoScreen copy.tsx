@@ -14,11 +14,10 @@ const GOOGLE_API_KEY = 'AIzaSyBYC-Mamm9LrqrbBPR7jcZ1ZnnwWiRIXQw';
 type Props = StackScreenProps<RootStackParamList, 'EditStageInfo'>;
 
 export default function EditStageInfoScreen({ route, navigation }: Props) {
-    const { type, roadtripId, stageId, stageTitle, stageAddress, stageArrivalDateTime, stageDepartureDateTime, stageNotes, refresh } = route.params;
+    const { type, roadtripId, stageId, stageTitle, stageArrivalDateTime, stageDepartureDateTime, stageNotes, refresh } = route.params;
 
     const [formState, setFormState] = useState({
         title: stageTitle || '',
-        address: stageAddress || '',
         arrivalDate: stageArrivalDateTime ? parseISO(stageArrivalDateTime) : new Date(),
         arrivalTime: stageArrivalDateTime ? parseISO(stageArrivalDateTime) : new Date(),
         departureDate: stageDepartureDateTime ? parseISO(stageDepartureDateTime) : new Date(),
@@ -122,15 +121,7 @@ export default function EditStageInfoScreen({ route, navigation }: Props) {
                         style={styles.input}
                     />
                 );
-            case 'stageAddress':
-                return (
-                    <TextInput
-                        label="Adresse"
-                        value={formState.address}
-                        onChangeText={(text) => setFormState((prevState) => ({ ...prevState, address: text }))}
-                        style={styles.input}
-                    />
-                );
+       
             case 'arrivalDate':
                 return (
                     <TextInput
