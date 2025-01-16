@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import { StyleSheet, View, Text, Alert, SectionList, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -15,6 +15,9 @@ type Props = StackScreenProps<RootStackParamList, 'EditStageInfo'>;
 
 export default function EditStageInfoScreen({ route, navigation }: Props) {
     const { type, roadtripId, stageId, stageTitle, stageAddress, stageArrivalDateTime, stageDepartureDateTime, stageNotes, refresh } = route.params;
+    const [addressInput, setAddressInput] = useState(stageAddress || '');
+    const [showPicker, setShowPicker] = useState({ type: '', isVisible: false });
+    const [isInitialized, setIsInitialized] = useState(false);
 
     const [formState, setFormState] = useState({
         title: stageTitle || '',
@@ -26,7 +29,8 @@ export default function EditStageInfoScreen({ route, navigation }: Props) {
         notes: stageNotes || ''
     });
 
-    const [showPicker, setShowPicker] = useState({ type: '', isVisible: false });
+
+    const googlePlacesRef = useRef(null);
 
     const handleSave = async () => {
 
@@ -42,6 +46,7 @@ export default function EditStageInfoScreen({ route, navigation }: Props) {
         const method = isEdit ? 'PUT' : 'POST';
         const payload = {
             name: formState.title,
+            address: formState.address,
             arrivalDateTime: new Date(Date.UTC(
                 formState.arrivalDate.getUTCFullYear(),
                 formState.arrivalDate.getUTCMonth(),
@@ -97,6 +102,13 @@ export default function EditStageInfoScreen({ route, navigation }: Props) {
         });
     }, [navigation, handleSave]);
 
+    useEffect(() => {
+        if (isInitialized && addressInput !== formState.address) {
+            console.log('Updating formState.address ', formState.address, 'with addressInput:', addressInput);
+            setFormState((prevState) => ({ ...prevState, address: addressInput }));
+        }
+    }, [addressInput, formState.address]);
+
     const getTimeFromDate = (date: Date) =>
         `${date.getUTCHours().toString().padStart(2, '0')}:${date.getUTCMinutes().toString().padStart(2, '0')}`;
 
@@ -124,12 +136,57 @@ export default function EditStageInfoScreen({ route, navigation }: Props) {
                 );
             case 'stageAddress':
                 return (
-                    <TextInput
-                        label="Adresse"
-                        value={formState.address}
-                        onChangeText={(text) => setFormState((prevState) => ({ ...prevState, address: text }))}
-                        style={styles.input}
-                    />
+                    <View style={styles.input}>
+                        <GooglePlacesAutocomplete
+                            ref={googlePlacesRef}
+                            placeholder="Adresse"
+                            onPress={(data, details = null) => {
+                                console.log('Address selected:', data.description);
+                                setAddressInput(data.description);
+                            }}
+                            query={{
+                                key: GOOGLE_API_KEY,
+                                language: 'fr',
+                            }}
+                            textInputProps={{
+                                value: addressInput,
+                                onChangeText: (text) => {
+                                    console.log("onChangeText (text:", text, "addressInput:", addressInput, "formState.address:", formState.address, ")");       
+                                    if (text !== "" || (text === "" && addressInput!==formState.address)) {
+                                        console.log('Setting addressInput to:', text, " / addressInput:", addressInput, " / formState.address:", formState.address, ")");       
+                                        setAddressInput(text);
+                                    }
+                                },
+                            }}
+                            listViewDisplayed={false}
+                            fetchDetails={true}
+                            enablePoweredByContainer={false}
+                            styles={{
+                                textInputContainer: {
+                                    backgroundColor: 'rgba(0,0,0,0)',
+                                    borderTopWidth: 0,
+                                    borderBottomWidth: 0,
+                                },
+                                textInput: {
+                                    marginLeft: 0,
+                                    marginRight: 0,
+                                    height: 38,
+                                    color: '#5d5d5d',
+                                    fontSize: 16,
+                                },
+                                predefinedPlacesDescription: {
+                                    color: '#1faadb',
+                                },
+                            }}
+                            renderRightButton={() => (
+                                <TouchableOpacity onPress={() => {
+                                    setAddressInput('');
+                                }}>
+                                    <Icon name="times-circle" size={20} color="gray" style={styles.clearIcon} />
+                                </TouchableOpacity>
+                            )}
+                        />
+                    </View>
                 );
             case 'arrivalDate':
                 return (
