@@ -108,7 +108,7 @@ export default function StageScreen({ route, navigation }: Props) {
     setFetchingCoordinates(true);
     try {
       let stageCoords = coordinates;
-      if (!coordinates) {
+    
         if (stageAddress) {
           console.log('Geocoding stage address:', stageAddress);
           stageCoords = await geocodeAddress(stageAddress);
@@ -118,7 +118,7 @@ export default function StageScreen({ route, navigation }: Props) {
         if (stageCoords && isMounted.current) {
           setCoordinates(stageCoords);
         }
-      }
+      
 
       const accommodationMarkers = await Promise.all(
         accommodations.map(async (accommodation) => {
