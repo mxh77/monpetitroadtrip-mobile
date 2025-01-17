@@ -27,3 +27,28 @@ export const formatTimeHHMM = (dateString: string): string => {
       minute: '2-digit'
     });
   }
+
+  
+  
+  
+  //Fonction permettant de restituer la date (String) d'un objet DateTime sans tenir compte du fuseau horaire
+  export const getDateUTCFromDateTime = (date: Date) =>
+    `${date.getUTCDate().toString().padStart(2, '0')}/${(date.getUTCMonth() + 1).toString().padStart(2, '0')}/${date.getUTCFullYear()}`;  
+
+
+  //Fonction permettant de restituer l'heure (String) d'un objet DateTime sans tenir compte du fuseau horaire
+  export const getTimeUTCFromDateTime = (date: Date) =>
+    `${date.getUTCHours().toString().padStart(2, '0')}:${date.getUTCMinutes().toString().padStart(2, '0')}`;
+
+
+//FOnction permettant de créer un objet Date à partir d'une string au format JJ/MM/AAAA
+export const createDateFromJJMMAA = (dateString: string): Date => {
+    const dateParts = dateString.split('/');
+    return new Date(parseInt(dateParts[2]), parseInt(dateParts[1]) - 1, parseInt(dateParts[0]));
+  };
+
+  //FOnction permettant de créer un objet Date à partir d'une string au format HH:SS
+export const createTimeFromHHMM = (timeString: string): Date => {
+    const timeParts = timeString.split(':');
+    return new Date(0, 0, 0, parseInt(timeParts[0]), parseInt(timeParts[1]));
+  };

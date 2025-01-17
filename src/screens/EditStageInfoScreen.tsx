@@ -8,6 +8,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import Constants from 'expo-constants';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { formatDateTimeUTC2Digits, formatDateJJMMAA } from '../utils/dateUtils';
 
 const GOOGLE_API_KEY = 'AIzaSyBYC-Mamm9LrqrbBPR7jcZ1ZnnwWiRIXQw';
 
@@ -17,17 +18,20 @@ export default function EditStageInfoScreen({ route, navigation }: Props) {
     const { type, roadtripId, stageId, stageTitle, stageAddress, stageArrivalDateTime, stageDepartureDateTime, stageNotes, refresh } = route.params;
     const [addressInput, setAddressInput] = useState(stageAddress || '');
     const [showPicker, setShowPicker] = useState({ type: '', isVisible: false });
+    const [pickerDate, setPickerDate] = useState(new Date());
+    const [tempDate, setTempDate] = useState(new Date());
 
     const [formState, setFormState] = useState({
         title: stageTitle || '',
         address: stageAddress || '',
+        arrivalDateTime: stageArrivalDateTime ? parseISO(stageArrivalDateTime) : new Date(),
         arrivalDate: stageArrivalDateTime ? parseISO(stageArrivalDateTime) : new Date(),
         arrivalTime: stageArrivalDateTime ? parseISO(stageArrivalDateTime) : new Date(),
         departureDate: stageDepartureDateTime ? parseISO(stageDepartureDateTime) : new Date(),
         departureTime: stageDepartureDateTime ? parseISO(stageDepartureDateTime) : new Date(),
         notes: stageNotes || ''
     });
-
+console.log('formState:', formState);
 
     const googlePlacesRef = useRef(null);
 
@@ -110,8 +114,13 @@ export default function EditStageInfoScreen({ route, navigation }: Props) {
 
     const getTimeFromDate = (date: Date) =>
         `${date.getUTCHours().toString().padStart(2, '0')}:${date.getUTCMinutes().toString().padStart(2, '0')}`;
+    //`${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
 
     const handlePickerChange = (type: string, event: any, selectedDate?: Date) => {
+        if (event.type === 'dismissed') {
+            setShowPicker({ type: '', isVisible: false });
+            return;
+        }
         setShowPicker({ type: '', isVisible: false });
         if (selectedDate) {
             const newDate = new Date(selectedDate);
@@ -120,6 +129,49 @@ export default function EditStageInfoScreen({ route, navigation }: Props) {
             if (type === 'departureDate') setFormState((prevState) => ({ ...prevState, departureDate: newDate }));
             if (type === 'departureTime') setFormState((prevState) => ({ ...prevState, departureTime: newDate }));
         }
+    };
+
+    const openPicker = (type: string) => {
+        let date;
+        switch (type) {
+            case 'arrivalDate':
+                date = new Date(Date.UTC(
+                    formState.arrivalDate.getUTCFullYear(),
+                    formState.arrivalDate.getUTCMonth(),
+                    formState.arrivalDate.getUTCDate()
+                ));
+                break;
+            case 'arrivalTime':
+                date = new Date(Date.UTC(
+                    formState.arrivalTime.getUTCFullYear(),
+                    formState.arrivalTime.getUTCMonth(),
+                    formState.arrivalTime.getUTCDate(),
+                    formState.arrivalTime.getUTCHours(),
+                    formState.arrivalTime.getUTCMinutes()
+                ));
+                break;
+            case 'departureDate':
+                date = new Date(Date.UTC(
+                    formState.departureDate.getUTCFullYear(),
+                    formState.departureDate.getUTCMonth(),
+                    formState.departureDate.getUTCDate()
+                ));
+                break;
+            case 'departureTime':
+                date = new Date(Date.UTC(
+                    formState.departureTime.getUTCFullYear(),
+                    formState.departureTime.getUTCMonth(),
+                    formState.departureTime.getUTCDate(),
+                    formState.departureTime.getUTCHours(),
+                    formState.departureTime.getUTCMinutes()
+                ));
+                break;
+            default:
+                date = new Date();
+        }
+        setPickerDate(date);
+        setTempDate(date);
+        setShowPicker({ type, isVisible: true });
     };
 
     const renderInputField = (field: string) => {
@@ -150,9 +202,9 @@ export default function EditStageInfoScreen({ route, navigation }: Props) {
                             textInputProps={{
                                 value: addressInput,
                                 onChangeText: (text) => {
-                                    console.log("onChangeText (text:", text, "addressInput:", addressInput, "formState.address:", formState.address, ")");       
-                                    if (text !== "" || (text === "" && addressInput!==formState.address)) {
-                                        console.log('Setting addressInput to:', text, " / addressInput:", addressInput, " / formState.address:", formState.address, ")");       
+                                    console.log("onChangeText (text:", text, "addressInput:", addressInput, "formState.address:", formState.address, ")");
+                                    if (text !== "" || (text === "" && addressInput !== formState.address)) {
+                                        console.log('Setting addressInput to:', text, " / addressInput:", addressInput, " / formState.address:", formState.address, ")");
                                         setAddressInput(text);
                                     }
                                 },
@@ -192,7 +244,7 @@ export default function EditStageInfoScreen({ route, navigation }: Props) {
                     <TextInput
                         label="Date d'arrivée"
                         value={format(formState.arrivalDate, 'dd/MM/yyyy')}
-                        onFocus={() => setShowPicker({ type: 'arrivalDate', isVisible: true })}
+                        onFocus={() => openPicker('arrivalDate')}
                         style={styles.input}
                     />
                 );
@@ -200,8 +252,9 @@ export default function EditStageInfoScreen({ route, navigation }: Props) {
                 return (
                     <TextInput
                         label="Heure d'arrivée"
+                        //Par défaut, afficher l'heure sans tenir compte du fuseau horaire
                         value={getTimeFromDate(formState.arrivalTime)}
-                        onFocus={() => setShowPicker({ type: 'arrivalTime', isVisible: true })}
+                        onFocus={() => openPicker('arrivalTime')}
                         style={styles.input}
                     />
                 );
@@ -210,7 +263,7 @@ export default function EditStageInfoScreen({ route, navigation }: Props) {
                     <TextInput
                         label="Date de départ"
                         value={format(formState.departureDate, 'dd/MM/yyyy')}
-                        onFocus={() => setShowPicker({ type: 'departureDate', isVisible: true })}
+                        onFocus={() => openPicker('departureDate')}
                         style={styles.input}
                     />
                 );
@@ -219,7 +272,7 @@ export default function EditStageInfoScreen({ route, navigation }: Props) {
                     <TextInput
                         label="Heure de départ"
                         value={getTimeFromDate(formState.departureTime)}
-                        onFocus={() => setShowPicker({ type: 'departureTime', isVisible: true })}
+                        onFocus={() => openPicker('departureTime')}
                         style={styles.input}
                     />
                 );
@@ -260,10 +313,17 @@ export default function EditStageInfoScreen({ route, navigation }: Props) {
             />
             {showPicker.isVisible && (
                 <DateTimePicker
-                    value={new Date()}
+                    value={pickerDate}
                     mode={showPicker.type.includes('Time') ? 'time' : 'date'}
                     display="default"
-                    onChange={(event, selectedDate) => handlePickerChange(showPicker.type, event, selectedDate)}
+                    timeZoneName='UTC'
+                    onChange={(event, selectedDate) => {
+                        if (event.type === 'set' && selectedDate) {
+                            handlePickerChange(showPicker.type, event, selectedDate);
+                        } else {
+                            setPickerDate(tempDate); // Reset to the original date if cancelled
+                        }
+                    }}
                 />
             )}
         </KeyboardAvoidingView>

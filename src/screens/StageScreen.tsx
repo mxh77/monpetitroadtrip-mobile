@@ -82,7 +82,7 @@ export default function StageScreen({ route, navigation }: Props) {
       console.log(`Fetching from URL: ${url}`);
       const response = await fetch(url);
       const data = await response.json();
-      //console.log('Stage details fetched:', data);
+      console.log('Stage details fetched:', data);
       if (isMounted.current) {
         setStageTitle(data.name);
         setStageAddress(data.address);
