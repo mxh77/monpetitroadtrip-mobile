@@ -150,8 +150,6 @@ dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
     implementation project(':react-native-maps')  // Assurez-vous que react-native-maps est bien référencé
-    implementation 'com.google.android.gms:play-services-maps:17.0.1'  // Vérifiez que la version est à jour
-    implementation 'com.google.android.gms:play-services-location:17.0.0'  // Si vous utilisez la géolocalisation
 
 
     def isGifEnabled = (findProperty('expo.gif.enabled') ?: "") == "true";
@@ -178,5 +176,3 @@ dependencies {
         implementation jscFlavor
     }
 }
-
-apply plugin: 'com.google.gms.google-services'  // Ajoutez cette ligne à la fin du fichier

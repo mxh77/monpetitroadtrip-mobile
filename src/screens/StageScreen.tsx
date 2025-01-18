@@ -406,7 +406,6 @@ export default function StageScreen({ route, navigation }: Props) {
               title={marker.title}
               description={marker.description}
             >
-              <Icon name={marker.type} size={20} color="#6200ee" />
             </Marker>
           ))}
         </MapView>
