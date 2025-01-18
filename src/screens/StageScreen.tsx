@@ -126,6 +126,8 @@ export default function StageScreen({ route, navigation }: Props) {
           console.error('Erreur : l\'adresse du stage est indéfinie.');
         }
         if (stageCoords && isMounted.current) {
+          alert('Coordinates set' + stageCoords.latitude + stageCoords.longitude);
+
           setCoordinates(stageCoords);
         }
       
@@ -210,7 +212,8 @@ export default function StageScreen({ route, navigation }: Props) {
         return null;
       }
     } catch (error) {
-      console.error('Erreur lors du géocodage:', error);
+      console.error('Erreur lors du géocodage:', error.origin.error_message);
+      alert('Erreur lors du géocodage:' + error.origin.error_message)
       return null;
     }
   };
