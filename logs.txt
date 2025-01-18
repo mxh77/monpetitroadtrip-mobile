@@ -1,0 +1,573 @@
+01-18 08:47:44.866 24292 24325 I ReactNativeJS: 'Stage details fetched:', 'Chartres, France'
+01-18 08:47:44.868 24292 24325 I ReactNativeJS: Loading or fetching coordinates...
+01-18 08:47:44.870 24292 24325 I ReactNativeJS: Loading or fetching coordinates...
+01-18 08:47:44.874 24292 24325 I ReactNativeJS: Loading or fetching coordinates...
+01-18 08:47:44.878 24292 24325 I ReactNativeJS: Loading or fetching coordinates...
+01-18 08:47:44.880 24292 24325 I ReactNativeJS: Rendering StageScreen with data
+01-18 08:47:44.880 24292 24325 I ReactNativeJS: 'coordinates:', null
+01-18 08:47:44.881 24292 24325 I ReactNativeJS: 'Number of markers:', 0
+01-18 08:47:44.881 24292 24325 I ReactNativeJS: No coordinates found
+01-18 08:47:44.884 24292 24325 I ReactNativeJS: Rendering StageScreen with data
+01-18 08:47:44.885 24292 24325 I ReactNativeJS: 'coordinates:', null
+01-18 08:47:44.885 24292 24325 I ReactNativeJS: 'Number of markers:', 0
+01-18 08:47:44.885 24292 24325 I ReactNativeJS: No coordinates found
+01-18 08:47:44.887 24292 24325 I ReactNativeJS: StageScreen focused
+01-18 08:47:44.887 24292 24325 I ReactNativeJS: Hook fetching coordinates...
+01-18 08:47:44.887 24292 24325 I ReactNativeJS: Fetching coordinates...
+01-18 08:47:44.888 24292 24325 I ReactNativeJS: 'Geocoding stage address:', 'Chartres, France'
+01-18 08:47:44.890 24292 24325 I ReactNativeJS: Loading or fetching coordinates...
+01-18 08:47:44.898 24292 24338 D TrafficStats: tagSocket(5) with statsTag=0xffffffff, statsUid=-1
+01-18 08:47:45.004 24292 24325 I ReactNativeJS: Loading or fetching coordinates...
+01-18 08:47:45.008 24292 24292 W WindowOnBackDispatcher: OnBackInvokedCallback is not enabled for the application.
+01-18 08:47:45.008 24292 24292 W WindowOnBackDispatcher: Set 'android:enableOnBackInvokedCallback="true"' in the application manifest.
+01-18 08:47:45.044  1748  2179 D CoreBackPreview: Window{20090c6 u0 com.maxime.heron.monpetitroadtrip/com.maxime.heron.monpetitroadtrip.MainActivity}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@29e68d9, mPriority=0, mIsAnimationCallback=false}
+01-18 08:47:45.055 24292 24292 W TextView: onProvideContentCaptureStructure(): calling assumeLayout()
+01-18 08:47:45.055 24292 24292 W TextView: onProvideContentCaptureStructure(): calling assumeLayout()
+01-18 08:47:45.146 24292 24325 I ReactNativeJS: Loading or fetching coordinates...
+01-18 08:47:45.150 24292 24325 I ReactNativeJS: Markers set:
+01-18 08:47:45.155 24292 24325 I ReactNativeJS: Loading or fetching coordinates...
+01-18 08:47:45.158 24292 24325 I ReactNativeJS: Rendering StageScreen with data
+01-18 08:47:45.158 24292 24325 I ReactNativeJS: 'coordinates:', { latitude: 48.44385399999999, longitude: 1.489012 }
+01-18 08:47:45.159 24292 24325 I ReactNativeJS: 'Number of markers:', 3
+01-18 08:47:45.237 24292 24325 I ReactNativeJS: Finished fetching coordinates
+01-18 08:47:45.247 24292 24326 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.rnmaps.maps.SizeReportingShadowNode
+01-18 08:47:45.261 24292 24292 D MapsInitializer: preferredRenderer: LATEST
+01-18 08:47:45.261 24292 24292 D zzcc    : preferredRenderer: LATEST
+01-18 08:47:45.264 24292 24292 I zzcc    : Making Creator dynamically
+01-18 08:47:45.272 24292 24292 W onpetitroadtrip: ClassLoaderContext classpath size mismatch. expected=1, found=0 (DLC[];PCL[base.apk*1592661768]{PCL[/system/framework/org.apache.http.legacy.jar*2780533809]#PCL[/system/framework/com.android.media.remotedisplay.jar*1110477037]#PCL[/system/framework/com.android.location.provider.jar*3196002273]#PCL[/system_ext/framework/org.carconnectivity.android.digitalkey.timesync.jar*4023448470]#PCL[/system_ext/framework/androidx.window.extensions.jar*2571268766]#PCL[/system_ext/framework/androidx.window.sidecar.jar*582891276]} | DLC[];PCL[])
+01-18 08:47:45.274 24292 24292 I DynamiteModule: Considering local module com.google.android.gms.maps_core_dynamite:0 and remote module com.google.android.gms.maps_core_dynamite:244625201
+01-18 08:47:45.274 24292 24292 I DynamiteModule: Selected remote version of com.google.android.gms.maps_core_dynamite, version >= 244625201
+01-18 08:47:45.274 24292 24292 V DynamiteModule: Dynamite loader version >= 2, using loadModule2NoCrashUtils
+01-18 08:47:45.282 24292 24292 W System  : ClassLoader referenced unknown path: 
+01-18 08:47:45.282 24292 24292 D nativeloader: Configuring clns-10 for other apk . target_sdk_version=35, uses_libraries=, library_path=/data/app/~~jrbaf96Oq7pdy8US9qv9_g==/com.google.android.gms-VHk2HEMXLrYh0XOhwxpTYw==/lib/arm64:/data/app/~~jrbaf96Oq7pdy8US9qv9_g==/com.google.android.gms-VHk2HEMXLrYh0XOhwxpTYw==/base.apk!/lib/arm64-v8a, permitted_path=/data:/mnt/expand:/data/user/0/com.google.android.gms
+01-18 08:47:45.305 24292 24292 D nativeloader: Configuring clns-11 for other apk . target_sdk_version=34, uses_libraries=ALL, library_path=/data/user_de/0/com.google.android.gms/app_chimera/m/000000bb/dl-MapsCoreDynamite.integ_244625201100400.apk!/lib/arm64-v8a, permitted_path=/data:/mnt/expand
+01-18 08:47:45.305 24292 24292 D nativeloader: Extending system_exposed_libraries: libedgetpu_dba.google.so
+01-18 08:47:45.307 24292 24292 D nativeloader: Load /data/user_de/0/com.google.android.gms/app_chimera/m/000000bb/dl-MapsCoreDynamite.integ_244625201100400.apk!/lib/arm64-v8a/libgmm-jni.so using isolated ns clns-11 (caller=/data/user_de/0/com.google.android.gms/app_chimera/m/000000bb/dl-MapsCoreDynamite.integ_244625201100400.apk): ok
+01-18 08:47:45.307 24292 24292 I native  : I0000 00:00:1737186465.307745   24292 jni_init.cc:30] Initializing JNI...
+01-18 08:47:45.308 24292 24292 I Google Android Maps SDK: Google Play services client version: 18020000
+01-18 08:47:45.314 24292 24292 D ho      : maps_core_dynamite module version in use (0 represents standalone library): 244625201
+01-18 08:47:45.318  9515  9648 D TrafficStats: tagSocket(110) with statsTag=0x1065fff, statsUid=10201
+01-18 08:47:45.324 24292 24292 D ho      : Added event: 110
+01-18 08:47:45.324 24292 24292 D ho      : Added event: 112
+01-18 08:47:45.324 24292 24292 D MapsInitializer: loadedRenderer: LATEST
+01-18 08:47:45.324 24292 24292 D AirMapRenderer: LATEST
+01-18 08:47:45.324 24292 24292 D MapsInitializer: preferredRenderer: null
+01-18 08:47:45.324 24292 24292 D zzcc    : preferredRenderer: null
+01-18 08:47:45.325 24292 24292 I Google Android Maps SDK: Google Play services package version: 245034036
+01-18 08:47:45.325 24292 24292 I Google Android Maps SDK: Google Play services maps renderer version(maps_core): 244625201
+01-18 08:47:45.326 24292 24292 D de      : about to start loading native library asynchronously
+01-18 08:47:45.328 24292 24292 W t       : Suppressed StrictMode policy violation: StrictModeDiskReadViolation
+01-18 08:47:45.330 24292 24292 I o       : Using GMM server: https://clients4.google.com/glm/mmap
+01-18 08:47:45.330 24292 24292 W t       : Suppressed StrictMode policy violation: StrictModeDiskReadViolation
+01-18 08:47:45.330 24292 24292 W t       : Suppressed StrictMode policy violation: StrictModeDiskWriteViolation
+01-18 08:47:45.331 24292 24292 D o       : Using Non-null serverVersionMetadataManager to load previous metadata.
+01-18 08:47:45.332 24292 24292 D o       : Previous session server version metadata loaded: CggIBhDFxKG8BgoICAMQgeKdvAYKCggEEL/WorwGGAEKCAgBEODslrwG
+01-18 08:47:45.335 24292 24408 D DataRequestDispatcher: Included server version metadata in dimens
+01-18 08:47:45.338 24292 24292 I bs      : Selected MapView map renderer: P
+01-18 08:47:45.339 24292 24292 D ho      : maps_core_dynamite module version in use (0 represents standalone library): 244625201
+01-18 08:47:45.340  1748  2315 D ConnectivityService: NetReassign [no changes] [c 0] [a 2] [i 1]
+01-18 08:47:45.340 24292 24397 W t       : Suppressed StrictMode policy violation: StrictModeDiskReadViolation
+01-18 08:47:45.340 24292 24397 W t       : Suppressed StrictMode policy violation: StrictModeDiskWriteViolation
+01-18 08:47:45.343 24292 24396 W t       : Suppressed StrictMode policy violation: StrictModeDiskReadViolation
+01-18 08:47:45.344 24292 24397 D gr      : ParameterGroupProto with type 147 is not updated
+01-18 08:47:45.344 24292 24397 W t       : Suppressed StrictMode policy violation: StrictModeDiskReadViolation
+01-18 08:47:45.344 24292 24397 I e       : Token loaded from file. Expires in: 431963594 ms.
+01-18 08:47:45.344 24292 24397 I e       : Scheduling next attempt in 431663 seconds.
+01-18 08:47:45.406 24292 24292 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+01-18 08:47:45.408 24292 24292 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+01-18 08:47:45.412 24292 24292 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+01-18 08:47:45.412 24292 24292 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+01-18 08:47:45.413 24292 24292 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+01-18 08:47:45.413 24292 24292 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+01-18 08:47:45.413 24292 24292 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+01-18 08:47:45.414 24292 24425 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+01-18 08:47:45.415 24292 24292 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+01-18 08:47:45.415 24292 24292 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+01-18 08:47:45.415 24292 24292 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+01-18 08:47:45.416 24292 24292 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+01-18 08:47:45.418 24292 24292 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+01-18 08:47:45.418 24292 24292 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+01-18 08:47:45.424  1748  4843 D ConnectivityService: requestNetwork for uid/pid:10412/24292 activeRequest: null callbackRequest: 23292 [NetworkRequest [ REQUEST id=23293, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10412 RequestorUid: 10412 RequestorPkg: com.maxime.heron.monpetitroadtrip UnderlyingNetworks: Null] ]] callback flags: 0 order: 2147483647 isUidTracked: false declaredMethods: AVAIL|LOST
+01-18 08:47:45.425 24292 24426 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+01-18 08:47:45.426 24292 24424 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+01-18 08:47:45.427  1748  2307 D OemPaidWifiNetworkFactory: got request NetworkRequest [ REQUEST id=23293, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10412 RequestorUid: 10412 RequestorPkg: com.maxime.heron.monpetitroadtrip UnderlyingNetworks: Null] ]
+01-18 08:47:45.427  1748  2307 D MultiInternetWifiNetworkFactory: got request NetworkRequest [ REQUEST id=23293, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10412 RequestorUid: 10412 RequestorPkg: com.maxime.heron.monpetitroadtrip UnderlyingNetworks: Null] ]
+01-18 08:47:45.427  1748  2307 D WifiNetworkFactory: got request NetworkRequest [ REQUEST id=23293, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10412 RequestorUid: 10412 RequestorPkg: com.maxime.heron.monpetitroadtrip UnderlyingNetworks: Null] ]
+01-18 08:47:45.428  1748  2307 D UntrustedWifiNetworkFactory: got request NetworkRequest [ REQUEST id=23293, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10412 RequestorUid: 10412 RequestorPkg: com.maxime.heron.monpetitroadtrip UnderlyingNetworks: Null] ]
+01-18 08:47:45.428  1748  2315 D ConnectivityService: NetReassign [23293 : null ÔåÆ 587] [c 0] [a 1] [i 2]
+01-18 08:47:45.429 24292 24418 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+01-18 08:47:45.430 24292 24426 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+01-18 08:47:45.432 24292 24418 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+01-18 08:47:45.432 24292 24418 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+01-18 08:47:45.432 24292 24426 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+01-18 08:47:45.433  1748  2179 D ActivityManager: sync unfroze 17111 com.google.android.gms for 7
+01-18 08:47:45.435  1748  2179 D ActivityManager: sync unfroze 18824 com.google.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:0 for 7
+01-18 08:47:45.436  1748  2179 W ProcessStats: Tracking association SourceState{1a916b7 com.maxime.heron.monpetitroadtrip/10412 BTop #1004937} whose proc state 2 is better than process ProcessState{449e9cd com.google.android.gms/10163 pkg=com.google.android.gms} proc state 14 (5 skipped)
+01-18 08:47:45.449 24292 24426 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+01-18 08:47:45.450  9515 23500 I PhenotypeResourceReader: unable to find any Phenotype resource metadata for com.maxime.heron.monpetitroadtrip
+01-18 08:47:45.450 24292 24425 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+01-18 08:47:45.456 24292 24425 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+01-18 08:47:45.456 24292 24425 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+01-18 08:47:45.458  9515 23500 I PhenotypeResourceReader: unable to find any Phenotype resource metadata for com.maxime.heron.monpetitroadtrip
+01-18 08:47:45.459  9515 23966 I PhenotypeResourceReader: unable to find any Phenotype resource metadata for com.maxime.heron.monpetitroadtrip
+01-18 08:47:45.472 24292 24437 W JavaCronetEngine: using the fallback Cronet Engine implementation. Performance will suffer and many HTTP client features, including caching, will not work.
+01-18 08:47:45.473 24292 24437 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+01-18 08:47:45.474 24292 24437 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+01-18 08:47:45.474 24292 24437 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+01-18 08:47:45.480 24292 24402 D TrafficStats: tagSocket(192) with statsTag=0x99e6744e, statsUid=-1
+01-18 08:47:45.512 24292 24450 D TrafficStats: tagSocket(222) with statsTag=0xffffffff, statsUid=-1
+01-18 08:47:45.513 24292 24451 D TrafficStats: tagSocket(225) with statsTag=0xffffffff, statsUid=-1
+01-18 08:47:45.513 24292 24325 E ReactNativeJS: TypeError: undefined is not a function
+01-18 08:47:45.513 24292 24325 E ReactNativeJS: 
+01-18 08:47:45.513 24292 24325 E ReactNativeJS: This error is located at:
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in MapMarker
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in AIRMap
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in MapView
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in RCTView
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in Unknown
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in RCTView
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in Unknown
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in StageScreen
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in StaticContainer
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in EnsureSingleNavigator
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in SceneView
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in RCTView
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in Unknown
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in RCTView
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in Unknown
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in RCTView
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in Unknown
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in CardSheet
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in RCTView
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in Unknown
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in Unknown
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in PanGestureHandler
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in PanGestureHandler
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in RCTView
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in Unknown
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in Unknown
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in RCTView
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in Unknown
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in Card
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in CardContainerInner
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in RNSScreen
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in Unknown
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in Suspender
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in Suspense
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in Freeze
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in DelayedFreeze
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in InnerScreen
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in Unknown
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in MaybeScreen
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in RNSScreenContainer
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in ScreenContainer
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in MaybeScreenContainer
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in RCTView
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in Unknown
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in CardStack
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in RNCSafeAreaProvider
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in SafeAreaProvider
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in SafeAreaProviderCompat
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in RNGestureHandlerRootView
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in GestureHandlerRootView
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in StackView
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in PreventRemoveProvider
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in NavigationContent
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in Unknown
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in StackNavigator
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in ThemeProvider
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in EnsureSingleNavigator
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in BaseNavigationContainer
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in NavigationContainerInner
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in App
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in RCTView
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in Unknown
+01-18 08:47:45.513 24292 24325 E ReactNativeJS:     in AppContainer, js engine: hermes
+01-18 08:47:45.514 24292 24462 D TrafficStats: tagSocket(229) with statsTag=0xffffffff, statsUid=-1
+01-18 08:47:45.515 24292 24463 D TrafficStats: tagSocket(250) with statsTag=0xffffffff, statsUid=-1
+01-18 08:47:45.515 24292 24466 D TrafficStats: tagSocket(255) with statsTag=0xffffffff, statsUid=-1
+01-18 08:47:45.516 24292 24465 D TrafficStats: tagSocket(237) with statsTag=0xffffffff, statsUid=-1
+01-18 08:47:45.516 24292 24325 E ReactNativeJS: TypeError: undefined is not a function
+01-18 08:47:45.516 24292 24325 E ReactNativeJS: 
+01-18 08:47:45.516 24292 24325 E ReactNativeJS: This error is located at:
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in MapMarker
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in AIRMap
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in MapView
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in RCTView
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in Unknown
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in RCTView
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in Unknown
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in StageScreen
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in StaticContainer
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in EnsureSingleNavigator
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in SceneView
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in RCTView
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in Unknown
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in RCTView
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in Unknown
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in RCTView
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in Unknown
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in CardSheet
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in RCTView
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in Unknown
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in Unknown
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in PanGestureHandler
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in PanGestureHandler
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in RCTView
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in Unknown
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in Unknown
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in RCTView
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in Unknown
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in Card
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in CardContainerInner
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in RNSScreen
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in Unknown
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in Suspender
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in Suspense
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in Freeze
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in DelayedFreeze
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in InnerScreen
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in Unknown
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in MaybeScreen
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in RNSScreenContainer
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in ScreenContainer
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in MaybeScreenContainer
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in RCTView
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in Unknown
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in CardStack
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in RNCSafeAreaProvider
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in SafeAreaProvider
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in SafeAreaProviderCompat
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in RNGestureHandlerRootView
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in GestureHandlerRootView
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in StackView
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in PreventRemoveProvider
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in NavigationContent
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in Unknown
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in StackNavigator
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in ThemeProvider
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in EnsureSingleNavigator
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in BaseNavigationContainer
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in NavigationContainerInner
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in App
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in RCTView
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in Unknown
+01-18 08:47:45.516 24292 24325 E ReactNativeJS:     in AppContainer, js engine: hermes
+01-18 08:47:45.518 24292 24469 D TrafficStats: tagSocket(258) with statsTag=0xffffffff, statsUid=-1
+01-18 08:47:45.518 24292 24464 D TrafficStats: tagSocket(259) with statsTag=0xffffffff, statsUid=-1
+01-18 08:47:45.522 24292 24325 I ReactNativeJS: StageScreen unmounted
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative: TypeError: undefined is not a function
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative: 
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative: This error is located at:
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in MapMarker
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in AIRMap
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in MapView
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in RCTView
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in Unknown
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in RCTView
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in Unknown
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in StageScreen
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in StaticContainer
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in EnsureSingleNavigator
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in SceneView
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in RCTView
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in Unknown
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in RCTView
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in Unknown
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in RCTView
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in Unknown
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in CardSheet
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in RCTView
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in Unknown
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in Unknown
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in PanGestureHandler
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in PanGestureHandler
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in RCTView
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in Unknown
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in Unknown
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in RCTView
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in Unknown
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in Card
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in CardContainerInner
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in RNSScreen
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in Unknown
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in Suspender
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in Suspense
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in Freeze
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in DelayedFreeze
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in InnerScreen
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in Unknown
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in MaybeScreen
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in RNSScreenContainer
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in ScreenContainer
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in MaybeScreenContainer
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in RCTView
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in Unknown
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in CardStack
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in RNCSafeAreaProvider
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in SafeAreaProvider
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in SafeAreaProviderCompat
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in RNGestureHandlerRootView
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in GestureHandlerRootView
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in StackView
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in PreventRemoveProvider
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in NavigationContent
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in Unknown
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in StackNavigator
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in ThemeProvider
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in EnsureSingleNavigator
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in BaseNavigationContainer
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in NavigationContainerInner
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in App
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in RCTView
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in Unknown
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative:     in AppContainer, js engine: hermes, stack:
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative: render@1:1913011
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative: finishClassComponent@1:1168265
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative: updateClassComponent@1:1168148
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative: beginWork@1:1174105
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative: performUnitOfWork@1:1193600
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative: workLoopSync@1:1192731
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative: renderRootSync@1:1192563
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative: flushSyncWorkAcrossRoots_impl@1:1146685
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative: batchedUpdatesImpl@1:1205058
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative: batchedUpdates$1@1:1139416
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative: _receiveRootNodeIDEvent@1:1139702
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative: receiveEvent@1:1202330
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative: __callFunction@1:143485
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative: anonymous@1:140977
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative: __guard@1:142842
+01-18 08:47:45.533 24292 24326 E unknown:ReactNative: callFunctionReturnFlushedQueue@1:140935
+01-18 08:47:45.535 24292 24326 E AndroidRuntime: FATAL EXCEPTION: mqt_native_modules
+01-18 08:47:45.535 24292 24326 E AndroidRuntime: Process: com.maxime.heron.monpetitroadtrip, PID: 24292
+01-18 08:47:45.535 24292 24326 E AndroidRuntime: com.facebook.react.common.JavascriptException: TypeError: undefined is not a function
+01-18 08:47:45.535 24292 24326 E AndroidRuntime: 
+01-18 08:47:45.535 24292 24326 E AndroidRuntime: This error is located at:
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in MapMarker
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in AIRMap
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in MapView
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in RCTView
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in Unknown
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in RCTView
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in Unknown
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in StageScreen
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in StaticContainer
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in EnsureSingleNavigator
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in SceneView
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in RCTView
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in Unknown
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in RCTView
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in Unknown
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in RCTView
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in Unknown
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in CardSheet
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in RCTView
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in Unknown
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in Unknown
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in PanGestureHandler
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in PanGestureHandler
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in RCTView
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in Unknown
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in Unknown
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in RCTView
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in Unknown
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in Card
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in CardContainerInner
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in RNSScreen
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in Unknown
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in Suspender
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in Suspense
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in Freeze
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in DelayedFreeze
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in InnerScreen
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in Unknown
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in MaybeScreen
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in RNSScreenContainer
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in ScreenContainer
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in MaybeScreenContainer
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in RCTView
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in Unknown
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in CardStack
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in RNCSafeAreaProvider
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in SafeAreaProvider
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in SafeAreaProviderCompat
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in RNGestureHandlerRootView
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in GestureHandlerRootView
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in StackView
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in PreventRemoveProvider
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in NavigationContent
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in Unknown
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in StackNavigator
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in ThemeProvider
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in EnsureSingleNavigator
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in BaseNavigationContainer
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in NavigationContainerInner
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in App
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in RCTView
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in Unknown
+01-18 08:47:45.535 24292 24326 E AndroidRuntime:     in AppContainer, js engine: hermes, stack:
+01-18 08:47:45.535 24292 24326 E AndroidRuntime: render@1:1913011
+01-18 08:47:45.535 24292 24326 E AndroidRuntime: finishClassComponent@1:1168265
+01-18 08:47:45.535 24292 24326 E AndroidRuntime: updateClassComponent@1:1168148
+01-18 08:47:45.535 24292 24326 E AndroidRuntime: beginWork@1:1174105
+01-18 08:47:45.535 24292 24326 E AndroidRuntime: performUnitOfWork@1:1193600
+01-18 08:47:45.535 24292 24326 E AndroidRuntime: workLoopSync@1:1192731
+01-18 08:47:45.535 24292 24326 E AndroidRuntime: renderRootSync@1:1192563
+01-18 08:47:45.535 24292 24326 E AndroidRuntime: flushSyncWorkAcrossRoots_impl@1:1146685
+01-18 08:47:45.535 24292 24326 E AndroidRuntime: batchedUpdatesImpl@1:1205058
+01-18 08:47:45.535 24292 24326 E AndroidRuntime: batchedUpdates$1@1:1139416
+01-18 08:47:45.535 24292 24326 E AndroidRuntime: _receiveRootNodeIDEvent@1:1139702
+01-18 08:47:45.535 24292 24326 E AndroidRuntime: receiveEvent@1:1202330
+01-18 08:47:45.535 24292 24326 E AndroidRuntime: __callFunction@1:143485
+01-18 08:47:45.535 24292 24326 E AndroidRuntime: anonymous@1:140977
+01-18 08:47:45.535 24292 24326 E AndroidRuntime: __guard@1:142842
+01-18 08:47:45.535 24292 24326 E AndroidRuntime: callFunctionReturnFlushedQueue@1:140935
+01-18 08:47:45.535 24292 24326 E AndroidRuntime: 
+01-18 08:47:45.535 24292 24326 E AndroidRuntime: 	at com.facebook.react.modules.core.ExceptionsManagerModule.reportException(ExceptionsManagerModule.kt:52)
+01-18 08:47:45.535 24292 24326 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+01-18 08:47:45.535 24292 24326 E AndroidRuntime: 	at com.facebook.react.bridge.JavaMethodWrapper.invoke(JavaMethodWrapper.java:372)
+01-18 08:47:45.535 24292 24326 E AndroidRuntime: 	at com.facebook.react.bridge.JavaModuleWrapper.invoke(JavaModuleWrapper.java:146)
+01-18 08:47:45.535 24292 24326 E AndroidRuntime: 	at com.facebook.jni.NativeRunnable.run(Native Method)
+01-18 08:47:45.535 24292 24326 E AndroidRuntime: 	at android.os.Handler.handleCallback(Handler.java:991)
+01-18 08:47:45.535 24292 24326 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:102)
+01-18 08:47:45.535 24292 24326 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadHandler.dispatchMessage(MessageQueueThreadHandler.java:27)
+01-18 08:47:45.535 24292 24326 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:232)
+01-18 08:47:45.535 24292 24326 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:317)
+01-18 08:47:45.535 24292 24326 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadImpl.lambda$startNewBackgroundThread$2(MessageQueueThreadImpl.java:217)
+01-18 08:47:45.535 24292 24326 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadImpl$$ExternalSyntheticLambda1.run(D8$$SyntheticClass:0)
+01-18 08:47:45.535 24292 24326 E AndroidRuntime: 	at java.lang.Thread.run(Thread.java:1012)
+01-18 08:47:45.538  1748 24472 I DropBoxManagerService: add tag=data_app_crash isTagEnabled=true flags=0x2
+01-18 08:47:45.538  1748  2746 W ActivityTaskManager:   Force finishing activity com.maxime.heron.monpetitroadtrip/.MainActivity
+01-18 08:47:45.539  2403  2430 V WindowManagerShell: Transition requested (#6890): android.os.BinderProxy@4684b01 TransitionRequestInfo { type = CLOSE, triggerTask = null, pipTask = null, remoteTransition = null, displayChange = null, flags = 10, debugId = 6890 }
+01-18 08:47:45.544 24292 24326 I Process : Sending signal. PID: 24292 SIG: 9
+01-18 08:47:45.616  9515  9648 D TrafficStats: tagSocket(163) with statsTag=0x1065fff, statsUid=10187
+01-18 08:47:45.624  1748  2179 I ActivityManager: Process com.maxime.heron.monpetitroadtrip (pid 24292) has died: fg  TOP 
+01-18 08:47:45.625  1748  4104 I ImeTracker: com.maxime.heron.monpetitroadtrip:b45341e5: onRequestHide at ORIGIN_SERVER reason HIDE_REMOVE_CLIENT fromUser false
+01-18 08:47:45.625  1748  4104 I ImeTracker: com.maxime.heron.monpetitroadtrip:b45341e5: onCancelled at PHASE_SERVER_SHOULD_HIDE
+01-18 08:47:45.626   701   701 W powerhal-libperfmgr: sched_setattr failed for thread 24320, err=3
+01-18 08:47:45.626   701   701 W powerhal-libperfmgr: sched_setattr failed for thread 24321, err=3
+01-18 08:47:45.626   701   701 W powerhal-libperfmgr: sched_setattr failed for thread 24307, err=3
+01-18 08:47:45.626   701   701 W powerhal-libperfmgr: sched_setattr failed for thread 24320, err=3
+01-18 08:47:45.626   701   701 W powerhal-libperfmgr: sched_setattr failed for thread 24321, err=3
+01-18 08:47:45.626   701   701 W powerhal-libperfmgr: sched_setattr failed for thread 24307, err=3
+01-18 08:47:45.626  1748  2315 D ConnectivityService: releasing NetworkRequest [ REQUEST id=23293, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10412 RequestorUid: 10412 RequestorPkg: com.maxime.heron.monpetitroadtrip UnderlyingNetworks: Null] ] (release request)
+01-18 08:47:45.627  1748  4835 I WindowManager: WIN DEATH: Window{20090c6 u0 com.maxime.heron.monpetitroadtrip/com.maxime.heron.monpetitroadtrip.MainActivity}
+01-18 08:47:45.627  1214  1214 I Zygote  : Process 24292 exited due to signal 9 (Killed)
+01-18 08:47:45.628  1748  1921 I libprocessgroup: Removed cgroup /sys/fs/cgroup/uid_10412/pid_24292
+01-18 08:47:45.633  1748  4835 I WindowManager: WIN DEATH: Window{11114da u0 com.maxime.heron.monpetitroadtrip/com.maxime.heron.monpetitroadtrip.MainActivity}
+01-18 08:47:45.638  1748  2315 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
+01-18 08:47:45.638  3977  4031 D ForegroundUtils: UID: 10412 deleted.
+01-18 08:47:45.642 25551 25551 D StatsLog: LAUNCHER_ONRESUME
+01-18 08:47:45.642 25551 25551 D NexusLauncherModelDelegate: notifySmartspaceEvent: SmartspaceTargetEvent{mSmartspaceTarget=null, mSmartspaceActionId='null', mEventType=6}
+01-18 08:47:45.643  1748  1825 W ActivityManager: setHasOverlayUi called on unknown pid: 24292
+01-18 08:47:45.643 25551 25551 D BaseDepthController: mSurface is null and mCurrentBlur is: 0
+01-18 08:47:45.645  1748  1823 D DisplayManagerService: Drop pending events for gone uid 10412
+01-18 08:47:45.648  1748  2315 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
+01-18 08:47:45.648  1748  2315 D InetDiagMessage: Destroyed live tcp sockets for uids={10412} in 11ms
+01-18 08:47:45.649  1748  2315 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
+01-18 08:47:45.650  1748  2315 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
+01-18 08:47:45.650  1748  2315 D InetDiagMessage: Destroyed live tcp sockets for uids={20412} in 2ms
+01-18 08:47:45.651 25551 25551 D BaseDepthController: setSurface:
+01-18 08:47:45.651 25551 25551 D BaseDepthController: 	mWaitingOnSurfaceValidity: false
+01-18 08:47:45.651 25551 25551 D BaseDepthController: 	mSurface: Surface(name=com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity)/@0xe2ad450
+01-18 08:47:45.658 25551 25571 D QuickstepModelDelegate: notifyAppTargetEvent action=1 launchLocation=
+01-18 08:47:45.667  2403  3037 V WindowManagerShell: onTransitionReady(transaction=7507603420230)
+01-18 08:47:45.667  2403  2430 V WindowManagerShell: onTransitionReady (#6890) android.os.BinderProxy@4684b01: {id=6890 t=CLOSE f=0x10 trk=0 r=[0@Point(0, 0)] c=[{WCT{android.window.IWindowContainerToken$Stub$Proxy@63dbe32} m=TO_FRONT f=SHOW_WALLPAPER|MOVE_TO_TOP leash=Surface(name=Task=1)/@0xb086da6 sb=Rect(0, 0 - 1008, 2244) eb=Rect(0, 0 - 1008, 2244) epz=Point(1008, 2244) d=0 taskParent=-1},{WCT{android.window.IWindowContainerToken$Stub$Proxy@4e96783} m=CLOSE f=NONE leash=Surface(name=Task=4677)/@0x86373e7 sb=Rect(0, 0 - 1008, 2244) eb=Rect(0, 0 - 1008, 2244) epz=Point(1008, 2244) d=0 taskParent=-1},{null m=TO_FRONT f=IS_WALLPAPER leash=Surface(name=WallpaperWindowToken{39f2f48 token=android.os.Binder@705953a})/@0xb52eb94 sb=Rect(0, 0 - 1008, 2244) eb=Rect(0, 0 - 1008, 2244) epz=Point(1008, 2244) d=0}]}
+01-18 08:47:45.668  2403  2430 V WindowManagerShell: Playing animation for (#6890) android.os.BinderProxy@4684b01@0
+01-18 08:47:45.668  2403  2430 V WindowManagerShell:  try handler com.android.wm.shell.transition.DefaultMixedHandler@e6f87d6
+01-18 08:47:45.668  2403  2430 V WindowManagerShell:  try handler com.android.wm.shell.keyguard.KeyguardTransitionHandler@6643a57
+01-18 08:47:45.668  2403  2430 V WindowManagerShell:  try handler com.android.wm.shell.pip.PipTransition@8bd8944
+01-18 08:47:45.668  2403  2430 V WindowManagerShell:  try handler com.android.wm.shell.activityembedding.ActivityEmbeddingController@71e5a2d
+01-18 08:47:45.668  2403  2430 V WindowManagerShell:  try handler com.android.wm.shell.recents.RecentsTransitionHandler@3344b62
+01-18 08:47:45.668  2403  2430 V ShellRecents: RecentsTransitionHandler.startAnimation: no controller found
+01-18 08:47:45.668  2403  2430 V WindowManagerShell:  try handler com.android.wm.shell.splitscreen.StageCoordinator@c0824f3
+01-18 08:47:45.668  2403  2430 V WindowManagerShell:  try handler com.android.wm.shell.back.BackAnimationController$BackTransitionHandler@1abf5b0
+01-18 08:47:45.668  3977  4031 D ForegroundUtils: Foreground UID status:
+01-18 08:47:45.668  2403  2430 V WindowManagerShell:  try handler com.android.wm.shell.transition.RemoteTransitionHandler@1336c29
+01-18 08:47:45.668  3977  4031 D ForegroundUtils: UID: 10087 is in foreground: false
+01-18 08:47:45.668  2403  2430 V WindowManagerShell: Transition doesn't have explicit remote, search filters for match for {id=6890 t=CLOSE f=0x10 trk=0 r=[0@Point(0, 0)] c=[{WCT{android.window.IWindowContainerToken$Stub$Proxy@63dbe32} m=TO_FRONT f=SHOW_WALLPAPER|MOVE_TO_TOP leash=Surface(name=Task=1)/@0xb086da6 sb=Rect(0, 0 - 1008, 2244) eb=Rect(0, 0 - 1008, 2244) epz=Point(1008, 2244) d=0 taskParent=-1},{WCT{android.window.IWindowContainerToken$Stub$Proxy@4e96783} m=CLOSE f=NONE leash=Surface(name=Task=4677)/@0x86373e7 sb=Rect(0, 0 - 1008, 2244) eb=Rect(0, 0 - 1008, 2244) epz=Point(1008, 2244) d=0 taskParent=-1},{null m=TO_FRONT f=IS_WALLPAPER leash=Surface(name=WallpaperWindowToken{39f2f48 token=android.os.Binder@705953a})/@0xb52eb94 sb=Rect(0, 0 - 1008, 2244) eb=Rect(0, 0 - 1008, 2244) epz=Point(1008, 2244) d=0}]}
+01-18 08:47:45.668  3977  4031 D ForegroundUtils: UID: 10092 is in foreground: false
+01-18 08:47:45.668  3977  4031 D ForegroundUtils: UID: 10139 is in foreground: false
+01-18 08:47:45.668  2403  2430 V WindowManagerShell:  Checking filter Pair{{types=[] flags=0x0] notFlags=0x0 checks=[{atype=undefined independent=true modes=[CLOSE,TO_BACK] flags=IN_TASK_WITH_EMBEDDED_ACTIVITY mustBeTask=false order=ANY topActivity=null launchCookie=null taskFragmentToken=android.os.BinderProxy@787348a}]} RemoteTransition { remoteTransition = android.window.IRemoteTransition$Stub$Proxy@34f9afb, appThread = android.app.IApplicationThread$Stub$Proxy@33fa718, debugName = overlayBackTransition }}
+01-18 08:47:45.668  3977  4031 D ForegroundUtils: UID: 10147 is in foreground: false
+01-18 08:47:45.668  3977  4031 D ForegroundUtils: UID: 10158 is in foreground: true
+01-18 08:47:45.668  3977  4031 D ForegroundUtils: UID: 10163 is in foreground: true
+01-18 08:47:45.668  2403  2430 V WindowManagerShell:  Checking filter Pair{{types=[] flags=0x0] notFlags=0x0 checks=[{atype=dream independent=true modes=[OPEN,TO_FRONT] flags=NONE mustBeTask=false order=ANY topActivity=null launchCookie=null},{atype=home independent=true modes=[CLOSE,TO_BACK] flags=NONE mustBeTask=false order=ANY topActivity=null launchCookie=null}]} RemoteTransition { remoteTransition = android.window.IRemoteTransition$Stub$Proxy@b93a571, appThread = android.app.IApplicationThread$Stub$Proxy@ac0f56, debugName = LauncherToDream }}
+01-18 08:47:45.668  3977  4031 D ForegroundUtils: UID: 10171 is in foreground: false
+01-18 08:47:45.668  3977  4031 D ForegroundUtils: UID: 10190 is in foreground: false
+01-18 08:47:45.668  3977  4031 D ForegroundUtils: UID: 10197 is in foreground: true
+01-18 08:47:45.668  2403  2430 V WindowManagerShell:  Checking filter Pair{{types=[] flags=0x0] notFlags=0x100 checks=[{atype=home independent=true modes=[OPEN,TO_FRONT] flags=NONE mustBeTask=false order=TOP topActivity=ComponentInfo{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity} launchCookie=null},{atype=standard independent=true modes=[CLOSE,TO_BACK] flags=NONE mustBeTask=false order=ANY topActivity=null launchCookie=null},{NOT atype=undefined independent=true modes=[] flags=NONE mustBeTask=true order=ANY topActivity=null launchCookie=null customAnim=true}]} RemoteTransition { remoteTransition = android.window.IRemoteTransition$Stub$Proxy@872ebd7, appThread = android.app.IApplicationThread$Stub$Proxy@c141cc4, debugName = QuickstepLaunchHome }}
+01-18 08:47:45.668  3977  4031 D ForegroundUtils: UID: 10213 is in foreground: true
+01-18 08:47:45.668  3977  4031 D ForegroundUtils: UID: 10225 is in foreground: true
+01-18 08:47:45.668  3977  4031 D ForegroundUtils: UID: 10244 is in foreground: false
+01-18 08:47:45.668  3977  4031 D ForegroundUtils: UID: 10263 is in foreground: true
+01-18 08:47:45.668  2403  2430 D RemoteTransitionHandler: Found filterPair{{types=[] flags=0x0] notFlags=0x100 checks=[{atype=home independent=true modes=[OPEN,TO_FRONT] flags=NONE mustBeTask=false order=TOP topActivity=ComponentInfo{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity} launchCookie=null},{atype=standard independent=true modes=[CLOSE,TO_BACK] flags=NONE mustBeTask=false order=ANY topActivity=null launchCookie=null},{NOT atype=undefined independent=true modes=[] flags=NONE mustBeTask=true order=ANY topActivity=null launchCookie=null customAnim=true}]} RemoteTransition { remoteTransition = android.window.IRemoteTransition$Stub$Proxy@872ebd7, appThread = android.app.IApplicationThread$Stub$Proxy@c141cc4, debugName = QuickstepLaunchHome }}
+01-18 08:47:45.668  3977  4031 D ForegroundUtils: UID: 10271 is in foreground: false
+01-18 08:47:45.668  2403  2430 V WindowManagerShell:  Delegate animation for (#6890) to RemoteTransition { remoteTransition = android.window.IRemoteTransition$Stub$Proxy@872ebd7, appThread = android.app.IApplicationThread$Stub$Proxy@c141cc4, debugName = QuickstepLaunchHome }
+01-18 08:47:45.668  3977  4031 D ForegroundUtils: UID: 10278 is in foreground: false
+01-18 08:47:45.674 25551 25551 D b/311077782: LauncherAnimationRunner.setAnimation
+01-18 08:47:45.677  1748  1822 V WindowManager: Sent Transition (#6890) createdAt=01-18 08:47:45.538 via request=TransitionRequestInfo { type = CLOSE, triggerTask = null, pipTask = null, remoteTransition = null, displayChange = null, flags = 10, debugId = 6890 }
+01-18 08:47:45.677  1748  1822 V WindowManager:     startWCT=WindowContainerTransaction { changes = {} hops = [] errorCallbackToken=null taskFragmentOrganizer=null }
+01-18 08:47:45.677  1748  1822 V WindowManager:     info={id=6890 t=CLOSE f=0x10 trk=0 r=[0@Point(0, 0)] c=[
+01-18 08:47:45.677  1748  1822 V WindowManager:         {WCT{RemoteToken{4bb62f9 Task{d7a4095 #1 type=home isResizeable=true minWidth=-1 minHeight=-1}}} m=TO_FRONT f=SHOW_WALLPAPER|MOVE_TO_TOP leash=Surface(name=Task=1)/@0xb019370 sb=Rect(0, 0 - 1008, 2244) eb=Rect(0, 0 - 1008, 2244) epz=Point(1008, 2244) d=0 taskParent=-1},
+01-18 08:47:45.677  1748  1822 V WindowManager:         {WCT{RemoteToken{91a885d Task{e8649ed #4677 type=standard A=10412:com.maxime.heron.monpetitroadtrip isResizeable=true minWidth=-1 minHeight=-1}}} m=CLOSE f=NONE leash=Surface(name=Task=4677)/@0x1745b21 sb=Rect(0, 0 - 1008, 2244) eb=Rect(0, 0 - 1008, 2244) epz=Point(1008, 2244) d=0 taskParent=-1},
+01-18 08:47:45.677  1748  1822 V WindowManager:         {null m=TO_FRONT f=IS_WALLPAPER leash=Surface(name=WallpaperWindowToken{39f2f48 token=android.os.Binder@705953a})/@0xe97c322 sb=Rect(0, 0 - 1008, 2244) eb=Rect(0, 0 - 1008, 2244) epz=Point(1008, 2244) d=0}
+01-18 08:47:45.677  1748  1822 V WindowManager:     ]}
+01-18 08:47:45.680  2403  2430 V WindowManagerShell:  animated by com.android.wm.shell.transition.RemoteTransitionHandler@1336c29
+01-18 08:47:45.684  1748  2179 W UserManagerService: Requested status bar icon for non-badged user 0
+01-18 08:47:45.691  1748  2236 I ImeTracker: com.google.android.apps.nexuslauncher:1356d48a: onRequestHide at ORIGIN_SERVER reason HIDE_UNSPECIFIED_WINDOW fromUser false
+01-18 08:47:45.692  1748  2236 I ImeTracker: com.google.android.apps.nexuslauncher:1356d48a: onCancelled at PHASE_SERVER_SHOULD_HIDE
+01-18 08:47:45.693  9170  9184 I AiAiEcho: (REDACTED) Predicting[%d]: %s
+01-18 08:47:45.694  9170  9184 I AiAiEcho: (REDACTED) EchoTargets: %s
+01-18 08:47:45.694  9170  9184 I AiAiEcho: Filtered by AiAi flag check: %s
+01-18 08:47:45.694  9170  9184 I AiAiEcho: #remoteViewsTwiddler: feature disabled.
+01-18 08:47:45.694  5827  5827 I GoogleInputMethodService: GoogleInputMethodService.onFinishInput():3095 
+01-18 08:47:45.696  9170  9184 I AiAiEcho: (REDACTED) #postPredictionTargets: Sending updates to UISurface %s with targets# %s (types=[%s])
+01-18 08:47:45.696  5827  5827 I GoogleInputMethodService: GoogleInputMethodService.updateDeviceLockedStatus():2167 repeatCheckTimes = 0, locked = false
+01-18 08:47:45.696  5827  5827 I GoogleInputMethodService: GoogleInputMethodService.onStartInput():1911 onStartInput(EditorInfo{EditorInfo{packageName=com.google.android.apps.nexuslauncher, inputType=0, inputTypeString=NULL, enableLearning=false, autoCorrection=false, autoComplete=false, imeOptions=0, privateImeOptions=null, actionName=UNSPECIFIED, actionLabel=null, initialSelStart=-1, initialSelEnd=-1, initialCapsMode=0, label=null, fieldId=0, fieldName=null, extras=null, hintText=null, hintLocales=[]}}, false)
+01-18 08:47:45.697  5827  5827 I GoogleInputMethodService: GoogleInputMethodService.updateDeviceLockedStatus():2167 repeatCheckTimes = 1, locked = false
+01-18 08:47:45.697  5827  5827 I AndroidIME: InputBundleManager.loadActiveInputBundleId():450 loadActiveInputBundleId: und-Latn-x-password, password
+01-18 08:47:45.697  1748  4835 W PackageConfigPersister: App-specific configuration not found for packageName: com.google.android.apps.nexuslauncher and userId: 0
+01-18 08:47:45.758  1307  1394 I WifiHAL : Creating message to get link statistics; iface = 47
+01-18 08:47:45.804   545   545 E BpTransactionCompletedListener: Failed to transact (-32)
+01-18 08:47:45.849  1748  2315 D ConnectivityService: NetReassign [no changes] [c 3] [a 3] [i 16]
+01-18 08:47:45.865  9515  9648 D TrafficStats: tagSocket(215) with statsTag=0x1065fff, statsUid=10171
+01-18 08:47:45.989  9515  9648 D TrafficStats: tagSocket(217) with statsTag=0x1065fff, statsUid=10188
+01-18 08:47:46.039  1748  1825 W ActivityTaskManager: Activity top resumed state loss timeout for ActivityRecord{f946004 u0 com.maxime.heron.monpetitroadtrip/.MainActivity t4677 f} isExiting}
+01-18 08:47:46.126 25551 25551 D SsBaseTemplateCard: No text view can be set up
+01-18 08:47:46.127 25551 25551 I SsBaseTemplateCard: setFormattedContentDescription: text=-1┬░C, iconDescription=Nuageux, contentDescription=Nuageux, -1┬░C
+01-18 08:47:46.127 25551 25551 D SsBaseTemplateCard: Passed-in item info is null
+01-18 08:47:46.127 25551 25551 I SsBaseTemplateCard: Secondary card pane is null
+01-18 08:47:46.132  2403  2430 V WindowManagerShell: Transition animation finished (aborted=false), notifying core (#6890) android.os.BinderProxy@4684b01@0
+01-18 08:47:46.135  1748  1822 V WindowManager: Finish Transition (#6890): created at 01-18 08:47:45.538 collect-started=0.059ms request-sent=0.073ms started=4.329ms ready=100.764ms sent=126.524ms finished=595.168ms
+01-18 08:47:46.137  1748  2773 W ActivityManager: pid 1748 system sent binder code 7 with flags 1 to frozen apps and got error -32
+01-18 08:47:46.138  1748  2773 W WindowManager: Exception thrown during dispatchAppVisibility Window{11114da u0 com.maxime.heron.monpetitroadtrip/com.maxime.heron.monpetitroadtrip.MainActivity EXITING}
+01-18 08:47:46.138  1748  2773 W WindowManager: android.os.DeadObjectException
+01-18 08:47:46.138  1748  2773 W WindowManager: 	at android.os.BinderProxy.transactNative(Native Method)
+01-18 08:47:46.138  1748  2773 W WindowManager: 	at android.os.BinderProxy.transact(BinderProxy.java:586)
+01-18 08:47:46.138  1748  2773 W WindowManager: 	at android.view.IWindow$Stub$Proxy.dispatchAppVisibility(IWindow.java:553)
+01-18 08:47:46.138  1748  2773 W WindowManager: 	at com.android.server.wm.WindowState.sendAppVisibilityToClients(WindowState.java:3287)
+01-18 08:47:46.138  1748  2773 W WindowManager: 	at com.android.server.wm.WindowContainer.sendAppVisibilityToClients(WindowContainer.java:1287)
+01-18 08:47:46.138  1748  2773 W WindowManager: 	at com.android.server.wm.WindowToken.setClientVisible(WindowToken.java:403)
+01-18 08:47:46.138  1748  2773 W WindowManager: 	at com.android.server.wm.ActivityRecord.setClientVisible(ActivityRecord.java:7053)
+01-18 08:47:46.138  1748  2773 W WindowManager: 	at com.android.server.wm.ActivityRecord.postApplyAnimation(ActivityRecord.java:5747)
+01-18 08:47:46.138  1748  2773 W WindowManager: 	at com.android.server.wm.ActivityRecord.commitVisibility(ActivityRecord.java:5690)
+01-18 08:47:46.138  1748  2773 W WindowManager: 	at com.android.server.wm.Transition.finishTransition(Transition.java:1334)
+01-18 08:47:46.138  1748  2773 W WindowManager: 	at com.android.server.wm.TransitionController.finishTransition(TransitionController.java:945)
+01-18 08:47:46.138  1748  2773 W WindowManager: 	at com.android.server.wm.WindowOrganizerController.finishTransition(WindowOrganizerController.java:521)
+01-18 08:47:46.138  1748  2773 W WindowManager: 	at android.window.IWindowOrganizerController$Stub.onTransact(IWindowOrganizerController.java:289)
+01-18 08:47:46.138  1748  2773 W WindowManager: 	at com.android.server.wm.WindowOrganizerController.onTransact(WindowOrganizerController.java:210)
+01-18 08:47:46.138  1748  2773 W WindowManager: 	at android.os.Binder.execTransactInternal(Binder.java:1396)
+01-18 08:47:46.138  1748  2773 W WindowManager: 	at android.os.Binder.execTransact(Binder.java:1335)
+01-18 08:47:46.138  1748  2773 W Process : Unable to open /proc/24292/status
+01-18 08:47:46.143  2403  2430 V WindowManagerShell: Track 0 became idle
+01-18 08:47:46.144  2403  2430 V WindowManagerShell: All active transition animations finished
+01-18 08:47:46.144  1748  4101 W UserManagerService: Requested status bar icon for non-badged user 0
+01-18 08:47:46.146 25551 25551 D RecentsView: onTaskRemoved: 4677, not handling task stack changes
+01-18 08:47:46.146 25551 25551 D RecentsView: onTaskRemoved: 4677, not handling task stack changes
+01-18 08:47:46.148  1748  4101 W UserManagerService: Requested status bar icon for non-badged user 0
+01-18 08:47:46.162   545   545 E BpTransactionCompletedListener: Failed to transact (-32)
+01-18 08:47:46.326  9515 24370 I NetworkScheduler.Stats: (REDACTED) Task %s/%s finished executing. cause:%s result: %s elapsed_millis: %s uptime_millis: %s exec_start_elapsed_seconds: %s
+01-18 08:47:46.760  1273 18263 D AidlBufferPool: bufferpool2 0xb4000075c44a2068 : 6(6292992 size) total buffers - 5(5244160 size) used buffers - 13942/14052 (recycle/alloc) - 626/14046 (fetch/transfer)
+01-18 08:47:46.860  1748  2305 W NetworkPolicy: shared quota unsupported; generating rule for each iface
+01-18 08:47:47.878  2403  2403 D DLObserver: onReceive(); android.intent.action.BATTERY_CHANGED
