@@ -10,7 +10,7 @@ import Constants from 'expo-constants';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { formatDateTimeUTC2Digits, formatDateJJMMAA } from '../utils/dateUtils';
 
-const GOOGLE_API_KEY = 'AIzaSyBYC-Mamm9LrqrbBPR7jcZ1ZnnwWiRIXQw';
+const GOOGLE_API_KEY = Constants.expoConfig?.extra?.apiKey || '';
 
 type Props = StackScreenProps<RootStackParamList, 'EditStageInfo'>;
 
@@ -31,7 +31,7 @@ export default function EditStageInfoScreen({ route, navigation }: Props) {
         departureTime: stageDepartureDateTime ? parseISO(stageDepartureDateTime) : new Date(),
         notes: stageNotes || ''
     });
-console.log('formState:', formState);
+    console.log('formState:', formState);
 
     const googlePlacesRef = useRef(null);
 
@@ -67,8 +67,8 @@ console.log('formState:', formState);
             notes: formState.notes,
         };
 
-        console.log('Méthode:', method);
-        console.log('Payload:', JSON.stringify(payload));
+        //console.log('Méthode:', method);
+        //console.log('Payload:', JSON.stringify(payload));
 
         try {
             const response = await fetch(url, {
@@ -79,6 +79,7 @@ console.log('formState:', formState);
 
             if (response.ok) {
                 const updatedData = await response.json();
+                console.log('Succès', 'Les informations ont été sauvegardées avec succès.');
                 Alert.alert('Succès', 'Les informations ont été sauvegardées avec succès.');
                 refresh();
                 navigation.goBack();

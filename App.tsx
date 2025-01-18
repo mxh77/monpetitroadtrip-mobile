@@ -12,14 +12,13 @@ import StageScreen from './src/screens/StageScreen';
 import EditStageInfoScreen from './src/screens/EditStageInfoScreen';
 import AccommodationScreen from './src/screens/AccommodationScreen';
 import Icon from 'react-native-vector-icons/MaterialIcons'; // Importer l'icône
-import MapsScreen from './src/screens/MapsScreen';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
+      <Stack.Navigator initialRouteName="Home" id={undefined}>
         <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Login" component={LoginScreen} options={{ title: 'Se connecter' }} />
         <Stack.Screen
@@ -57,7 +56,6 @@ export default function App() {
         <Stack.Screen name="Stage" component={StageScreen} options={{ title: 'Liste des étapes' }} />
         <Stack.Screen name="EditStageInfo" component={EditStageInfoScreen} options={{ title: 'Etape' }} />
         <Stack.Screen name="Accommodation" component={AccommodationScreen} options={{ title: 'Etape' }} />
-        <Stack.Screen name="Maps" component={MapsScreen} options={{ title: 'Carte' }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

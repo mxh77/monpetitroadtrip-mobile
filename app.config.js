@@ -1,3 +1,5 @@
+import 'dotenv/config';
+
 export default ({ config }) => ({
   ...config,
   name: "monpetitroadtrip",
@@ -6,7 +8,7 @@ export default ({ config }) => ({
   orientation: "portrait",
   icon: "./assets/logo_icone_monpetitroadtrip.png",
   userInterfaceStyle: "light",
-  newArchEnabled: false, // Activez la nouvelle architecture si nécessaire
+  newArchEnabled: false,
   splash: {
     image: "./assets/splash-icon.png",
     resizeMode: "contain",
@@ -15,8 +17,8 @@ export default ({ config }) => ({
   android: {
     config: {
       googleMaps: {
-        apiKey: "AIzaSyBYC-Mamm9LrqrbBPR7jcZ1ZnnwWiRIXQw"
-      }
+        apiKey: process.env.GOOGLE_API_KEY,
+      },
     },
     adaptiveIcon: {
       foregroundImage: "./assets/adaptive-icon.png",
@@ -24,13 +26,18 @@ export default ({ config }) => ({
     },
     package: "com.maxime.heron.monpetitroadtrip",
     permissions: [
-      "INTERNET", // Nécessaire pour Google Maps et API Places
-      "ACCESS_FINE_LOCATION", // Permission de localisation si nécessaire
+      "INTERNET",
+      "ACCESS_FINE_LOCATION",
       "ACCESS_COARSE_LOCATION",
-    ]
-
+    ],
   },
   web: {
     favicon: "./assets/favicon.png",
-  }
+  },
+  extra: {
+    apiKey: process.env.GOOGLE_API_KEY, // Ajout de la clé API ici
+    eas: {
+      projectId: "547f7eb3-324d-4060-91c6-924ef3f69de8", // Ajoutez ici l’identifiant du projet
+    },
+  },
 });

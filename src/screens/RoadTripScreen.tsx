@@ -179,10 +179,6 @@ export default function RoadTripScreen({ route, navigation }: Props) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{roadtrip.name}</Text>
-      <Button
-        title="Voir sur la carte"
-        onPress={() => navigation.navigate('Maps')}
-      />
       <FlatList
         data={combinedList}
         keyExtractor={(item) => item._id}
