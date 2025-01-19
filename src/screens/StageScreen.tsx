@@ -399,6 +399,7 @@ export default function StageScreen({ route, navigation }: Props) {
             longitudeDelta: 0.0421,
           }}
         >
+          
         </MapView>
       </View>
 
