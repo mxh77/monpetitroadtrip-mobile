@@ -399,15 +399,6 @@ export default function StageScreen({ route, navigation }: Props) {
             longitudeDelta: 0.0421,
           }}
         >
-          {markers.map((marker, index) => (
-            <Marker
-              key={index}
-              coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
-              title={marker.title}
-              description={marker.description}
-            >
-            </Marker>
-          ))}
         </MapView>
       </View>
 
