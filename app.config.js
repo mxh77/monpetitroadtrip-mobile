@@ -6,11 +6,11 @@ export default ({ config }) => ({
   slug: "monpetitroadtrip",
   version: "1.0.0",
   orientation: "portrait",
-  icon: "./assets/logo_icone_monpetitroadtrip.png",
+  icon: "./assets/logo192.png",
   userInterfaceStyle: "light",
-  newArchEnabled: false,
+  newArchEnabled: true,
   splash: {
-    image: "./assets/splash-icon.png",
+    image: "./assets/logo.png",
     resizeMode: "contain",
     backgroundColor: "#ffffff",
   },
@@ -21,7 +21,7 @@ export default ({ config }) => ({
       },
     },
     adaptiveIcon: {
-      foregroundImage: "./assets/adaptive-icon.png",
+      foregroundImage: "./assets/logo192.png",
       backgroundColor: "#ffffff",
     },
     package: "com.maxime.heron.monpetitroadtrip",

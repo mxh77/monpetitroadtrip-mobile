@@ -57,9 +57,9 @@ export default function StageScreen({ route, navigation }: Props) {
 
   useEffect(() => {
     const fitMapToMarkers = () => {
-      console.log('Fitting map to markers...');
+      //console.log('Fitting map to markers...');
       if (markers.length > 0) {
-        console.log('Fitting map to markers:', markers);
+        //console.log('Fitting map to markers:', markers);
         const markerCoordinates = markers.map(marker => ({
           latitude: marker.latitude,
           longitude: marker.longitude,
@@ -75,9 +75,9 @@ export default function StageScreen({ route, navigation }: Props) {
       }
     };
 
-    console.log('useEffect triggered');
-    console.log('markers:', markers);
-    console.log('mapViewRef.current:', mapViewRef.current);
+    //console.log('useEffect triggered');
+    //console.log('markers:', markers);
+    //console.log('mapViewRef.current:', mapViewRef.current);
 
     fitMapToMarkers();
   }, [markers]);
@@ -89,10 +89,10 @@ export default function StageScreen({ route, navigation }: Props) {
       const url = type === 'stage'
         ? `https://mon-petit-roadtrip.vercel.app/stages/${stageId}`
         : `https://mon-petit-roadtrip.vercel.app/stops/${stageId}`;
-      console.log(`Fetching from URL: ${url}`);
+      //console.log(`Fetching from URL: ${url}`);
       const response = await fetch(url);
       const data = await response.json();
-      //console.log('Stage details fetched:', data);
+      console.log('Stage details fetched:', data.address);
       if (isMounted.current) {
         setStageTitle(data.name);
         setStageAddress(data.address);
@@ -118,23 +118,23 @@ export default function StageScreen({ route, navigation }: Props) {
     setFetchingCoordinates(true);
     try {
       let stageCoords = coordinates;
-      if (!coordinates) {
-        if (stageAddress) {
-          console.log('Geocoding stage address:', stageAddress);
-          stageCoords = await geocodeAddress(stageAddress);
-        } else {
-          console.error('Erreur : l\'adresse du stage est indéfinie.');
-        }
-        if (stageCoords && isMounted.current) {
-          setCoordinates(stageCoords);
-        }
+
+      if (stageAddress) {
+        console.log('Geocoding stage address:', stageAddress);
+        stageCoords = await geocodeAddress(stageAddress);
+      } else {
+        console.error('Erreur : l\'adresse du stage est indéfinie.');
       }
+      if (stageCoords && isMounted.current) {
+-        setCoordinates(stageCoords);
+      }
+
 
       const accommodationMarkers = await Promise.all(
         accommodations.map(async (accommodation) => {
           const coords = accommodation.coordinates || await geocodeAddress(accommodation.address);
           if (coords) {
-            console.log('Geocoded accommodation:', accommodation.name, coords);
+            // console.log('Geocoded accommodation:', accommodation.name, coords);
             return { ...coords, title: accommodation.name, type: 'bed', description: accommodation.address };
           }
           return null;
@@ -145,7 +145,7 @@ export default function StageScreen({ route, navigation }: Props) {
         activities.map(async (activity) => {
           const coords = activity.coordinates || await geocodeAddress(activity.address);
           if (coords) {
-            console.log('Geocoded activity:', activity.name, coords);
+            //console.log('Geocoded activity:', activity.name, coords);
             return { ...coords, title: activity.name, type: 'flag', description: activity.address };
           }
           return null;
@@ -159,7 +159,7 @@ export default function StageScreen({ route, navigation }: Props) {
 
       if (isMounted.current) {
         setMarkers(validMarkers);
-        console.log('Markers set:', validMarkers);
+        console.log('Markers set:');
 
         if (mapViewRef.current && validMarkers.length > 0) {
           const coordinates = validMarkers.map(marker => ({ latitude: marker.latitude, longitude: marker.longitude }));
@@ -189,11 +189,12 @@ export default function StageScreen({ route, navigation }: Props) {
       if (!dataFetched) {
         fetchStageDetails();
       }
-    }, [stageId, dataFetched])
+    }, [stageId, stageAddress, dataFetched])
   );
 
   useEffect(() => {
     if (dataFetched) {
+      console.log('Hook fetching coordinates...');
       fetchCoordinates();
     }
   }, [accommodations, activities, stageAddress, dataFetched]);
@@ -209,7 +210,7 @@ export default function StageScreen({ route, navigation }: Props) {
         return null;
       }
     } catch (error) {
-      console.error('Erreur lors du géocodage:', error);
+      console.error('Erreur lors du géocodage:', error.origin.error_message);
       return null;
     }
   };
@@ -350,6 +351,11 @@ export default function StageScreen({ route, navigation }: Props) {
     );
   }
 
+  console.log('Rendering StageScreen with data');
+  console.log('coordinates:', coordinates);
+  console.log('Number of markers:', markers.length);
+
+
   if (!coordinates) {
     console.log('No coordinates found');
     return (
@@ -358,10 +364,6 @@ export default function StageScreen({ route, navigation }: Props) {
       </View>
     );
   }
-
-  console.log('Rendering StageScreen with data');
-  console.log('coordinates:', coordinates);
-  console.log('Number of markers:', markers.length);
 
   return (
     <View style={styles.container}>
@@ -392,20 +394,9 @@ export default function StageScreen({ route, navigation }: Props) {
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
           }}
-        >
-          {markers.map((marker, index) => (
-            <Marker
-              key={index}
-              coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
-              title={marker.title}
-              description={marker.description}
-            >
-              <Icon name={marker.type} size={20} color="#6200ee" />
-            </Marker>
-          ))}
+        >         
         </MapView>
       </View>
-
     </View>
   );
 }

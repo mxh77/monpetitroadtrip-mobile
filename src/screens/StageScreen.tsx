@@ -118,25 +118,23 @@ export default function StageScreen({ route, navigation }: Props) {
     setFetchingCoordinates(true);
     try {
       let stageCoords = coordinates;
-    
-        if (stageAddress) {
-          console.log('Geocoding stage address:', stageAddress);
-          stageCoords = await geocodeAddress(stageAddress);
-        } else {
-          console.error('Erreur : l\'adresse du stage est indéfinie.');
-        }
-        if (stageCoords && isMounted.current) {
-          alert('Coordinates set' + stageCoords.latitude + stageCoords.longitude);
 
-          setCoordinates(stageCoords);
-        }
-      
+      if (stageAddress) {
+        console.log('Geocoding stage address:', stageAddress);
+        stageCoords = await geocodeAddress(stageAddress);
+      } else {
+        console.error('Erreur : l\'adresse du stage est indéfinie.');
+      }
+      if (stageCoords && isMounted.current) {
+-        setCoordinates(stageCoords);
+      }
+
 
       const accommodationMarkers = await Promise.all(
         accommodations.map(async (accommodation) => {
           const coords = accommodation.coordinates || await geocodeAddress(accommodation.address);
           if (coords) {
-           // console.log('Geocoded accommodation:', accommodation.name, coords);
+            // console.log('Geocoded accommodation:', accommodation.name, coords);
             return { ...coords, title: accommodation.name, type: 'bed', description: accommodation.address };
           }
           return null;
@@ -213,7 +211,6 @@ export default function StageScreen({ route, navigation }: Props) {
       }
     } catch (error) {
       console.error('Erreur lors du géocodage:', error.origin.error_message);
-      alert('Erreur lors du géocodage:' + error.origin.error_message)
       return null;
     }
   };
@@ -368,7 +365,6 @@ export default function StageScreen({ route, navigation }: Props) {
     );
   }
 
-
   return (
     <View style={styles.container}>
 
@@ -398,11 +394,9 @@ export default function StageScreen({ route, navigation }: Props) {
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
           }}
-        >
-          
+        >         
         </MapView>
       </View>
-
     </View>
   );
 }
