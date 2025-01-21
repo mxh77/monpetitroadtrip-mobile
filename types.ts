@@ -1,59 +1,43 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
+export type StepType = 'stage' | 'stop';
+
+export interface SimpleStep {
+  id: string;
+  type: StepType;
+  name: string;
+  arrivalDateTime: string;
+  latitude?: number;
+  longitude?: number;
+}
+
+export interface Roadtrip {
+  idRoadtrip: string;
+  name: string;
+  steps: SimpleStep[];
+}
+
 export type RootStackParamList = {
   Home: undefined;
   Login: undefined;
   RoadTrips: { refresh?: () => void };
   RoadTrip: { roadtripId: string };
   EditRoadTrip: { roadtripId?: string };
+  CreateStep: { roadtripId: string; refresh: () => void };
   Stage: {
-    type: 'stage' | 'stop';
+    type: 'stage';
     roadtripId: string;
-    stageId?: string;
-    stageTitle?: string;
-    stageAddress?: string;
-    stageArrivalDateTime?: string;
-    stageDepartureDateTime?: string;
-    stageNotes?: string;
-    stageCoordinates?: {
-      latitude: number;
-      longitude: number;
-    };
-    refresh?: () => void; // Ajout de la propriété refresh ici
-    accommodations?: {
-      longitude: any;
-      latitude: any;
-      name: string;
-      address: string;
-      website: string;
-      coordinates?: {
-        latitude: number;
-        longitude: number;
-      };
-      arrivalDateTime: string;
-      departureDateTime: string;
-      thumbnail?: {
-        url: string;
-      };
-    }[];
-    activities?: {
-      name: string;
-      address: string;
-      website: string;
-      startDateTime: string;
-      endDateTime: string;
-      coordinates?: {
-        latitude: number;
-        longitude: number;
-      };
-      thumbnail?: {
-        url: string;
-      };
-    }[];
+    stepId: string;
+    refresh: () => void;
+  };
+  Stop: {
+    type: 'stop';
+    roadtripId: string;
+    stepId: string;
+    refresh: () => void;
   };
   EditStageInfo: {
-    type: 'stage' | 'stop';
     roadtripId: string;
     stageId?: string;
     stageTitle?: string;

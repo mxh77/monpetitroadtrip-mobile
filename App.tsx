@@ -9,6 +9,7 @@ import RoadTripsScreen from './src/screens/RoadTripsScreen'; // Assurez-vous que
 import RoadTripScreen from './src/screens/RoadTripScreen';
 import EditRoadTripScreen from './src/screens/EditRoadTripScreen';
 import StageScreen from './src/screens/StageScreen';
+import StopScreen from './src/screens/StopScreen';
 import EditStageInfoScreen from './src/screens/EditStageInfoScreen';
 import AccommodationScreen from './src/screens/AccommodationScreen';
 import Icon from 'react-native-vector-icons/MaterialIcons'; // Importer l'icône
@@ -54,6 +55,7 @@ export default function App() {
         <Stack.Screen name="RoadTrip" component={RoadTripScreen} options={{ title: 'Mes RoadTrips' }} />
         <Stack.Screen name="EditRoadTrip" component={EditRoadTripScreen} options={{ title: 'Modifier le RoadTrip' }} />
         <Stack.Screen name="Stage" component={StageScreen} options={{ title: 'Liste des étapes' }} />
+        <Stack.Screen name="Stop" component={StopScreen} options={{ title: 'Liste des étapes' }} />
         <Stack.Screen name="EditStageInfo" component={EditStageInfoScreen} options={{ title: 'Etape' }} />
         <Stack.Screen name="Accommodation" component={AccommodationScreen} options={{ title: 'Etape' }} />
       </Stack.Navigator>

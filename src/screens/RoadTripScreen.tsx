@@ -1,69 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import {Button, StyleSheet, View, Text, FlatList, ActivityIndicator, TouchableOpacity, Alert } from 'react-native';
+import { Button, StyleSheet, View, Text, FlatList, ActivityIndicator, TouchableOpacity, Alert } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/FontAwesome'; // Importer les icônes
-import { RootStackParamList } from '../../types';
+import { RootStackParamList, Roadtrip, StepType, SimpleStep} from '../../types';
 import { FAB } from 'react-native-paper'; // Importer le bouton flottant
-import { Swipeable } from 'react-native-gesture-handler'; // Importer Swipeable
+import  Swipeable  from 'react-native-gesture-handler/Swipeable'; // Importer Swipeable de react-native-gesture-handler
+
 
 type Props = StackScreenProps<RootStackParamList, 'RoadTrip'>;
-
-type Stage = {
-  _id: string;
-  name: string;
-  description: string;
-  address: string;
-  arrivalDateTime: string;
-  departureDateTime: string;
-  notes: string;
-  accommodations: Accommodation[];
-  activities: Activity[];
-};
-
-type Stop = {
-  _id: string;
-  name: string;
-  description: string;
-  address: string;
-  arrivalDateTime: string;
-  departureDateTime: string;
-  notes: string;
-};
-
-type Accommodation = {
-  _id: string;
-  name: string;
-  address: string;
-  latitude: number;
-  longitude: number;
-};
-
-type Activity = {
-  _id: string;
-  name: string;
-  address: string;
-  latitude: number;
-  longitude: number;
-  startDateTime: string;
-  endDateTime: string;
-};
-
-type Roadtrip = {
-  _id: string;
-  userId: string;
-  name: string;
-  days: number;
-  startLocation: string;
-  startDate: string;
-  startTime: string;
-  endLocation: string;
-  endDate: string;
-  endTime: string;
-  currency: string;
-  notes: string;
-  stages: Stage[];
-  stops: Stop[];
-};
 
 export default function RoadTripScreen({ route, navigation }: Props) {
   const { roadtripId } = route.params;
@@ -75,7 +19,30 @@ export default function RoadTripScreen({ route, navigation }: Props) {
     try {
       const response = await fetch(`https://mon-petit-roadtrip.vercel.app/roadtrips/${roadtripId}`);
       const data = await response.json();
-      setRoadtrip(data);
+      console.log('Données de l\'API:', data); // Ajoutez ce log
+
+      // Filtrer les données pour ne conserver que les champs nécessaires
+      const filteredData: Roadtrip = {
+        idRoadtrip: data._id,
+        name: data.name,
+        steps: [
+          ...data.stages.map((stage: any) => ({
+            id: stage._id,
+            type: 'stage' as StepType,
+            name: stage.name,
+            arrivalDateTime: stage.arrivalDateTime,
+          })),
+          ...data.stops.map((stop: any) => ({
+            id: stop._id,
+            type: 'stop' as StepType,
+            name: stop.name,
+            arrivalDateTime: stop.arrivalDateTime,
+          })),
+        ],
+      };
+
+      setRoadtrip(filteredData);
+      console.log('Roadtrip récupéré:', filteredData);
     } catch (error) {
       console.error('Erreur lors de la récupération du roadtrip:', error);
     } finally {
@@ -95,62 +62,74 @@ export default function RoadTripScreen({ route, navigation }: Props) {
   }, [navigation, roadtripId]);
 
   // Fonction pour gérer la navigation vers la page de détails de l'étape ou de l'arrêt
-  const handleStagePress = (item: Stage | Stop) => {
-    navigation.navigate('Stage', {
-      type: 'accommodations' in item ? 'stage' : 'stop',
-      roadtripId,
-      stageId: item._id,
-      stageTitle: item.name,
-      stageAddress: item.address,
-      stageArrivalDateTime: item.arrivalDateTime,
-      stageDepartureDateTime: item.departureDateTime,
-      stageNotes: item.notes,
-      refresh: fetchRoadtrip, // Passer la fonction de rafraîchissement
-    });
-  };
-
-  // Fonction pour gérer la navigation vers la page de création d'une nouvelle étape
-  const handleAddStage = () => {
-    navigation.navigate('EditStageInfo', {
-      type: 'stage',
-      roadtripId,
-      stageId: undefined,
-      stageTitle: '',
-      stageAddress: '',
-      stageArrivalDateTime: '',
-      stageDepartureDateTime: '',
-      stageNotes: '',
-      refresh: fetchRoadtrip, // Passer la fonction de rafraîchissement
-    });
-  };
-
-  // Fonction pour gérer la suppression d'une étape
-  const handleDeleteStage = async (stageId: string) => {
-    try {
-      await fetch(`https://mon-petit-roadtrip.vercel.app/stages/${stageId}`, {
-        method: 'DELETE',
+  const handleStepPress = (step: any) => {
+    if (step.type === 'stage') {
+      navigation.navigate('Stage', {
+        type: 'stage',
+        roadtripId,
+        stepId: step.id,
+        refresh: fetchRoadtrip, // Passer la fonction de rafraîchissement
       });
-      fetchRoadtrip(); // Rafraîchir les données après suppression
-    } catch (error) {
-      console.error('Erreur lors de la suppression de l\'étape:', error);
+    } else {
+      navigation.navigate('Stop', {
+        type: 'stop',
+        roadtripId,
+        stepId: step.id,
+        refresh: fetchRoadtrip, // Passer la fonction de rafraîchissement
+      });
     }
   };
 
-  // Fonction pour afficher une alerte de confirmation avant suppression
-  const confirmDeleteStage = (stageId: string) => {
+  // Fonction pour gérer la navigation vers la page de création d'un nouveau step (CreateStepScreen)
+  const handleAddStep = () => {
+    navigation.navigate('CreateStep', {
+      roadtripId,
+      refresh: fetchRoadtrip, // Passer la fonction de rafraîchissement
+    });
+  }
+
+    // Fonction pour gérer la suppression d'un step selon le type (Stage ou Stop)
+  const handleDeleteStep = async (stepId: string, type: string) => {
+    try {
+      let response;
+      //Adapter l'appel API selon le type de step
+      if (type === 'stage') {
+        response = await fetch(`https://mon-petit-roadtrip.vercel.app/stages/${stepId}`, {
+          method: 'DELETE',
+        });
+      } else {  
+        response = await fetch(`https://mon-petit-roadtrip.vercel.app/stops/${stepId}`, {
+          method: 'DELETE',
+        });
+      }
+      
+      if (response.ok) {
+        fetchRoadtrip(); // Recharger les données
+        Alert.alert('Succès', 'L\'étape a été supprimée.');
+      } else {
+        Alert.alert('Erreur', 'Une erreur est survenue lors de la suppression de l\'étape.');
+      }
+    } catch (error) {
+      Alert.alert('Erreur', 'Une erreur est survenue. Veuillez réessayer.');
+    }
+  }
+
+
+  // Fonction pour afficher une alerte de confirmation avant suppression du stage ou du stop
+  const confirmDeleteStep = (stepId: string, type: string) => {
     Alert.alert(
       'Supprimer l\'étape',
       'Êtes-vous sûr de vouloir supprimer cette étape ?',
       [
         { text: 'Annuler', style: 'cancel' },
-        { text: 'Supprimer', style: 'destructive', onPress: () => handleDeleteStage(stageId) },
+        { text: 'Supprimer', style: 'destructive', onPress: () => handleDeleteStep(stepId, type) },
       ],
       { cancelable: true }
     );
   };
 
-  const renderRightActions = (stageId: string) => (
-    <TouchableOpacity style={styles.deleteButton} onPress={() => confirmDeleteStage(stageId)}>
+  const renderRightActions = (stageId: string, type: any) => (
+    <TouchableOpacity style={styles.deleteButton} onPress={() =>  confirmDeleteStep(stageId, type)}>
       <Icon name="trash" size={24} color="white" />
     </TouchableOpacity>
   );
@@ -171,8 +150,8 @@ export default function RoadTripScreen({ route, navigation }: Props) {
     );
   }
 
-  // Combinez et triez les étapes et les arrêts par arrivalDateTime
-  const combinedList = [...roadtrip.stages, ...roadtrip.stops].sort((a, b) =>
+  // Triez les étapes par arrivalDateTime
+  const sortedSteps = roadtrip.steps.sort((a, b) =>
     new Date(a.arrivalDateTime).getTime() - new Date(b.arrivalDateTime).getTime()
   );
 
@@ -180,18 +159,17 @@ export default function RoadTripScreen({ route, navigation }: Props) {
     <View style={styles.container}>
       <Text style={styles.title}>{roadtrip.name}</Text>
       <FlatList
-        data={combinedList}
-        keyExtractor={(item) => item._id}
+        data={sortedSteps}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <Swipeable renderRightActions={() => renderRightActions(item._id)}>
-
+          <Swipeable renderRightActions={() => renderRightActions(item.id, item.type)}>
             <TouchableOpacity
               style={styles.item}
-              onPress={() => handleStagePress(item)}
+              onPress={() => handleStepPress(item)}
             >
               <View style={styles.itemHeader}>
                 <Icon
-                  name={roadtrip.stages.some(stage => stage._id === item._id) ? 'bed' : 'flag'}
+                  name={item.type === 'stage' ? 'bed' : 'flag'}
                   size={20}
                   color="#007BFF"
                   style={styles.itemIcon}
@@ -210,14 +188,13 @@ export default function RoadTripScreen({ route, navigation }: Props) {
               </Text>
             </TouchableOpacity>
           </Swipeable>
-
         )}
       />
       <FAB
         style={styles.fab}
         small
         icon="plus"
-        onPress={handleAddStage}
+        onPress={handleAddStep}
       />
     </View>
   );
@@ -243,7 +220,7 @@ const styles = StyleSheet.create({
   item: {
     marginBottom: 16,
     borderWidth: 1,
-    borderRadius: 10,
+    borderRadius: 0,
     padding: 16,
   },
   itemHeader: {
@@ -272,7 +249,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#007BFF',
   },
   deleteButton: {
-    //La corbeille doit êre rouge
     backgroundColor: 'red',
     justifyContent: 'center',
     alignItems: 'center',
