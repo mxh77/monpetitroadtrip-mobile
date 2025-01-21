@@ -36,3 +36,6 @@ yarn-error.*
 *.tsbuildinfo
 
 *@mxh7777*keystore*
+
+android/app/build.gradle
+android/gradle.properties
