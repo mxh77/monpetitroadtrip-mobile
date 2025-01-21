@@ -24,7 +24,7 @@ export default ({ config }) => ({
       foregroundImage: "./assets/logo192.png",
       backgroundColor: "#ffffff",
     },
-    package: "com.maxime.heron.monpetitroadtrip",
+    package: "com.maxime.heron.monpetitroadtrip.debug",
     permissions: [
       "INTERNET",
       "ACCESS_FINE_LOCATION",

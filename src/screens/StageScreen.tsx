@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
-import { View, StyleSheet, Text, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, Text, ActivityIndicator, ScrollView, RefreshControl } from 'react-native';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList, SimpleStep } from '../../types';
@@ -17,9 +17,12 @@ export default function StageScreen({ route, navigation }: Props) {
     // États
     const [stage, setStage] = useState<SimpleStep | null>(null);
     const [loading, setLoading] = useState(true);
+    const [refreshing, setRefreshing] = useState(false);
     const [coordinatesStage, setCoordinatesStage] = useState<{ latitude: number; longitude: number } | null>(null);
     const [coordinatesAccommodation, setCoordinatesAccommodation] = useState<Array<{ latitude: number; longitude: number; name: string; arrivalDateTime: string }>>([]);
-    const [coordinatesActivities, setCoordinatesActivities] = useState<Array<{ latitude: number; longitude: number; name: string; arrivalDateTime: string }>>([]);
+    const [coordinatesActivities, setCoordinatesActivities] = useState<Array<{
+        address: string; latitude: number; longitude: number; name: string; arrivalDateTime: string 
+}>>([]);
     const mapRef = useRef<MapView>(null);
 
     // Récupérer l'id de l'étape
@@ -36,11 +39,11 @@ export default function StageScreen({ route, navigation }: Props) {
         try {
             const response = await Geocoder.from(address);
             const { lat, lng } = response.results[0].geometry.location;
-            console.log(`Coordonnées pour adresse:`);
+            console.log(`Coordonnées pour ${address}:`);
             return { latitude: lat, longitude: lng };
         } catch (error) {
-            console.error('Erreur lors de la récupération des coordonnées:', error);
-            return { latitude: undefined, longitude: undefined };
+            console.warn('Erreur lors de la récupération des coordonnées:', error);
+            return null; // Retourner null en cas d'erreur
         }
     };
 
@@ -54,28 +57,31 @@ export default function StageScreen({ route, navigation }: Props) {
 
             // Récupérer les coordonnées de l'adresse
             const coords = await getCoordinates(data.address);
-            setCoordinatesStage(coords);
+            if (coords) {
+                setCoordinatesStage(coords);
+            }
 
             // Récupérer les coordonnées des adresses des accommodations
             const accommodations = data.accommodations;
             const accommodationCoords = await Promise.all(accommodations.map(async (accommodation: any) => {
                 const coords = await getCoordinates(accommodation.address);
-                return { ...accommodation, latitude: coords.latitude, longitude: coords.longitude };
+                return coords ? { ...accommodation, latitude: coords.latitude, longitude: coords.longitude } : null;
             }));
-            setCoordinatesAccommodation(accommodationCoords);
+            setCoordinatesAccommodation(accommodationCoords.filter(coord => coord !== null));
 
             // Récupérer les coordonnées des adresses des activities
             const activities = data.activities;
             const activitiesCoords = await Promise.all(activities.map(async (activity: any) => {
                 const coords = await getCoordinates(activity.address);
-                return { ...activity, latitude: coords.latitude, longitude: coords.longitude };
+                return coords ? { ...activity, latitude: coords.latitude, longitude: coords.longitude } : null;
             }));
-            setCoordinatesActivities(activitiesCoords);
+            setCoordinatesActivities(activitiesCoords.filter(coord => coord !== null));
 
         } catch (error) {
             console.error('Erreur lors de la récupération de l\'étape:', error);
         } finally {
             setLoading(false);
+            setRefreshing(false);
         }
     };
 
@@ -93,30 +99,28 @@ export default function StageScreen({ route, navigation }: Props) {
         }
     }, [coordinatesStage]);
 
-   // Fonction pour ajuster la carte
-   const adjustMap = () => {
-    if (mapRef.current && coordinatesStage && coordinatesAccommodation.length > 0 && coordinatesActivities.length > 0) {
-        const allCoordinates = [
-            coordinatesStage,
-            ...coordinatesAccommodation,
-            ...coordinatesActivities,
-        ].filter(coord => coord.latitude !== undefined && coord.longitude !== undefined);
+    // Fonction pour ajuster la carte
+    const adjustMap = () => {
+        if (mapRef.current) {
+            const allCoordinates = [
+                coordinatesStage,
+                ...coordinatesAccommodation,
+                ...coordinatesActivities,
+            ].filter(coord => coord && coord.latitude !== undefined && coord.longitude !== undefined);
 
-        if (allCoordinates.length > 0) {
-            console.log('Ajustement de la carte avec les coordonnées:', allCoordinates);
-            mapRef.current.fitToCoordinates(allCoordinates, {
-                edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
-                animated: true,
-            });
+            if (allCoordinates.length > 0) {
+                console.log('Ajustement de la carte avec les coordonnées');
+                mapRef.current.fitToCoordinates(allCoordinates, {
+                    edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
+                    animated: true,
+                });
+            }
         }
-    }
-};
-     
+    };
+
     // Ajuster la carte pour s'adapter aux marqueurs
     useEffect(() => {
-        if (mapRef.current && coordinatesStage && coordinatesAccommodation.length > 0 && coordinatesActivities.length > 0) {
-            adjustMap();
-        }
+        adjustMap();
     }, [coordinatesStage, coordinatesAccommodation, coordinatesActivities]);
 
     const renderMarkerAccommodations = useCallback(() => {
@@ -147,13 +151,18 @@ export default function StageScreen({ route, navigation }: Props) {
                     longitude: activity.longitude,
                 }}
                 title={activity.name}
-                description={activity.arrivalDateTime}
+                description={activity.address}
                 tracksViewChanges={false}
             >
                 <Fontawesome5 name="hiking" size={24} color="red" />
             </Marker>
         ));
     }, [coordinatesActivities]);
+
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+        fetchStage();
+    }, []);
 
     if (loading) {
         return (
@@ -172,16 +181,21 @@ export default function StageScreen({ route, navigation }: Props) {
     }
 
     return (
-        <View style={styles.mapContainer}>
+        <ScrollView
+            contentContainerStyle={styles.mapContainer}
+            refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+        >
             <MapView
                 ref={(ref) => {
                     mapRef.current = ref; // Assurez-vous que mapRef est mis à jour ici
-                    console.log('MapView ref:', ref); // Ajoutez un log pour vérifier si la référence est attachée
+                    console.log('MapView ref:'); // Ajoutez un log pour vérifier si la référence est attachée
                 }}
                 provider={PROVIDER_GOOGLE}
                 style={styles.map}
                 initialRegion={{
-                    latitude: coordinatesStage.latitude,
+                    latitude: coordinatesStage.latitude, 
                     longitude: coordinatesStage.longitude,
                     latitudeDelta: 0.0922,
                     longitudeDelta: 0.0421,
@@ -198,15 +212,16 @@ export default function StageScreen({ route, navigation }: Props) {
                 navigationState={{
                     index: 0,
                     routes: [
-                        { key: 'map', title: 'Carte' },
-                        { key: 'infos', title: 'Infos' }
+                        { key: 'infos', title: 'Infos' },
+                        { key: 'accommodations', title: 'Hébergements' },
+                        { key: 'activities', title: 'Activités' }
                     ]
                 }}
                 renderScene={() => null}
                 onIndexChange={() => null}
                 initialLayout={{ width: 0, height: 0 }}
             />
-        </View>
+        </ScrollView>
     );
 }
 
@@ -216,6 +231,7 @@ const styles = StyleSheet.create({
     },
     map: {
         flex: 1,
+        height: 400, // Ajoutez une hauteur fixe pour le MapView
     },
     loadingContainer: {
         flex: 1,
