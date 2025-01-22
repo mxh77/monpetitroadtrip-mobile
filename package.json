@@ -6,6 +6,8 @@
   "scripts": {
     "start": "expo start",
     "android": "expo run:android",
+    "android:debug": "set BUILD_TYPE=debug && npx expo prebuild && npx expo run:android",
+    "android:release": "set BUILD_TYPE=release && npx expo prebuild && cd android && gradlew.bat assembleRelease",
     "ios": "expo run:ios",
     "web": "expo start --web",
     "deploy:all": "git add . && git commit -m \"Update deployment\" && git push origin master"
