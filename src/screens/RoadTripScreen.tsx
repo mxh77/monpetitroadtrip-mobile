@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, StyleSheet, View, Text, FlatList, ActivityIndicator, TouchableOpacity, Alert } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
-import Icon from 'react-native-vector-icons/FontAwesome'; // Importer les icônes
+import Icon from 'react-native-vector-icons/FontAwesome5'; // Importer les icônes
 import { RootStackParamList, Roadtrip, StepType, SimpleStep} from '../../types';
 import { FAB } from 'react-native-paper'; // Importer le bouton flottant
 import  Swipeable  from 'react-native-gesture-handler/Swipeable'; // Importer Swipeable de react-native-gesture-handler
@@ -20,7 +20,7 @@ export default function RoadTripScreen({ route, navigation }: Props) {
       const response = await fetch(`https://mon-petit-roadtrip.vercel.app/roadtrips/${roadtripId}`);
       const data = await response.json();
       console.log('Données de l\'API:', data); // Ajoutez ce log
-
+ 
       // Filtrer les données pour ne conserver que les champs nécessaires
       const filteredData: Roadtrip = {
         idRoadtrip: data._id,

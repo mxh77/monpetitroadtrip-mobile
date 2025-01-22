@@ -3,19 +3,67 @@ import { StackNavigationProp } from '@react-navigation/stack';
 
 export type StepType = 'stage' | 'stop';
 
-export interface SimpleStep {
+export interface Step {
   id: string;
   type: StepType;
   name: string;
+  address: string;
   arrivalDateTime: string;
+  departureDateTime: string;
+  notes: string;
   latitude?: number;
   longitude?: number;
+  accommodations?: Accommodation[];
+  activities?: Activity[];
 }
+
+export interface Accommodation {
+  name: string;
+  address: string;
+  website?: string;
+  phone?: string;
+  email?: string;
+  reservationNumber?: string;
+  confirmationDateTime?: string;
+  arrivalDateTime: string;
+  departureDateTime: string;
+  nights?: number;
+  price?: string;
+  notes?: string;
+  thumbnail?: File;
+  photos?: File[];
+  documents?: File[];
+}
+
+export interface Activity {
+  name: string;
+  address: string;
+  website?: string;
+  phone?: string;
+  email?: string;
+  reservationNumber?: string;
+  confirmationDateTime?: string;
+  startDateTime: string;
+  endDateTime: string;
+  price?: string;
+  notes?: string;
+  thumbnail?: File;
+  photos?: File[];
+  documents?: File[];
+}
+
+
+export interface File {
+  type: string;
+  name: string;
+  url: string;
+}
+
 
 export interface Roadtrip {
   idRoadtrip: string;
   name: string;
-  steps: SimpleStep[];
+  steps: Step[];
 }
 
 export type RootStackParamList = {

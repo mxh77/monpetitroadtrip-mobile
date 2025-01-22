@@ -8,7 +8,7 @@ export default ({ config }) => ({
   orientation: "portrait",
   icon: "./assets/logo192.png",
   userInterfaceStyle: "light",
-  newArchEnabled: true,
+  newArchEnabled: false,
   splash: {
     image: "./assets/logo.png",
     resizeMode: "contain",
@@ -24,7 +24,7 @@ export default ({ config }) => ({
       foregroundImage: "./assets/logo192.png",
       backgroundColor: "#ffffff",
     },
-    package: "com.maxime.heron.monpetitroadtrip.debug",
+    package: "com.maxime.heron.monpetitroadtrip",
     permissions: [
       "INTERNET",
       "ACCESS_FINE_LOCATION",
