@@ -332,7 +332,7 @@ export default function StageScreen({ route, navigation }: Props) {
                     index: 0,
                     routes: [
                         { key: 'infos', title: 'Infos' },
-                        { key: 'accommodations', title: 'Hébergements' },
+                        { key: 'accommodations', title: 'Hébergddements' },
                         { key: 'activities', title: 'Activités' }
                     ]
                 }}

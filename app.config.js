@@ -18,7 +18,7 @@ export default ({ config }) => {
       image: "./assets/logo.png",
       resizeMode: "contain",
       backgroundColor: "#ffffff",
-    },
+  },
     android: {
       config: {
         googleMaps: {
