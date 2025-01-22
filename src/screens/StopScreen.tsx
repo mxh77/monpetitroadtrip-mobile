@@ -22,12 +22,11 @@ export default function StopScreen({ route, navigation }: Props) {
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
     const [coordinatesStop, setCoordinatesStop] = useState<{ latitude: number; longitude: number } | null>(null);
-
     const mapRef = useRef<MapView>(null);
 
     // Récupérer l'id de l'étape
     const { stepId } = route.params;
-    console.log('ID de l\'arrêt:', stepId);
+    console.log('ID de l\'étape:', stepId);
 
     // Appeler l'API lors du montage du composant
     useEffect(() => {
@@ -53,13 +52,20 @@ export default function StopScreen({ route, navigation }: Props) {
             const response = await fetch(`https://mon-petit-roadtrip.vercel.app/stops/${stepId}`);
             const data = await response.json();
             console.log('Données de l\'API:'); // Ajoutez ce log
-            setStop(data);
+
+            const transformedData = {
+                ...data,
+                id: data._id,
+            };
+            console.log('Données transformées:', data._id)
+            setStop(transformedData);
 
             // Récupérer les coordonnées de l'adresse
             const coords = await getCoordinates(data.address);
             if (coords) {
                 setCoordinatesStop(coords);
             }
+
 
         } catch (error) {
             console.error('Erreur lors de la récupération de l\'étape:', error);
@@ -72,7 +78,7 @@ export default function StopScreen({ route, navigation }: Props) {
     // Utiliser un useEffect pour surveiller les changements de l'état stop
     useEffect(() => {
         if (stop) {
-            console.log('Stop mis à jour:', stop.name, stop.latitude, stop.longitude);
+            console.log('Stop mis à jour:', stop.id, stop.name, stop.latitude, stop.longitude);
         }
     }, [stop]);
 
@@ -87,7 +93,7 @@ export default function StopScreen({ route, navigation }: Props) {
     const adjustMap = () => {
         if (mapRef.current) {
             const allCoordinates = [
-                coordinatesStop
+                coordinatesStop,
             ].filter(coord => coord && coord.latitude !== undefined && coord.longitude !== undefined);
 
             if (allCoordinates.length > 0) {
@@ -103,7 +109,7 @@ export default function StopScreen({ route, navigation }: Props) {
     // Ajuster la carte pour s'adapter aux marqueurs
     useEffect(() => {
         adjustMap();
-    }, [coordinatesStop]); 
+    }, [coordinatesStop]);
 
     useEffect(() => {
         navigation.setOptions({
@@ -114,6 +120,10 @@ export default function StopScreen({ route, navigation }: Props) {
             ),
         });
     }, [navigation]);
+
+    const navigateToEditStopInfo = () => {
+        navigation.navigate('EditStopInfo', { stop: stop, refresh: fetchStop });
+    }
 
     const GeneralInfo = () => {
         const formattedArrivalDateTime = stop.arrivalDateTime ? formatDateTimeUTC2Digits(stop.arrivalDateTime) : 'N/A';
@@ -142,15 +152,20 @@ export default function StopScreen({ route, navigation }: Props) {
                         <Text style={styles.infoLabel}>Notes :</Text>
                         <Text style={styles.infoValue}>{stop.notes}</Text>
                     </View>
-
+                    <Button
+                        mode="contained"
+                        onPress={navigateToEditStopInfo}
+                        style={styles.editButton}
+                    >
+                        Éditer
+                    </Button>
                 </View>
             </ScrollView>
         );
     };
 
-
     const renderScene = SceneMap({
-        infos: GeneralInfo
+        infos: GeneralInfo,
     });
 
     const onRefresh = useCallback(() => {
@@ -194,11 +209,6 @@ export default function StopScreen({ route, navigation }: Props) {
                     adjustMap();
                 }}
             >
-                <Marker
-                    coordinate={coordinatesStop}
-                    title={stop.name}
-                    description={stop.address}
-                />
             </MapView>
             <TabView
                 navigationState={{
@@ -264,6 +274,9 @@ const styles = StyleSheet.create({
     infoText: {
         fontSize: 16,
         marginBottom: 8,
+    },
+    editButton: {
+        marginTop: 16,
     },
     card: {
         marginBottom: 16,

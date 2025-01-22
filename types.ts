@@ -85,14 +85,12 @@ export type RootStackParamList = {
     stepId: string;
     refresh: () => void;
   };
-  EditStageInfo: {
-    roadtripId: string;
-    stageId?: string;
-    stageTitle?: string;
-    stageAddress?: string;
-    stageArrivalDateTime?: string;
-    stageDepartureDateTime?: string;
-    stageNotes?: string;
+    EditStageInfo: {
+    stage:Step;
+    refresh: () => void;
+  };
+  EditStopInfo: {
+    stop:Step;
     refresh: () => void;
   };
   Accommodation: {

@@ -56,7 +56,13 @@ export default function StageScreen({ route, navigation }: Props) {
             const response = await fetch(`https://mon-petit-roadtrip.vercel.app/stages/${stepId}`);
             const data = await response.json();
             console.log('Données de l\'API:'); // Ajoutez ce log
-            setStage(data);
+
+            const transformedData = {
+                ...data,
+                id: data._id,
+            };
+            console.log('Données transformées:', data._id)
+            setStage(transformedData);
 
             // Récupérer les coordonnées de l'adresse
             const coords = await getCoordinates(data.address);
@@ -91,7 +97,7 @@ export default function StageScreen({ route, navigation }: Props) {
     // Utiliser un useEffect pour surveiller les changements de l'état stage
     useEffect(() => {
         if (stage) {
-            console.log('Stage mis à jour:', stage.name, stage.latitude, stage.longitude);
+            console.log('Stage mis à jour:', stage.id, stage.name, stage.latitude, stage.longitude);
         }
     }, [stage]);
 
@@ -172,6 +178,10 @@ export default function StageScreen({ route, navigation }: Props) {
         ));
     }, [coordinatesActivities]);
 
+    const navigateToEditStageInfo = () => {
+        navigation.navigate('EditStageInfo', { stage: stage, refresh: fetchStage });
+    }
+
     const GeneralInfo = () => {
         const formattedArrivalDateTime = stage.arrivalDateTime ? formatDateTimeUTC2Digits(stage.arrivalDateTime) : 'N/A';
         const formattedDepartureDateTime = stage.departureDateTime ? formatDateTimeUTC2Digits(stage.departureDateTime) : 'N/A';
@@ -199,7 +209,13 @@ export default function StageScreen({ route, navigation }: Props) {
                         <Text style={styles.infoLabel}>Notes :</Text>
                         <Text style={styles.infoValue}>{stage.notes}</Text>
                     </View>
-
+                    <Button
+                        mode="contained"
+                        onPress={navigateToEditStageInfo}
+                        style={styles.editButton}
+                    >
+                        Éditer
+                    </Button>
                 </View>
             </ScrollView>
         );
@@ -243,39 +259,39 @@ export default function StageScreen({ route, navigation }: Props) {
     );
 
     const Activities = () => (
-       <ScrollView style={styles.tabContent}>
-         {stage.activities.map((activity, index) => (
-           <Card key={index} style={styles.card}>
-             <Card.Title titleStyle={styles.cardTitle} title={activity.name} />
-             <Card.Content>
-               <Text style={styles.infoText}>Du {formatDateJJMMAA(activity.startDateTime)} au {formatDateJJMMAA(activity.endDateTime)}</Text>
-             </Card.Content>
-             <Card.Content>
-               {activity.thumbnail && (
-                 <Image source={{ uri: activity.thumbnail.url }} style={styles.thumbnail} />
-               )}
-               <Text style={styles.infoText}>{activity.address}</Text>
-               <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                 <Button
-                   mode="contained"
-                   onPress={() => openWebsite(activity.website)}
-                   style={styles.mapButton}
-                 >
-                   Ouvrir Site Web
-                 </Button>
-                 <Button
-                   mode="contained"
-                   onPress={() => openInGoogleMaps(activity.address)}
-                   style={styles.mapButton}
-                 >
-                   Ouvrir dans Google Maps
-                 </Button>
-               </View>
-             </Card.Content>
-           </Card>
-         ))}
-       </ScrollView>
-     );
+        <ScrollView style={styles.tabContent}>
+            {stage.activities.map((activity, index) => (
+                <Card key={index} style={styles.card}>
+                    <Card.Title titleStyle={styles.cardTitle} title={activity.name} />
+                    <Card.Content>
+                        <Text style={styles.infoText}>Du {formatDateJJMMAA(activity.startDateTime)} au {formatDateJJMMAA(activity.endDateTime)}</Text>
+                    </Card.Content>
+                    <Card.Content>
+                        {activity.thumbnail && (
+                            <Image source={{ uri: activity.thumbnail.url }} style={styles.thumbnail} />
+                        )}
+                        <Text style={styles.infoText}>{activity.address}</Text>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <Button
+                                mode="contained"
+                                onPress={() => openWebsite(activity.website)}
+                                style={styles.mapButton}
+                            >
+                                Ouvrir Site Web
+                            </Button>
+                            <Button
+                                mode="contained"
+                                onPress={() => openInGoogleMaps(activity.address)}
+                                style={styles.mapButton}
+                            >
+                                Ouvrir dans Google Maps
+                            </Button>
+                        </View>
+                    </Card.Content>
+                </Card>
+            ))}
+        </ScrollView>
+    );
 
     const renderScene = SceneMap({
         infos: GeneralInfo,
@@ -332,7 +348,7 @@ export default function StageScreen({ route, navigation }: Props) {
                     index: 0,
                     routes: [
                         { key: 'infos', title: 'Infos' },
-                        { key: 'accommodations', title: 'Hébergddements' },
+                        { key: 'accommodations', title: 'Hébergements' },
                         { key: 'activities', title: 'Activités' }
                     ]
                 }}
@@ -394,6 +410,9 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginBottom: 8,
     },
+    editButton: {
+        marginTop: 16,
+    },
     card: {
         marginBottom: 16,
     },
@@ -404,8 +423,8 @@ const styles = StyleSheet.create({
         width: '100%',
         height: 150,
         marginBottom: 8,
-      },
-      mapButton: {
+    },
+    mapButton: {
         marginTop: 8,
-      },
+    },
 });

@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import { StyleSheet, View, Text, Alert, SectionList, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
-import { TextInput, Button, RadioButton } from 'react-native-paper';
+import { TextInput, Button } from 'react-native-paper';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../../types';
 import { format, parseISO } from 'date-fns';
@@ -12,32 +12,37 @@ import { formatDateTimeUTC2Digits, formatDateJJMMAA } from '../utils/dateUtils';
 
 const GOOGLE_API_KEY = Constants.expoConfig?.extra?.apiKey || '';
 
-type Props = StackScreenProps<RootStackParamList, 'CreateStep'>;
+type Props = StackScreenProps<RootStackParamList, 'EditStopInfo'>;
 
-export default function CreateStepScreen({ route, navigation }: Props) {
-    const { roadtripId } = route.params;
-    const [stepType, setStepType] = useState('stage'); // 'stage' or 'stop'
-    const [addressInput, setAddressInput] = useState('');
+export default function EditStopInfoScreen({ route, navigation }: Props) {
+    const { stop, refresh } = route.params;
+    console.log('Étape:', stop);
+    console.log('Stop ID:', stop.id);
+
+    const [addressInput, setAddressInput] = useState(stop.address || '');
     const [showPicker, setShowPicker] = useState({ type: '', isVisible: false });
     const [pickerDate, setPickerDate] = useState(new Date());
     const [tempDate, setTempDate] = useState(new Date());
 
     const [formState, setFormState] = useState({
-        title: '',
-        address: '',
-        arrivalDate: new Date(),
-        arrivalTime: new Date(),
-        departureDate: new Date(),
-        departureTime: new Date(),
-        notes: '',
+        title: stop.name || '',
+        address: stop.address || '',
+        arrivalDate: parseISO(stop.arrivalDateTime) || new Date(),
+        arrivalTime: parseISO(stop.arrivalDateTime) || new Date(),
+        departureDate: parseISO(stop.departureDateTime) || new Date(),
+        departureTime: parseISO(stop.departureDateTime) || new Date(),
+        notes: stop.notes || '',
     });
+
+    console.log('formState:', formState);
 
     const googlePlacesRef = useRef(null);
 
     const handleSave = async () => {
-        const urlStage = `https://mon-petit-roadtrip.vercel.app/roadtrips/${roadtripId}/stages`;
-        const urlStop = `https://mon-petit-roadtrip.vercel.app/roadtrips/${roadtripId}/stops`;
-        const url = stepType === 'stage' ? urlStage : urlStop;
+
+        const isEdit = !!stop.id;
+        const url = isEdit ? `https://mon-petit-roadtrip.vercel.app/stops/${stop.id}` : 'https://mon-petit-roadtrip.vercel.app/stops';
+        const method = isEdit ? 'PUT' : 'POST';
         const payload = {
             name: formState.title,
             address: formState.address,
@@ -58,11 +63,12 @@ export default function CreateStepScreen({ route, navigation }: Props) {
             notes: formState.notes,
         };
 
+        console.log('Méthode:', method);
         console.log('Payload:', JSON.stringify(payload));
 
         try {
             const response = await fetch(url, {
-                method: 'POST',
+                method,
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),
             });
@@ -71,6 +77,10 @@ export default function CreateStepScreen({ route, navigation }: Props) {
                 const updatedData = await response.json();
                 console.log('Succès', 'Les informations ont été sauvegardées avec succès.');
                 Alert.alert('Succès', 'Les informations ont été sauvegardées avec succès.');
+                if(refresh){
+                    refresh();
+                }
+
                 navigation.goBack();
             } else {
                 Alert.alert('Erreur', 'Une erreur est survenue lors de la sauvegarde.');
@@ -81,7 +91,7 @@ export default function CreateStepScreen({ route, navigation }: Props) {
         }
     };
 
-    useEffect(() => {
+    React.useEffect(() => {
         navigation.setOptions({
             headerRight: () => (
                 <Button
@@ -104,6 +114,7 @@ export default function CreateStepScreen({ route, navigation }: Props) {
 
     const getTimeFromDate = (date: Date) =>
         `${date.getUTCHours().toString().padStart(2, '0')}:${date.getUTCMinutes().toString().padStart(2, '0')}`;
+    //`${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
 
     const handlePickerChange = (type: string, event: any, selectedDate?: Date) => {
         if (event.type === 'dismissed') {
@@ -165,7 +176,7 @@ export default function CreateStepScreen({ route, navigation }: Props) {
 
     const renderInputField = (field: string) => {
         switch (field) {
-            case 'stepTitle':
+            case 'stopTitle':
                 return (
                     <TextInput
                         label="Nom de l'étape"
@@ -174,7 +185,7 @@ export default function CreateStepScreen({ route, navigation }: Props) {
                         style={styles.input}
                     />
                 );
-            case 'stepAddress':
+            case 'stopAddress':
                 return (
                     <View style={styles.input}>
                         <GooglePlacesAutocomplete
@@ -241,6 +252,7 @@ export default function CreateStepScreen({ route, navigation }: Props) {
                 return (
                     <TextInput
                         label="Heure d'arrivée"
+                        //Par défaut, afficher l'heure sans tenir compte du fuseau horaire
                         value={getTimeFromDate(formState.arrivalTime)}
                         onFocus={() => openPicker('arrivalTime')}
                         style={styles.input}
@@ -285,24 +297,9 @@ export default function CreateStepScreen({ route, navigation }: Props) {
             style={{ flex: 1 }}
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         >
-            <View style={styles.radioContainer}>
-                <RadioButton.Group
-                    onValueChange={value => setStepType(value)}
-                    value={stepType}
-                >
-                    <View style={styles.radioButton}>
-                        <RadioButton value="stage" />
-                        <Text>Stage</Text>
-                    </View>
-                    <View style={styles.radioButton}>
-                        <RadioButton value="stop" />
-                        <Text>Stop</Text>
-                    </View>
-                </RadioButton.Group>
-            </View>
             <SectionList
                 sections={[
-                    { title: 'Informations de l\'étape', data: ['stepTitle', 'stepAddress'] },
+                    { title: 'Informations de l\'arrêt', data: ['stopTitle', 'stopAddress'] },
                     { title: 'Dates et heures', data: ['arrivalDate', 'arrivalTime', 'departureDate', 'departureTime'] },
                     { title: 'Notes', data: ['notes'] },
                 ]}
@@ -360,15 +357,5 @@ const styles = StyleSheet.create({
     clearIcon: {
         marginRight: 10,
         marginTop: 10,
-    },
-    radioContainer: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        marginBottom: 20,
-    },
-    radioButton: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginHorizontal: 10,
     },
 });

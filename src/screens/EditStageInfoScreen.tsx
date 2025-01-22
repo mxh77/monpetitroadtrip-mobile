@@ -7,7 +7,7 @@ import { format, parseISO } from 'date-fns';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import Constants from 'expo-constants';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import { formatDateTimeUTC2Digits, formatDateJJMMAA } from '../utils/dateUtils';
 
 const GOOGLE_API_KEY = Constants.expoConfig?.extra?.apiKey || '';
@@ -15,37 +15,38 @@ const GOOGLE_API_KEY = Constants.expoConfig?.extra?.apiKey || '';
 type Props = StackScreenProps<RootStackParamList, 'EditStageInfo'>;
 
 export default function EditStageInfoScreen({ route, navigation }: Props) {
-    const { type, roadtripId, stageId, stageTitle, stageAddress, stageArrivalDateTime, stageDepartureDateTime, stageNotes, refresh } = route.params;
-    const [addressInput, setAddressInput] = useState(stageAddress || '');
+    const { stage, refresh } = route.params;
+    console.log('Étape:', stage);
+    console.log('Stage ID:', stage.id);
+    const [name, setName] = useState(stage.name);
+    const [address, setAddress] = useState(stage.address);
+    const [arrivalDateTime, setArrivalDateTime] = useState(stage.arrivalDateTime);
+    const [departureDateTime, setDepartureDateTime] = useState(stage.departureDateTime);
+    const [notes, setNotes] = useState(stage.notes);
+
+    const [addressInput, setAddressInput] = useState(stage.address || '');
     const [showPicker, setShowPicker] = useState({ type: '', isVisible: false });
     const [pickerDate, setPickerDate] = useState(new Date());
     const [tempDate, setTempDate] = useState(new Date());
 
     const [formState, setFormState] = useState({
-        title: stageTitle || '',
-        address: stageAddress || '',
-        arrivalDateTime: stageArrivalDateTime ? parseISO(stageArrivalDateTime) : new Date(),
-        arrivalDate: stageArrivalDateTime ? parseISO(stageArrivalDateTime) : new Date(),
-        arrivalTime: stageArrivalDateTime ? parseISO(stageArrivalDateTime) : new Date(),
-        departureDate: stageDepartureDateTime ? parseISO(stageDepartureDateTime) : new Date(),
-        departureTime: stageDepartureDateTime ? parseISO(stageDepartureDateTime) : new Date(),
-        notes: stageNotes || ''
+        title: stage.name || '',
+        address: stage.address || '',
+        arrivalDate: parseISO(stage.arrivalDateTime) || new Date(),
+        arrivalTime: parseISO(stage.arrivalDateTime) || new Date(),
+        departureDate: parseISO(stage.departureDateTime) || new Date(),
+        departureTime: parseISO(stage.departureDateTime) || new Date(),
+        notes: stage.notes || '',
     });
+
     console.log('formState:', formState);
 
     const googlePlacesRef = useRef(null);
 
     const handleSave = async () => {
 
-        const isEdit = !!stageId;
-        const url = isEdit
-            ? type === 'stage'
-                ? `https://mon-petit-roadtrip.vercel.app/stages/${stageId}`
-                : `https://mon-petit-roadtrip.vercel.app/stops/${stageId}`
-            : type === 'stage'
-                ? `https://mon-petit-roadtrip.vercel.app/roadtrips/${roadtripId}/stages`
-                : `https://mon-petit-roadtrip.vercel.app/roadtrips/${roadtripId}/stops`;
-
+        const isEdit = !!stage.id;
+        const url = isEdit ? `https://mon-petit-roadtrip.vercel.app/stages/${stage.id}` : 'https://mon-petit-roadtrip.vercel.app/stages';
         const method = isEdit ? 'PUT' : 'POST';
         const payload = {
             name: formState.title,
@@ -67,8 +68,8 @@ export default function EditStageInfoScreen({ route, navigation }: Props) {
             notes: formState.notes,
         };
 
-        //console.log('Méthode:', method);
-        //console.log('Payload:', JSON.stringify(payload));
+        console.log('Méthode:', method);
+        console.log('Payload:', JSON.stringify(payload));
 
         try {
             const response = await fetch(url, {
@@ -81,7 +82,10 @@ export default function EditStageInfoScreen({ route, navigation }: Props) {
                 const updatedData = await response.json();
                 console.log('Succès', 'Les informations ont été sauvegardées avec succès.');
                 Alert.alert('Succès', 'Les informations ont été sauvegardées avec succès.');
-                refresh();
+                if(refresh){
+                    refresh();
+                }
+
                 navigation.goBack();
             } else {
                 Alert.alert('Erreur', 'Une erreur est survenue lors de la sauvegarde.');
