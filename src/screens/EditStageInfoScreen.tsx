@@ -8,7 +8,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import Constants from 'expo-constants';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { formatDateTimeUTC2Digits, formatDateJJMMAA } from '../utils/dateUtils';
+import { getTimeFromDate } from '../utils/dateUtils';
 
 const GOOGLE_API_KEY = Constants.expoConfig?.extra?.apiKey || '';
 
@@ -117,9 +117,6 @@ export default function EditStageInfoScreen({ route, navigation }: Props) {
         }
     }, [addressInput, formState.address]);
 
-    const getTimeFromDate = (date: Date) =>
-        `${date.getUTCHours().toString().padStart(2, '0')}:${date.getUTCMinutes().toString().padStart(2, '0')}`;
-    //`${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
 
     const handlePickerChange = (type: string, event: any, selectedDate?: Date) => {
         if (event.type === 'dismissed') {

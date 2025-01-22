@@ -13,7 +13,7 @@ import StopScreen from './src/screens/StopScreen';
 import CreateStepScreen from './src/screens/CreateStepScreen';
 import EditStageInfoScreen from './src/screens/EditStageInfoScreen';
 import EditStopInfoScreen from './src/screens/EditStopInfoScreen';
-import AccommodationScreen from './src/screens/AccommodationScreen';
+import EditAccommodationScreen from './src/screens/EditAccommodationScreen';
 import Icon from 'react-native-vector-icons/MaterialIcons'; // Importer l'icône
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -61,7 +61,7 @@ export default function App() {
         <Stack.Screen name="CreateStep" component={CreateStepScreen} options={{ title: 'Etape' }} />
         <Stack.Screen name="EditStageInfo" component={EditStageInfoScreen} options={{ title: 'Etape' }} />
         <Stack.Screen name="EditStopInfo" component={EditStopInfoScreen} options={{ title: 'Arrêt' }} />
-        <Stack.Screen name="Accommodation" component={AccommodationScreen} options={{ title: 'Etape' }} />
+        <Stack.Screen name="EditAccommodation" component={EditAccommodationScreen} options={{ title: 'Etape' }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

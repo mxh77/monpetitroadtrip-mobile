@@ -18,6 +18,7 @@ export interface Step {
 }
 
 export interface Accommodation {
+  _id: string;
   name: string;
   address: string;
   website?: string;
@@ -52,7 +53,6 @@ export interface Activity {
   documents?: File[];
 }
 
-
 export interface File {
   type: string;
   name: string;
@@ -85,27 +85,18 @@ export type RootStackParamList = {
     stepId: string;
     refresh: () => void;
   };
-    EditStageInfo: {
-    stage:Step;
+  EditStageInfo: {
+    stage: Step;
     refresh: () => void;
   };
   EditStopInfo: {
-    stop:Step;
+    stop: Step;
     refresh: () => void;
   };
-  Accommodation: {
-    name: string;
-    address: string;
-    website?: string;
-    phone?: string;
-    email?: string;
-    reservationNumber?: string;
-    confirmationDateTime?: string;
-    arrivalDateTime: string;
-    departureDateTime: string;
-    nights?: number;
-    price?: string;
-    notes?: string;
+  EditAccommodation: {
+    accommodation: Accommodation;
+    refresh: () => void;
+
   };
   WebView: { url: string };
   Maps: undefined;
@@ -118,8 +109,8 @@ export type StageScreenRouteProp = RouteProp<RootStackParamList, 'Stage'>;
 export type EditStageInfoScreenNavigationProp = StackNavigationProp<RootStackParamList, 'EditStageInfo'>;
 export type EditStageInfoScreenRouteProp = RouteProp<RootStackParamList, 'EditStageInfo'>;
 
-export type AccommodationScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Accommodation'>;
-export type AccommodationScreenRouteProp = RouteProp<RootStackParamList, 'Accommodation'>;
+export type EditAccommodationScreenNavigationProp = StackNavigationProp<RootStackParamList, 'EditAccommodation'>;
+export type EditAccommodationScreenRouteProp = RouteProp<RootStackParamList, 'EditAccommodation'>;
 
 //Gérer les props de navigation et de route de MapsScreen
 export type MapsScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Maps'>;
@@ -136,6 +127,6 @@ export type EditStageInfoScreenProps = {
 };
 
 export type AccommodationScreenProps = {
-  navigation: AccommodationScreenNavigationProp;
-  route: AccommodationScreenRouteProp;
+  navigation: EditAccommodationScreenNavigationProp;
+  route: EditAccommodationScreenRouteProp;
 };

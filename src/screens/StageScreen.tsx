@@ -61,6 +61,7 @@ export default function StageScreen({ route, navigation }: Props) {
                 ...data,
                 id: data._id,
             };
+
             console.log('Données transformées:', data._id)
             setStage(transformedData);
 
@@ -230,11 +231,12 @@ export default function StageScreen({ route, navigation }: Props) {
                         <Text style={styles.infoText}>Du {formatDateJJMMAA(accommodation.arrivalDateTime)} au {formatDateJJMMAA(accommodation.departureDateTime)}</Text>
                     </Card.Content>
                     <Card.Content>
-                        {accommodation.thumbnail && (
-                            <TouchableOpacity onPress={() => navigation.navigate('Accommodation', accommodation)}>
-                                <Image source={{ uri: accommodation.thumbnail.url }} style={styles.thumbnail} />
-                            </TouchableOpacity>
-                        )}
+                        <TouchableOpacity onPress={() => navigation.navigate('EditAccommodation', { accommodation , refresh: fetchStage})}>
+                            <Image
+                                source={accommodation.thumbnail ? { uri: accommodation.thumbnail.url } : require('../../assets/default-thumbnail.png')}
+                                style={styles.thumbnail}
+                            />
+                        </TouchableOpacity>
                         <Text style={styles.infoText}>{accommodation.address}</Text>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                             <Button

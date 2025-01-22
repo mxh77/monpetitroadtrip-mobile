@@ -28,7 +28,10 @@ export const formatTimeHHMM = (dateString: string): string => {
     });
   }
 
-  
+  export const getTimeFromDate = (date: Date) =>
+    `${date.getUTCHours().toString().padStart(2, '0')}:${date.getUTCMinutes().toString().padStart(2, '0')}`;
+//`${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+
   
   
   //Fonction permettant de restituer la date (String) d'un objet DateTime sans tenir compte du fuseau horaire
