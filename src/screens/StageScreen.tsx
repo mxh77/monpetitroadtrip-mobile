@@ -144,6 +144,16 @@ export default function StageScreen({ route, navigation }: Props) {
         ));
     }, [coordinatesAccommodation]);
 
+    useEffect(() => {
+        navigation.setOptions({
+            headerRight: () => (
+                <TouchableOpacity onPress={fetchStage} style={{ padding: 10, marginRight: 10 }}>
+                    <Fontawesome5 name="sync" size={20} color="black" />
+                </TouchableOpacity>
+            ),
+        });
+    }, [navigation]);
+
     const renderMarkerActivities = useCallback(() => {
         if (!coordinatesActivities) return null;
         return coordinatesActivities.map((activity, index) => (
@@ -295,12 +305,7 @@ export default function StageScreen({ route, navigation }: Props) {
     }
 
     return (
-        <ScrollView
-            contentContainerStyle={styles.mapContainer}
-            refreshControl={
-                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-            }
-        >
+        <View style={styles.container}>
             <MapView
                 ref={(ref) => {
                     mapRef.current = ref; // Assurez-vous que mapRef est mis à jour ici
@@ -335,7 +340,7 @@ export default function StageScreen({ route, navigation }: Props) {
                 onIndexChange={() => null}
                 initialLayout={{ width: 0, height: 0 }}
             />
-        </ScrollView>
+        </View>
     );
 }
 
@@ -350,7 +355,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    mapContainer: {
+    container: {
         flex: 1,
     },
     map: {

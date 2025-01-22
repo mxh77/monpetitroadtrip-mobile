@@ -2,11 +2,11 @@ import 'dotenv/config';
 
 export default ({ config }) => ({
   ...config,
-  name: "monpetitroadtrip",
+  name: "Mon Petit Roadtrip",
   slug: "monpetitroadtrip",
   version: "1.0.0",
   orientation: "portrait",
-  icon: "./assets/logo192.png",
+  icon: "./assets/logo_sans_texte.png",
   userInterfaceStyle: "light",
   newArchEnabled: false,
   splash: {
@@ -21,7 +21,7 @@ export default ({ config }) => ({
       },
     },
     adaptiveIcon: {
-      foregroundImage: "./assets/logo192.png",
+      foregroundImage: "./assets/logo_sans_texte.png",
       backgroundColor: "#ffffff",
     },
     package: "com.maxime.heron.monpetitroadtrip",

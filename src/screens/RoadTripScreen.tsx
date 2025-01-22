@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, StyleSheet, View, Text, FlatList, ActivityIndicator, TouchableOpacity, Alert } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/FontAwesome5'; // Importer les icônes
-import { RootStackParamList, Roadtrip, StepType, SimpleStep} from '../../types';
+import { RootStackParamList, Roadtrip, StepType} from '../../types';
 import { FAB } from 'react-native-paper'; // Importer le bouton flottant
 import  Swipeable  from 'react-native-gesture-handler/Swipeable'; // Importer Swipeable de react-native-gesture-handler
 
