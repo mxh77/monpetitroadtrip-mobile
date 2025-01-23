@@ -231,7 +231,7 @@ export default function StageScreen({ route, navigation }: Props) {
                         <Text style={styles.infoText}>Du {formatDateJJMMAA(accommodation.arrivalDateTime)} au {formatDateJJMMAA(accommodation.departureDateTime)}</Text>
                     </Card.Content>
                     <Card.Content>
-                        <TouchableOpacity onPress={() => navigation.navigate('EditAccommodation', { accommodation , refresh: fetchStage})}>
+                        <TouchableOpacity onPress={() => navigation.navigate('EditAccommodation', { accommodation, refresh: fetchStage })}>
                             <Image
                                 source={accommodation.thumbnail ? { uri: accommodation.thumbnail.url } : require('../../assets/default-thumbnail.png')}
                                 style={styles.thumbnail}
@@ -269,9 +269,12 @@ export default function StageScreen({ route, navigation }: Props) {
                         <Text style={styles.infoText}>Du {formatDateJJMMAA(activity.startDateTime)} au {formatDateJJMMAA(activity.endDateTime)}</Text>
                     </Card.Content>
                     <Card.Content>
-                        {activity.thumbnail && (
-                            <Image source={{ uri: activity.thumbnail.url }} style={styles.thumbnail} />
-                        )}
+                        <TouchableOpacity onPress={() => navigation.navigate('EditActivity', { activity, refresh: fetchStage })}>
+                            <Image
+                                source={activity.thumbnail ? { uri: activity.thumbnail.url } : require('../../assets/default-thumbnail.png')}
+                                style={styles.thumbnail}
+                            />
+                        </TouchableOpacity>
                         <Text style={styles.infoText}>{activity.address}</Text>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                             <Button

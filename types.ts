@@ -37,6 +37,7 @@ export interface Accommodation {
 }
 
 export interface Activity {
+  _id: string;
   name: string;
   address: string;
   website?: string;
@@ -98,6 +99,11 @@ export type RootStackParamList = {
     refresh: () => void;
 
   };
+  EditActivity: {
+    activity: Activity;
+    refresh: () => void;
+
+  };
   WebView: { url: string };
   Maps: undefined;
 };
@@ -105,28 +111,31 @@ export type RootStackParamList = {
 // Types pour les props de navigation et de route
 export type StageScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Stage'>;
 export type StageScreenRouteProp = RouteProp<RootStackParamList, 'Stage'>;
-
-export type EditStageInfoScreenNavigationProp = StackNavigationProp<RootStackParamList, 'EditStageInfo'>;
-export type EditStageInfoScreenRouteProp = RouteProp<RootStackParamList, 'EditStageInfo'>;
-
-export type EditAccommodationScreenNavigationProp = StackNavigationProp<RootStackParamList, 'EditAccommodation'>;
-export type EditAccommodationScreenRouteProp = RouteProp<RootStackParamList, 'EditAccommodation'>;
-
-//Gérer les props de navigation et de route de MapsScreen
-export type MapsScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Maps'>;
-export type MapsScreenRouteProp = RouteProp<RootStackParamList, 'Maps'>;
-
 export type StageScreenProps = {
   navigation: StageScreenNavigationProp;
   route: StageScreenRouteProp;
 };
 
+export type EditStageInfoScreenNavigationProp = StackNavigationProp<RootStackParamList, 'EditStageInfo'>;
+export type EditStageInfoScreenRouteProp = RouteProp<RootStackParamList, 'EditStageInfo'>;
 export type EditStageInfoScreenProps = {
   navigation: EditStageInfoScreenNavigationProp;
   route: EditStageInfoScreenRouteProp;
 };
 
+export type EditAccommodationScreenNavigationProp = StackNavigationProp<RootStackParamList, 'EditAccommodation'>;
+export type EditAccommodationScreenRouteProp = RouteProp<RootStackParamList, 'EditAccommodation'>;
 export type AccommodationScreenProps = {
   navigation: EditAccommodationScreenNavigationProp;
   route: EditAccommodationScreenRouteProp;
 };
+
+export type EditActivityScreenNavigationProp = StackNavigationProp<RootStackParamList, 'EditActivity'>;
+export type EditActivityScreenRouteProp = RouteProp<RootStackParamList, 'EditActivity'>;
+export type ActivityScreenProps = {
+  navigation: EditActivityScreenNavigationProp;
+  route: EditActivityScreenRouteProp;
+};
+
+
+
