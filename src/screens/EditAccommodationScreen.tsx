@@ -1,50 +1,53 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, View, Text, SectionList, Alert, KeyboardAvoidingView, Platform } from 'react-native';
+import { StyleSheet, View, Text, SectionList, Alert, KeyboardAvoidingView, Platform, TouchableOpacity, Image } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
 import { StackScreenProps } from '@react-navigation/stack';
-import { RootStackParamList } from '../../types';
+import { RootStackParamList, Accommodation } from '../../types';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { formatDateTimeUTC2Digits, formatDateJJMMAA, getTimeFromDate, formatTimeHHMM } from '../utils/dateUtils';
 import Constants from 'expo-constants';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { format, parseISO } from 'date-fns';
+import { format, parseISO, set } from 'date-fns';
 import Fontawesome5 from 'react-native-vector-icons/FontAwesome5';
+import * as ImagePicker from 'expo-image-picker';
 
 type Props = StackScreenProps<RootStackParamList, 'EditAccommodation'>;
 const GOOGLE_API_KEY = Constants.expoConfig?.extra?.apiKey || '';
 
-export default function AccommodationScreen({ route, navigation }: Props) {
+export default function EditAccommodationScreen({ route, navigation }: Props) {
   const { accommodation, refresh } = route.params;
-  console.log('Accommodation ID:', accommodation._id);
-
+console.log('Accommodation:', accommodation);
   const [isEditing, setIsEditing] = useState(true);
+  const [thumbnail, setThumbnail] = useState(accommodation.thumbnail ? { uri: accommodation.thumbnail.url } : null);
 
   const [addressInput, setAddressInput] = useState(accommodation.address || '');
   const [showPicker, setShowPicker] = useState({ type: '', isVisible: false });
   const [pickerDate, setPickerDate] = useState(new Date());
   const [tempDate, setTempDate] = useState(new Date());
 
-  const [formState, setFormState] = useState({
-    name: accommodation.name || ''  ,
-    address: accommodation.address,
-    website: accommodation.website,
-    phone: accommodation.phone,
-    email: accommodation.email,
-    reservationNumber: accommodation.reservationNumber,
-    confirmationDateTime: accommodation.confirmationDateTime,
-    arrivalDate: parseISO(accommodation.arrivalDateTime) || new Date(),
-    arrivalTime: parseISO(accommodation.arrivalDateTime) || new Date(),
-    departureDate: parseISO(accommodation.departureDateTime) || new Date(),
-    departureTime: parseISO(accommodation.departureDateTime) || new Date(),
-    nights: accommodation.nights,
-    price: accommodation.price,
-    notes: accommodation.notes,
-
+  const [formState, setFormState] = useState<Accommodation>({
+    _id: accommodation._id,
+    name: accommodation.name || '',
+    address: accommodation.address || '',
+    website: accommodation.website || '',
+    phone: accommodation.phone || '',
+    email: accommodation.email || '',
+    reservationNumber: accommodation.reservationNumber || '',
+    confirmationDateTime: accommodation.confirmationDateTime || '',
+    arrivalDateTime: accommodation.arrivalDateTime || '',
+    departureDateTime: accommodation.departureDateTime || '',
+    nights: accommodation.nights || 0,
+    price: accommodation.price || '0',
+    notes: accommodation.notes || '',
+    thumbnail: accommodation.thumbnail,
   });
 
-  console.log('formState:', formState);
+  const [formConfirmationDate, setFormConfirmationDate] = useState(new Date());
+  const [formArrivalDate, setFormArrivalDate] = useState(new Date());
+  const [formArrivalTime, setFormArrivalTime] = useState(new Date());
+  const [formDepartureDate, setFormDepartureDate] = useState(new Date());
+  const [formDepartureTime, setFormDepartureTime] = useState(new Date());
 
   const googlePlacesRef = useRef(null);
 
@@ -53,30 +56,22 @@ export default function AccommodationScreen({ route, navigation }: Props) {
     const url = `https://mon-petit-roadtrip.vercel.app/accommodations/${accommodation._id}`;
     console.log('formState:', formState);
     const payload = {
-      name: formState.name,
-      address: formState.address,
-      website: formState.website,
-      phone: formState.phone,
-      email: formState.email,
-      reservationNumber: formState.reservationNumber,
-      confirmationDateTime: formState.confirmationDateTime,
+      ...formState,
+      confirmationDateTime: formConfirmationDate.toISOString(),
       arrivalDateTime: new Date(Date.UTC(
-        formState.arrivalDate.getUTCFullYear(),
-        formState.arrivalDate.getUTCMonth(),
-        formState.arrivalDate.getUTCDate(),
-        formState.arrivalTime.getUTCHours(),
-        formState.arrivalTime.getUTCMinutes()
-      )),
+        formArrivalDate.getUTCFullYear(),
+        formArrivalDate.getUTCMonth(),
+        formArrivalDate.getUTCDate(),
+        formArrivalTime.getUTCHours(),
+        formArrivalTime.getUTCMinutes()
+      )).toISOString(),
       departureDateTime: new Date(Date.UTC(
-        formState.departureDate.getUTCFullYear(),
-        formState.departureDate.getUTCMonth(),
-        formState.departureDate.getUTCDate(),
-        formState.departureTime.getUTCHours(),
-        formState.departureTime.getUTCMinutes()
-      )),
-      nights: formState.nights,
-      price: formState.price,
-      notes: formState.notes,
+        formDepartureDate.getUTCFullYear(),
+        formDepartureDate.getUTCMonth(),
+        formDepartureDate.getUTCDate(),
+        formDepartureTime.getUTCHours(),
+        formDepartureTime.getUTCMinutes())
+      ).toISOString()
     };
 
     console.log('Payload:', JSON.stringify(payload));
@@ -114,7 +109,21 @@ export default function AccommodationScreen({ route, navigation }: Props) {
         </TouchableOpacity>
       ),
     });
-  }, [navigation,handleSave]);
+  }, [navigation, handleSave]);
+
+  useEffect(() => {
+    if (formState.confirmationDateTime) {
+      setFormConfirmationDate(parseISO(formState.confirmationDateTime));
+    }
+    if (formState.arrivalDateTime) {
+      setFormArrivalDate(parseISO(formState.arrivalDateTime));
+      setFormArrivalTime(parseISO(formState.arrivalDateTime));
+    }
+    if (formState.departureDateTime) {
+      setFormDepartureDate(parseISO(formState.departureDateTime));
+      setFormDepartureTime(parseISO(formState.departureDateTime));
+    }
+  }, [formState.confirmationDateTime, formState.arrivalDateTime, formState.departureDateTime]);
 
   useEffect(() => {
     if (addressInput !== formState.address) {
@@ -131,46 +140,67 @@ export default function AccommodationScreen({ route, navigation }: Props) {
     setShowPicker({ type: '', isVisible: false });
     if (selectedDate) {
       const newDate = new Date(selectedDate);
-      if (type === 'arrivalDate') setFormState((prevState) => ({ ...prevState, arrivalDate: newDate }));
-      if (type === 'arrivalTime') setFormState((prevState) => ({ ...prevState, arrivalTime: newDate }));
-      if (type === 'departureDate') setFormState((prevState) => ({ ...prevState, departureDate: newDate }));
-      if (type === 'departureTime') setFormState((prevState) => ({ ...prevState, departureTime: newDate }));
+      if (type === 'confirmationDate') {
+        setFormConfirmationDate(newDate);
+      }
+      if (type === 'arrivalDate') {
+        setFormArrivalDate(newDate);
+      }
+      if (type === 'arrivalTime') {
+        setFormArrivalTime(newDate);
+      }
+      if (type === 'departureDate') {
+        setFormDepartureDate(newDate);
+      }
+      if (type === 'departureTime') {
+        setFormDepartureTime(newDate);
+      }
+
     }
   };
 
   const openPicker = (type: string) => {
     let date;
     switch (type) {
-      case 'arrivalDate':
+      case 'confirmationDate':
+        console.log('formConfirmationDate:', formConfirmationDate);
         date = new Date(Date.UTC(
-          formState.arrivalDate.getUTCFullYear(),
-          formState.arrivalDate.getUTCMonth(),
-          formState.arrivalDate.getUTCDate()
+          formConfirmationDate.getUTCFullYear(),
+          formConfirmationDate.getUTCMonth(),
+          formConfirmationDate.getUTCDate()
+        ));
+        break;
+      case 'arrivalDate':
+        console.log('formArrivalDate:', formArrivalDate);
+        date = new Date(Date.UTC(
+          formArrivalDate.getUTCFullYear(),
+          formArrivalDate.getUTCMonth(),
+          formArrivalDate.getUTCDate()
         ));
         break;
       case 'arrivalTime':
         date = new Date(Date.UTC(
-          formState.arrivalTime.getUTCFullYear(),
-          formState.arrivalTime.getUTCMonth(),
-          formState.arrivalTime.getUTCDate(),
-          formState.arrivalTime.getUTCHours(),
-          formState.arrivalTime.getUTCMinutes()
+          formArrivalTime.getUTCFullYear(),
+          formArrivalTime.getUTCMonth(),
+          formArrivalTime.getUTCDate(),
+          formArrivalTime.getUTCHours(),
+          formArrivalTime.getUTCMinutes()
         ));
         break;
       case 'departureDate':
         date = new Date(Date.UTC(
-          formState.departureDate.getUTCFullYear(),
-          formState.departureDate.getUTCMonth(),
-          formState.departureDate.getUTCDate()
+          formDepartureDate.getUTCFullYear(),
+          formDepartureDate.getUTCMonth(),
+          formDepartureDate.getUTCDate()
         ));
         break;
       case 'departureTime':
         date = new Date(Date.UTC(
-          formState.departureTime.getUTCFullYear(),
-          formState.departureTime.getUTCMonth(),
-          formState.departureTime.getUTCDate(),
-          formState.departureTime.getUTCHours(),
-          formState.departureTime.getUTCMinutes()
+          formDepartureTime.getUTCFullYear(),
+          formDepartureTime.getUTCMonth(),
+          formDepartureTime.getUTCDate(),
+          formDepartureTime.getUTCHours(),
+          formDepartureTime.getUTCMinutes()
         ));
         break;
       default:
@@ -186,7 +216,7 @@ export default function AccommodationScreen({ route, navigation }: Props) {
       case 'name':
         return (
           <TextInput
-            label="Nom de l'étape"
+            label="Nom de l'hébergement"
             value={formState.name}
             onChangeText={(text) => setFormState((prevState) => ({ ...prevState, name: text }))}
             style={styles.input}
@@ -286,8 +316,8 @@ export default function AccommodationScreen({ route, navigation }: Props) {
         return (
           <TextInput
             label="Date de confirmation"
-            value={format(formState.arrivalDate, 'dd/MM/yyyy')}
-            onFocus={() => openPicker('arrivalDate')}
+            value={formConfirmationDate ? format(formConfirmationDate, 'dd/MM/yyyy') : ''}
+            onFocus={() => openPicker('confirmationDate')}
             style={styles.input}
           />
         );
@@ -297,7 +327,7 @@ export default function AccommodationScreen({ route, navigation }: Props) {
             <View style={styles.rowItem}>
               <TextInput
                 label="Date d'arrivée"
-                value={format(formState.arrivalDate, 'dd/MM/yyyy')}
+                value={format(formArrivalDate, 'dd/MM/yyyy')}
                 onFocus={() => openPicker('arrivalDate')}
                 style={styles.input}
               />
@@ -305,13 +335,12 @@ export default function AccommodationScreen({ route, navigation }: Props) {
             <View style={styles.rowItem}>
               <TextInput
                 label="Heure d'arrivée"
-                value={getTimeFromDate(formState.arrivalTime)}
+                value={getTimeFromDate(new Date(formArrivalTime))}
                 onFocus={() => openPicker('arrivalTime')}
                 style={styles.input}
               />
             </View>
           </View>
-
         );
       case 'departureDateTime':
         return (
@@ -319,7 +348,7 @@ export default function AccommodationScreen({ route, navigation }: Props) {
             <View style={styles.rowItem}>
               <TextInput
                 label="Date de départ"
-                value={format(formState.departureDate, 'dd/MM/yyyy')}
+                value={format(formDepartureDate, 'dd/MM/yyyy')}
                 onFocus={() => openPicker('departureDate')}
                 style={styles.input}
               />
@@ -327,7 +356,7 @@ export default function AccommodationScreen({ route, navigation }: Props) {
             <View style={styles.rowItem}>
               <TextInput
                 label="Heure de départ"
-                value={getTimeFromDate(formState.departureTime)}
+                value={getTimeFromDate(new Date(formDepartureTime))}
                 onFocus={() => openPicker('departureTime')}
                 style={styles.input}
               />
@@ -347,7 +376,7 @@ export default function AccommodationScreen({ route, navigation }: Props) {
         return (
           <TextInput
             label="Prix"
-            value={formState.price}
+            value={formState.price? formState.price.toString() : '0'}
             onChangeText={(text) => setFormState((prevState) => ({ ...prevState, price: text }))}
             style={styles.input}
           />
@@ -386,6 +415,7 @@ export default function AccommodationScreen({ route, navigation }: Props) {
         renderSectionHeader={({ section: { title } }) => (
           <Text style={styles.sectionTitle}>{title}</Text>
         )}
+
       />
       {showPicker.isVisible && (
         <DateTimePicker
@@ -395,6 +425,7 @@ export default function AccommodationScreen({ route, navigation }: Props) {
           timeZoneName='UTC'
           onChange={(event, selectedDate) => {
             if (event.type === 'set' && selectedDate) {
+              console.log('Selected date:', selectedDate);
               handlePickerChange(showPicker.type, event, selectedDate);
             } else {
               setPickerDate(tempDate); // Reset to the original date if cancelled
@@ -437,5 +468,19 @@ const styles = StyleSheet.create({
   clearIcon: {
     marginRight: 10,
     marginTop: 10,
+  },
+  thumbnailContainer: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  thumbnail: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+  },
+  changeThumbnailText: {
+    marginTop: 10,
+    color: '#007BFF',
+    textDecorationLine: 'underline',
   },
 });

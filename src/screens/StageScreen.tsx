@@ -62,7 +62,7 @@ export default function StageScreen({ route, navigation }: Props) {
                 id: data._id,
             };
 
-            console.log('Données transformées:', data._id)
+            console.log('Données transformées:', transformedData)
             setStage(transformedData);
 
             // Récupérer les coordonnées de l'adresse
