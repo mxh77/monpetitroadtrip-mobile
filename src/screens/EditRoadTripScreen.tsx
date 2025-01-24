@@ -127,7 +127,7 @@ export default function EditRoadTripScreen({ route, navigation }: Props) {
 
       if (response.ok) {
         Alert.alert('Succès', 'Le roadtrip a été sauvegardé.');
-        navigation.navigate('RoadTrips', { refresh: () => {} });
+        navigation.navigate('RoadTrips', { refresh: () => { } });
       } else {
         const data = await response.json();
         Alert.alert('Erreur', data.message || 'Une erreur est survenue.');
@@ -185,7 +185,7 @@ export default function EditRoadTripScreen({ route, navigation }: Props) {
         transparent={true}
         animationType="none"
         visible={loading}
-        onRequestClose={() => {}}
+        onRequestClose={() => { }}
       >
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#007BFF" />

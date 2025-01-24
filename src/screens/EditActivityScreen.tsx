@@ -16,30 +16,31 @@ type Props = StackScreenProps<RootStackParamList, 'EditActivity'>;
 const GOOGLE_API_KEY = Constants.expoConfig?.extra?.apiKey || '';
 
 export default function EditActivityScreen({ route, navigation }: Props) {
-  const { activity, refresh } = route.params;
-console.log('Activity:', activity);
-  const [isEditing, setIsEditing] = useState(true);
-  const [thumbnail, setThumbnail] = useState(activity.thumbnail ? { uri: activity.thumbnail.url } : null);
+  const { stage, activity, refresh } = route.params;
+  const isEditing = !!activity;
+  console.log('Activity:', activity);
 
-  const [addressInput, setAddressInput] = useState(activity.address || '');
+  const [thumbnail, setThumbnail] = useState(activity?.thumbnail ? { uri: activity.thumbnail.url } : null);
+
+  const [addressInput, setAddressInput] = useState(activity?.address || '');
   const [showPicker, setShowPicker] = useState({ type: '', isVisible: false });
   const [pickerDate, setPickerDate] = useState(new Date());
   const [tempDate, setTempDate] = useState(new Date());
 
   const [formState, setFormState] = useState<Activity>({
-    _id: activity._id,
-    name: activity.name || '',
-    address: activity.address || '',
-    website: activity.website || '',
-    phone: activity.phone || '',
-    email: activity.email || '',
-    reservationNumber: activity.reservationNumber || '',
-    confirmationDateTime: activity.confirmationDateTime || '',
-    startDateTime: activity.startDateTime || '',
-    endDateTime: activity.endDateTime || '',
-    price: activity.price || '0',
-    notes: activity.notes || '',
-    thumbnail: activity.thumbnail,
+    _id: activity?._id || '',
+    name: activity?.name || '',
+    address: activity?.address || '',
+    website: activity?.website || '',
+    phone: activity?.phone || '',
+    email: activity?.email || '',
+    reservationNumber: activity?.reservationNumber || '',
+    confirmationDateTime: activity?.confirmationDateTime || '',
+    startDateTime: activity?.startDateTime || '',
+    endDateTime: activity?.endDateTime || '',
+    price: activity?.price || '0',
+    notes: activity?.notes || '',
+    thumbnail: activity?.thumbnail || null,
   });
 
   const [formConfirmationDate, setFormConfirmationDate] = useState(new Date());
@@ -51,9 +52,12 @@ console.log('Activity:', activity);
   const googlePlacesRef = useRef(null);
 
   const handleSave = async () => {
-    console.log('Activity ID:', activity._id);
-    const url = `https://mon-petit-roadtrip.vercel.app/activities/${activity._id}`;
+    console.log('Activity ID:', activity?._id);
+    const url = isEditing
+      ? `https://mon-petit-roadtrip.vercel.app/activities/${activity._id}`
+      : `https://mon-petit-roadtrip.vercel.app/roadtrips/${stage.roadtripId}/stages/${stage.id}/activities`;
     console.log('formState:', formState);
+
     const payload = {
       ...formState,
       confirmationDateTime: formConfirmationDate.toISOString(),
@@ -73,13 +77,25 @@ console.log('Activity:', activity);
       ).toISOString()
     };
 
-    console.log('Payload:', JSON.stringify(payload));
+    // Préparez le formulaire multipart/form-data
+    const formData = new FormData();
+    formData.append('data', JSON.stringify(payload));
+
+    if (formState.thumbnail && typeof formState.thumbnail.url === 'string') {
+      formData.append('thumbnail', {
+        uri: formState.thumbnail.url,
+        name: 'thumbnail.jpg',
+        type: 'image/jpeg',
+      } as any);
+    }
+
+    console.log(isEditing ? 'PUT Payload :' : 'POST Payload :', payload);
+    console.log(isEditing ? 'PUT Data :' : 'POST Data :', formData);
 
     try {
       const response = await fetch(url, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        method: isEditing ? 'PUT' : 'POST',
+        body: formData,
       });
 
       if (response.ok) {
@@ -100,15 +116,67 @@ console.log('Activity:', activity);
     }
   };
 
+  const handleDelete = async () => {
+    if (!activity?._id) return;
+
+    Alert.alert(
+      'Confirmation',
+      'Êtes-vous sûr de vouloir supprimer cet hébergement ?',
+      [
+        {
+          text: 'Annuler',
+          style: 'cancel',
+        },
+        {
+          text: 'Supprimer',
+          style: 'destructive',
+          onPress: async () => {
+            const url = `https://mon-petit-roadtrip.vercel.app/activities/${activity._id}`;
+
+            try {
+              const response = await fetch(url, {
+                method: 'DELETE',
+              });
+
+              if (response.ok) {
+                console.log('Succès', 'L\'hébergement a été supprimé avec succès.');
+                Alert.alert('Succès', 'L\'hébergement a été supprimé avec succès.');
+                if (refresh) {
+                  refresh();
+                }
+
+                navigation.goBack();
+              } else {
+                Alert.alert('Erreur', 'Une erreur est survenue lors de la suppression.');
+              }
+            } catch (error) {
+              console.error('Erreur lors de la suppression:', error);
+              Alert.alert('Erreur', 'Une erreur est survenue lors de la suppression.');
+            }
+          },
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
   useEffect(() => {
+    console.log('useEffect called');
     navigation.setOptions({
       headerRight: () => (
-        <TouchableOpacity onPress={handleSave} style={{ padding: 10, marginRight: 10 }}>
-          <Fontawesome5 name="save" size={30} color="black" />
-        </TouchableOpacity>
+        <View style={{ flexDirection: 'row' }}>
+          {isEditing && (
+            <TouchableOpacity onPress={handleDelete} style={{ padding: 10, marginRight: 10 }}>
+              <Fontawesome5 name="trash-alt" size={30} color="red" />
+            </TouchableOpacity>
+          )}
+          <TouchableOpacity onPress={handleSave} style={{ padding: 10, marginRight: 10 }}>
+            <Fontawesome5 name="save" size={30} color="black" />
+          </TouchableOpacity>
+        </View>
       ),
     });
-  }, [navigation, handleSave]);
+  }, [navigation, handleSave, handleDelete]);
 
   useEffect(() => {
     if (formState.confirmationDateTime) {
@@ -154,7 +222,6 @@ console.log('Activity:', activity);
       if (type === 'endTime') {
         setFormEndTime(newDate);
       }
-
     }
   };
 
@@ -210,12 +277,34 @@ console.log('Activity:', activity);
     setShowPicker({ type, isVisible: true });
   };
 
+  const pickImage = async () => {
+    const result = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (result.granted === false) {
+      alert('Permission to access gallery is required!');
+      return;
+    }
+
+    let pickerResult = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!pickerResult.canceled) {
+      if (pickerResult.assets && pickerResult.assets.length > 0) {
+        setThumbnail({ uri: pickerResult.assets[0].uri });
+        setFormState((prevState) => ({ ...prevState, thumbnail: { url: pickerResult.assets[0].uri, type: 'image', name: 'thumbnail', fileId: '', createdAt: '' } }));
+      }
+    }
+  };
+
   const renderInputField = (field: string) => {
     switch (field) {
       case 'name':
         return (
           <TextInput
-            label="Nom de l'activité"
+            label="Nom de l'hébergement"
             value={formState.name}
             onChangeText={(text) => setFormState((prevState) => ({ ...prevState, name: text }))}
             style={styles.input}
@@ -325,7 +414,7 @@ console.log('Activity:', activity);
           <View style={styles.rowContainer}>
             <View style={styles.rowItem}>
               <TextInput
-                label="Date de début"
+                label="Date d'arrivée"
                 value={format(formStartDate, 'dd/MM/yyyy')}
                 onFocus={() => openPicker('startDate')}
                 style={styles.input}
@@ -333,7 +422,7 @@ console.log('Activity:', activity);
             </View>
             <View style={styles.rowItem}>
               <TextInput
-                label="Heure de début"
+                label="Heure d'arrivée"
                 value={getTimeFromDate(new Date(formStartTime))}
                 onFocus={() => openPicker('startTime')}
                 style={styles.input}
@@ -346,7 +435,7 @@ console.log('Activity:', activity);
           <View style={styles.rowContainer}>
             <View style={styles.rowItem}>
               <TextInput
-                label="Date de fin"
+                label="Date de départ"
                 value={format(formEndDate, 'dd/MM/yyyy')}
                 onFocus={() => openPicker('endDate')}
                 style={styles.input}
@@ -354,7 +443,7 @@ console.log('Activity:', activity);
             </View>
             <View style={styles.rowItem}>
               <TextInput
-                label="Heure de fin"
+                label="Heure de départ"
                 value={getTimeFromDate(new Date(formEndTime))}
                 onFocus={() => openPicker('endTime')}
                 style={styles.input}
@@ -362,11 +451,12 @@ console.log('Activity:', activity);
             </View>
           </View>
         );
+
       case 'price':
         return (
           <TextInput
             label="Prix"
-            value={formState.price? formState.price.toString() : '0'}
+            value={formState.price ? formState.price.toString() : '0'}
             onChangeText={(text) => setFormState((prevState) => ({ ...prevState, price: text }))}
             style={styles.input}
           />
@@ -391,11 +481,19 @@ console.log('Activity:', activity);
       style={{ flex: 1 }}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
+      <View style={styles.thumbnailContainer}>
+        <TouchableOpacity onPress={pickImage}>
+          <Image
+            source={thumbnail ? { uri: thumbnail.uri } : require('../../assets/default-thumbnail.png')}
+            style={styles.thumbnail}
+          />
+        </TouchableOpacity>
+      </View>
       <SectionList
         sections={[
-          { title: 'Informations Générales', data: ['name', 'address', 'website', 'phone', 'email'] },
+          { title: 'Infodddrmations Générales', data: ['name', 'address', 'website', 'phone', 'email'] },
           { title: 'Réservation', data: ['reservationNumber', 'confirmationDateTime'] },
-          { title: 'Dates d\'activité', data: ['startDateTime', 'endDateTime'] },
+          { title: 'Dates de séjour', data: ['startDateTime', 'endDateTime', 'nights'] },
           { title: 'Autres informations', data: ['price', 'notes'] },
         ]}
         renderItem={({ item }) => <View key={item}>{renderInputField(item)}</View>}
@@ -405,7 +503,6 @@ console.log('Activity:', activity);
         renderSectionHeader={({ section: { title } }) => (
           <Text style={styles.sectionTitle}>{title}</Text>
         )}
-
       />
       {showPicker.isVisible && (
         <DateTimePicker

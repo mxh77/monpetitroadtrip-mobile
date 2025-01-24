@@ -10,6 +10,7 @@ import Geocoder from 'react-native-geocoding';
 import Constants from 'expo-constants';
 import Fontawesome5 from 'react-native-vector-icons/FontAwesome5';
 import { formatDateTimeUTC2Digits, formatDateJJMMAA } from '../utils/dateUtils';
+import { TriangleCornerTopRight } from '../components/shapes';
 
 type Props = StackScreenProps<RootStackParamList, 'Stage'>;
 
@@ -17,20 +18,26 @@ const GOOGLE_API_KEY = Constants.expoConfig?.extra?.apiKey || '';
 Geocoder.init(GOOGLE_API_KEY);
 
 export default function StageScreen({ route, navigation }: Props) {
+    //Récupération des paramètres de navigation
+    const { type, roadtripId, stepId: stageId, refresh } = route.params;
+
     // États
     const [stage, setStage] = useState<Step | null>(null);
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
     const [coordinatesStage, setCoordinatesStage] = useState<{ latitude: number; longitude: number } | null>(null);
-    const [coordinatesAccommodation, setCoordinatesAccommodation] = useState<Array<{ latitude: number; longitude: number; name: string; arrivalDateTime: string }>>([]);
+    const [coordinatesAccommodations, setCoordinatesAccommodations] = useState<Array<{ latitude: number; longitude: number; name: string; arrivalDateTime: string }>>([]);
     const [coordinatesActivities, setCoordinatesActivities] = useState<Array<{
         address: string; latitude: number; longitude: number; name: string; arrivalDateTime: string
     }>>([]);
     const mapRef = useRef<MapView>(null);
+    const [index, setIndex] = useState(0); // État pour suivre l'onglet actif
+    const [routes] = useState([
+        { key: 'infos', title: 'Infos' },
+        { key: 'accommodations', title: 'Hébergements' },
+        { key: 'activities', title: 'Activités' },
+    ]);
 
-    // Récupérer l'id de l'étape
-    const { stepId } = route.params;
-    console.log('ID de l\'étape:', stepId);
 
     // Appeler l'API lors du montage du composant
     useEffect(() => {
@@ -53,7 +60,7 @@ export default function StageScreen({ route, navigation }: Props) {
     // Appeler l'API
     const fetchStage = async () => {
         try {
-            const response = await fetch(`https://mon-petit-roadtrip.vercel.app/stages/${stepId}`);
+            const response = await fetch(`https://mon-petit-roadtrip.vercel.app/stages/${stageId}`);
             const data = await response.json();
             console.log('Données de l\'API:'); // Ajoutez ce log
 
@@ -77,15 +84,15 @@ export default function StageScreen({ route, navigation }: Props) {
                 const coords = await getCoordinates(accommodation.address);
                 return coords ? { ...accommodation, latitude: coords.latitude, longitude: coords.longitude } : null;
             }));
-            setCoordinatesAccommodation(accommodationCoords.filter(coord => coord !== null));
+            setCoordinatesAccommodations(accommodationCoords.filter(coord => coord !== null));
 
             // Récupérer les coordonnées des adresses des activities
             const activities = data.activities;
-            const activitiesCoords = await Promise.all(activities.map(async (activity: any) => {
+            const activitieCoords = await Promise.all(activities.map(async (activity: any) => {
                 const coords = await getCoordinates(activity.address);
                 return coords ? { ...activity, latitude: coords.latitude, longitude: coords.longitude } : null;
             }));
-            setCoordinatesActivities(activitiesCoords.filter(coord => coord !== null));
+            setCoordinatesActivities(activitieCoords.filter(coord => coord !== null));
 
         } catch (error) {
             console.error('Erreur lors de la récupération de l\'étape:', error);
@@ -114,7 +121,7 @@ export default function StageScreen({ route, navigation }: Props) {
         if (mapRef.current) {
             const allCoordinates = [
                 coordinatesStage,
-                ...coordinatesAccommodation,
+                ...coordinatesAccommodations,
                 ...coordinatesActivities,
             ].filter(coord => coord && coord.latitude !== undefined && coord.longitude !== undefined);
 
@@ -131,11 +138,11 @@ export default function StageScreen({ route, navigation }: Props) {
     // Ajuster la carte pour s'adapter aux marqueurs
     useEffect(() => {
         adjustMap();
-    }, [coordinatesStage, coordinatesAccommodation, coordinatesActivities]);
+    }, [coordinatesStage, coordinatesAccommodations, coordinatesActivities]);
 
     const renderMarkerAccommodations = useCallback(() => {
-        if (!coordinatesAccommodation) return null;
-        return coordinatesAccommodation.map((accommodation, index) => (
+        if (!coordinatesAccommodations) return null;
+        return coordinatesAccommodations.map((accommodation, index) => (
             <Marker
                 key={`${accommodation.latitude}-${accommodation.longitude}`}
                 coordinate={{
@@ -149,7 +156,7 @@ export default function StageScreen({ route, navigation }: Props) {
                 <Fontawesome5 name="campground" size={24} color="green" />
             </Marker>
         ));
-    }, [coordinatesAccommodation]);
+    }, [coordinatesAccommodations]);
 
     useEffect(() => {
         navigation.setOptions({
@@ -223,85 +230,102 @@ export default function StageScreen({ route, navigation }: Props) {
     };
 
     const Accommodations = () => (
-        <ScrollView style={styles.tabContent}>
-            {stage.accommodations.map((accommodation, index) => (
-                <Card key={index} style={styles.card}>
-                    <Card.Title titleStyle={styles.cardTitle} title={accommodation.name} />
-                    <Card.Content>
-                        <Text style={styles.infoText}>Du {formatDateJJMMAA(accommodation.arrivalDateTime)} au {formatDateJJMMAA(accommodation.departureDateTime)}</Text>
-                    </Card.Content>
-                    <Card.Content>
-                        <TouchableOpacity onPress={() => navigation.navigate('EditAccommodation', { accommodation, refresh: fetchStage })}>
-                            <Image
-                                source={accommodation.thumbnail ? { uri: accommodation.thumbnail.url } : require('../../assets/default-thumbnail.png')}
-                                style={styles.thumbnail}
-                            />
-                        </TouchableOpacity>
-                        <Text style={styles.infoText}>{accommodation.address}</Text>
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                            <Button
-                                mode="contained"
-                                onPress={() => openWebsite(accommodation.website)}
-                                style={styles.mapButton}
-                            >
-                                Ouvrir Site Web
-                            </Button>
-                            <Button
-                                mode="contained"
-                                onPress={() => openInGoogleMaps(accommodation.address)}
-                                style={styles.mapButton}
-                            >
-                                Ouvrir dans Google Maps
-                            </Button>
-                        </View>
-                    </Card.Content>
-                </Card>
-            ))}
-        </ScrollView>
+        <View style={{ flex: 1 }}>
+            <ScrollView style={styles.tabContent}>
+                {stage.accommodations.map((accommodation, index) => (
+                    <Card key={index} style={styles.card}>
+                        <Card.Title titleStyle={styles.cardTitle} title={accommodation.name} />
+                        <Card.Content>
+                            <Text style={styles.infoText}>Du {formatDateJJMMAA(accommodation.arrivalDateTime)} au {formatDateJJMMAA(accommodation.departureDateTime)}</Text>
+                        </Card.Content>
+                        <Card.Content>
+                            <TouchableOpacity onPress={() => navigation.navigate('EditAccommodation', { stage: null, accommodation, refresh: fetchStage })}>
+                                <Image
+                                    source={accommodation.thumbnail ? { uri: accommodation.thumbnail.url } : require('../../assets/default-thumbnail.png')}
+                                    style={styles.thumbnail}
+                                />
+                            </TouchableOpacity>
+                            <Text style={styles.infoText}>{accommodation.address}</Text>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <Button
+                                    mode="contained"
+                                    onPress={() => openWebsite(accommodation.website)}
+                                    style={styles.mapButton}
+                                >
+                                    Ouvrir Site Web
+                                </Button>
+                                <Button
+                                    mode="contained"
+                                    onPress={() => openInGoogleMaps(accommodation.address)}
+                                    style={styles.mapButton}
+                                >
+                                    Ouvrir dans Google Maps
+                                </Button>
+                            </View>
+                        </Card.Content>
+                    </Card>
+                ))}
+            </ScrollView>
+            <TouchableOpacity
+                style={styles.triangleButtonContainer}
+                onPress={() => navigation.navigate('EditAccommodation', { stage, accommodation: null, refresh: fetchStage })}
+            >
+                <TriangleCornerTopRight style={styles.triangleButton} />
+            </TouchableOpacity>
+        </View>
+
     );
 
     const Activities = () => (
-        <ScrollView style={styles.tabContent}>
-            {stage.activities.map((activity, index) => (
-                <Card key={index} style={styles.card}>
-                    <Card.Title titleStyle={styles.cardTitle} title={activity.name} />
-                    <Card.Content>
-                        <Text style={styles.infoText}>Du {formatDateJJMMAA(activity.startDateTime)} au {formatDateJJMMAA(activity.endDateTime)}</Text>
-                    </Card.Content>
-                    <Card.Content>
-                        <TouchableOpacity onPress={() => navigation.navigate('EditActivity', { activity, refresh: fetchStage })}>
-                            <Image
-                                source={activity.thumbnail ? { uri: activity.thumbnail.url } : require('../../assets/default-thumbnail.png')}
-                                style={styles.thumbnail}
-                            />
-                        </TouchableOpacity>
-                        <Text style={styles.infoText}>{activity.address}</Text>
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                            <Button
-                                mode="contained"
-                                onPress={() => openWebsite(activity.website)}
-                                style={styles.mapButton}
-                            >
-                                Ouvrir Site Web
-                            </Button>
-                            <Button
-                                mode="contained"
-                                onPress={() => openInGoogleMaps(activity.address)}
-                                style={styles.mapButton}
-                            >
-                                Ouvrir dans Google Maps
-                            </Button>
-                        </View>
-                    </Card.Content>
-                </Card>
-            ))}
-        </ScrollView>
+        <View style={{ flex: 1 }}>
+            <ScrollView style={styles.tabContent}>
+                {stage.activities.map((activity, index) => (
+                    <Card key={index} style={styles.card}>
+                        <Card.Title titleStyle={styles.cardTitle} title={activity.name} />
+                        <Card.Content>
+                            <Text style={styles.infoText}>Du {formatDateJJMMAA(activity.startDateTime)} au {formatDateJJMMAA(activity.endDateTime)}</Text>
+                        </Card.Content>
+                        <Card.Content>
+                            <TouchableOpacity onPress={() => navigation.navigate('EditActivity', { stage: null, activity, refresh: fetchStage })}>
+                                <Image
+                                    source={activity.thumbnail ? { uri: activity.thumbnail.url } : require('../../assets/default-thumbnail.png')}
+                                    style={styles.thumbnail}
+                                />
+                            </TouchableOpacity>
+                            <Text style={styles.infoText}>{activity.address}</Text>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <Button
+                                    mode="contained"
+                                    onPress={() => openWebsite(activity.website)}
+                                    style={styles.mapButton}
+                                >
+                                    Ouvrir Site Web
+                                </Button>
+                                <Button
+                                    mode="contained"
+                                    onPress={() => openInGoogleMaps(activity.address)}
+                                    style={styles.mapButton}
+                                >
+                                    Ouvrir dans Google Maps
+                                </Button>
+                            </View>
+                        </Card.Content>
+                    </Card>
+                ))}
+            </ScrollView>
+            <TouchableOpacity
+                style={styles.triangleButtonContainer}
+                onPress={() => navigation.navigate('EditActivity', { stage, activity: null, refresh: fetchStage })}
+            >
+                <TriangleCornerTopRight style={styles.triangleButton} />
+            </TouchableOpacity>
+        </View>
     );
 
     const renderScene = SceneMap({
         infos: GeneralInfo,
-        accommodations: Accommodations,
         activities: Activities,
+        accommodations: Accommodations,
     });
 
     const onRefresh = useCallback(() => {
@@ -350,7 +374,7 @@ export default function StageScreen({ route, navigation }: Props) {
             </MapView>
             <TabView
                 navigationState={{
-                    index: 0,
+                    index,
                     routes: [
                         { key: 'infos', title: 'Infos' },
                         { key: 'accommodations', title: 'Hébergements' },
@@ -358,7 +382,7 @@ export default function StageScreen({ route, navigation }: Props) {
                     ]
                 }}
                 renderScene={renderScene}
-                onIndexChange={() => null}
+                onIndexChange={setIndex}
                 initialLayout={{ width: 0, height: 0 }}
             />
         </View>
@@ -431,5 +455,14 @@ const styles = StyleSheet.create({
     },
     mapButton: {
         marginTop: 8,
+    },
+
+    triangleButtonContainer: {
+        position: 'absolute',
+        top: 0,
+        right: 0,
+    },
+    triangleButton: {
+        position: 'relative',
     },
 });

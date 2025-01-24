@@ -16,31 +16,32 @@ type Props = StackScreenProps<RootStackParamList, 'EditAccommodation'>;
 const GOOGLE_API_KEY = Constants.expoConfig?.extra?.apiKey || '';
 
 export default function EditAccommodationScreen({ route, navigation }: Props) {
-  const { accommodation, refresh } = route.params;
-console.log('Accommodation:', accommodation);
-  const [isEditing, setIsEditing] = useState(true);
-  const [thumbnail, setThumbnail] = useState(accommodation.thumbnail ? { uri: accommodation.thumbnail.url } : null);
+  const { stage, accommodation, refresh } = route.params;
+  const isEditing = !!accommodation;
+  console.log('Accommodation:', accommodation);
 
-  const [addressInput, setAddressInput] = useState(accommodation.address || '');
+  const [thumbnail, setThumbnail] = useState(accommodation?.thumbnail ? { uri: accommodation.thumbnail.url } : null);
+
+  const [addressInput, setAddressInput] = useState(accommodation?.address || '');
   const [showPicker, setShowPicker] = useState({ type: '', isVisible: false });
   const [pickerDate, setPickerDate] = useState(new Date());
   const [tempDate, setTempDate] = useState(new Date());
 
   const [formState, setFormState] = useState<Accommodation>({
-    _id: accommodation._id,
-    name: accommodation.name || '',
-    address: accommodation.address || '',
-    website: accommodation.website || '',
-    phone: accommodation.phone || '',
-    email: accommodation.email || '',
-    reservationNumber: accommodation.reservationNumber || '',
-    confirmationDateTime: accommodation.confirmationDateTime || '',
-    arrivalDateTime: accommodation.arrivalDateTime || '',
-    departureDateTime: accommodation.departureDateTime || '',
-    nights: accommodation.nights || 0,
-    price: accommodation.price || '0',
-    notes: accommodation.notes || '',
-    thumbnail: accommodation.thumbnail,
+    _id: accommodation?._id || '',
+    name: accommodation?.name || '',
+    address: accommodation?.address || '',
+    website: accommodation?.website || '',
+    phone: accommodation?.phone || '',
+    email: accommodation?.email || '',
+    reservationNumber: accommodation?.reservationNumber || '',
+    confirmationDateTime: accommodation?.confirmationDateTime || '',
+    arrivalDateTime: accommodation?.arrivalDateTime || '',
+    departureDateTime: accommodation?.departureDateTime || '',
+    nights: accommodation?.nights || 0,
+    price: accommodation?.price || '0',
+    notes: accommodation?.notes || '',
+    thumbnail: accommodation?.thumbnail || null,
   });
 
   const [formConfirmationDate, setFormConfirmationDate] = useState(new Date());
@@ -52,9 +53,12 @@ console.log('Accommodation:', accommodation);
   const googlePlacesRef = useRef(null);
 
   const handleSave = async () => {
-    console.log('Accommodation ID:', accommodation._id);
-    const url = `https://mon-petit-roadtrip.vercel.app/accommodations/${accommodation._id}`;
+    console.log('Accommodation ID:', accommodation?._id);
+    const url = isEditing
+      ? `https://mon-petit-roadtrip.vercel.app/accommodations/${accommodation._id}`
+      : `https://mon-petit-roadtrip.vercel.app/roadtrips/${stage.roadtripId}/stages/${stage.id}/accommodations`;
     console.log('formState:', formState);
+
     const payload = {
       ...formState,
       confirmationDateTime: formConfirmationDate.toISOString(),
@@ -74,13 +78,25 @@ console.log('Accommodation:', accommodation);
       ).toISOString()
     };
 
-    console.log('Payload:', JSON.stringify(payload));
+    // Préparez le formulaire multipart/form-data
+    const formData = new FormData();
+    formData.append('data', JSON.stringify(payload));
+
+    if (formState.thumbnail && typeof formState.thumbnail.url === 'string') {
+      formData.append('thumbnail', {
+        uri: formState.thumbnail.url,
+        name: 'thumbnail.jpg',
+        type: 'image/jpeg',
+      } as any);
+    }
+
+    console.log(isEditing ? 'PUT Payload :' : 'POST Payload :', payload);
+    console.log(isEditing ? 'PUT Data :' : 'POST Data :', formData);
 
     try {
       const response = await fetch(url, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        method: isEditing ? 'PUT' : 'POST',
+        body: formData,
       });
 
       if (response.ok) {
@@ -101,15 +117,67 @@ console.log('Accommodation:', accommodation);
     }
   };
 
+  const handleDelete = async () => {
+    if (!accommodation?._id) return;
+
+    Alert.alert(
+      'Confirmation',
+      'Êtes-vous sûr de vouloir supprimer cet hébergement ?',
+      [
+        {
+          text: 'Annuler',
+          style: 'cancel',
+        },
+        {
+          text: 'Supprimer',
+          style: 'destructive',
+          onPress: async () => {
+            const url = `https://mon-petit-roadtrip.vercel.app/accommodations/${accommodation._id}`;
+
+            try {
+              const response = await fetch(url, {
+                method: 'DELETE',
+              });
+
+              if (response.ok) {
+                console.log('Succès', 'L\'hébergement a été supprimé avec succès.');
+                Alert.alert('Succès', 'L\'hébergement a été supprimé avec succès.');
+                if (refresh) {
+                  refresh();
+                }
+
+                navigation.goBack();
+              } else {
+                Alert.alert('Erreur', 'Une erreur est survenue lors de la suppression.');
+              }
+            } catch (error) {
+              console.error('Erreur lors de la suppression:', error);
+              Alert.alert('Erreur', 'Une erreur est survenue lors de la suppression.');
+            }
+          },
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
   useEffect(() => {
+    console.log('useEffect called');
     navigation.setOptions({
       headerRight: () => (
-        <TouchableOpacity onPress={handleSave} style={{ padding: 10, marginRight: 10 }}>
-          <Fontawesome5 name="save" size={30} color="black" />
-        </TouchableOpacity>
+        <View style={{ flexDirection: 'row' }}>
+          {isEditing && (
+            <TouchableOpacity onPress={handleDelete} style={{ padding: 10, marginRight: 10 }}>
+              <Fontawesome5 name="trash-alt" size={30} color="red" />
+            </TouchableOpacity>
+          )}
+          <TouchableOpacity onPress={handleSave} style={{ padding: 10, marginRight: 10 }}>
+            <Fontawesome5 name="save" size={30} color="black" />
+          </TouchableOpacity>
+        </View>
       ),
     });
-  }, [navigation, handleSave]);
+  }, [navigation, handleSave, handleDelete]);
 
   useEffect(() => {
     if (formState.confirmationDateTime) {
@@ -155,7 +223,6 @@ console.log('Accommodation:', accommodation);
       if (type === 'departureTime') {
         setFormDepartureTime(newDate);
       }
-
     }
   };
 
@@ -209,6 +276,28 @@ console.log('Accommodation:', accommodation);
     setPickerDate(date);
     setTempDate(date);
     setShowPicker({ type, isVisible: true });
+  };
+
+  const pickImage = async () => {
+    const result = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (result.granted === false) {
+      alert('Permission to access gallery is required!');
+      return;
+    }
+
+    let pickerResult = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!pickerResult.canceled) {
+      if (pickerResult.assets && pickerResult.assets.length > 0) {
+        setThumbnail({ uri: pickerResult.assets[0].uri });
+        setFormState((prevState) => ({ ...prevState, thumbnail: { url: pickerResult.assets[0].uri, type: 'image', name: 'thumbnail', fileId: '', createdAt: '' } }));
+      }
+    }
   };
 
   const renderInputField = (field: string) => {
@@ -376,7 +465,7 @@ console.log('Accommodation:', accommodation);
         return (
           <TextInput
             label="Prix"
-            value={formState.price? formState.price.toString() : '0'}
+            value={formState.price ? formState.price.toString() : '0'}
             onChangeText={(text) => setFormState((prevState) => ({ ...prevState, price: text }))}
             style={styles.input}
           />
@@ -401,6 +490,14 @@ console.log('Accommodation:', accommodation);
       style={{ flex: 1 }}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
+      <View style={styles.thumbnailContainer}>
+        <TouchableOpacity onPress={pickImage}>
+          <Image
+            source={thumbnail ? { uri: thumbnail.uri } : require('../../assets/default-thumbnail.png')}
+            style={styles.thumbnail}
+          />
+        </TouchableOpacity>
+      </View>
       <SectionList
         sections={[
           { title: 'Informations Générales', data: ['name', 'address', 'website', 'phone', 'email'] },
@@ -415,7 +512,6 @@ console.log('Accommodation:', accommodation);
         renderSectionHeader={({ section: { title } }) => (
           <Text style={styles.sectionTitle}>{title}</Text>
         )}
-
       />
       {showPicker.isVisible && (
         <DateTimePicker

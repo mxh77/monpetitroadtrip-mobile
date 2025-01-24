@@ -5,6 +5,7 @@ export type StepType = 'stage' | 'stop';
 
 export interface Step {
   id: string;
+  roadtripId: string;
   type: StepType;
   name: string;
   address: string;
@@ -95,11 +96,13 @@ export type RootStackParamList = {
     refresh: () => void;
   };
   EditAccommodation: {
+    stage: Step;
     accommodation: Accommodation;
     refresh: () => void;
 
   };
   EditActivity: {
+    stage: Step;
     activity: Activity;
     refresh: () => void;
 
@@ -125,17 +128,18 @@ export type EditStageInfoScreenProps = {
 
 export type EditAccommodationScreenNavigationProp = StackNavigationProp<RootStackParamList, 'EditAccommodation'>;
 export type EditAccommodationScreenRouteProp = RouteProp<RootStackParamList, 'EditAccommodation'>;
-export type AccommodationScreenProps = {
+export type EditAccommodationScreenProps = {
   navigation: EditAccommodationScreenNavigationProp;
   route: EditAccommodationScreenRouteProp;
 };
 
 export type EditActivityScreenNavigationProp = StackNavigationProp<RootStackParamList, 'EditActivity'>;
 export type EditActivityScreenRouteProp = RouteProp<RootStackParamList, 'EditActivity'>;
-export type ActivityScreenProps = {
+export type EditActivityScreenProps = {
   navigation: EditActivityScreenNavigationProp;
   route: EditActivityScreenRouteProp;
 };
+
 
 
 
