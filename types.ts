@@ -12,6 +12,7 @@ export interface Step {
   arrivalDateTime: string;
   departureDateTime: string;
   notes: string;
+  thumbnail?: File;
   latitude?: number;
   longitude?: number;
   accommodations?: Accommodation[];

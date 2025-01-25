@@ -205,6 +205,12 @@ export default function StageScreen({ route, navigation }: Props) {
                         <Text style={styles.infoLabel}>Adresse :</Text>
                         <Text style={styles.infoValue}>{stage.address}</Text>
                     </View>
+                    <TouchableOpacity onPress={() => navigation.navigate('EditStageInfo', { stage: stage, refresh: fetchStage })}>
+                                <Image
+                                    source={stage.thumbnail ? { uri: stage.thumbnail.url } : require('../../assets/default-thumbnail.png')}
+                                    style={styles.thumbnail}
+                                />
+                            </TouchableOpacity>
                     <View style={styles.infoRow}>
                         <Text style={styles.infoLabel}>Date et heure d'arrivée :</Text>
                         <Text style={styles.infoValue}>{formattedArrivalDateTime}</Text>
@@ -217,13 +223,6 @@ export default function StageScreen({ route, navigation }: Props) {
                         <Text style={styles.infoLabel}>Notes :</Text>
                         <Text style={styles.infoValue}>{stage.notes}</Text>
                     </View>
-                    <Button
-                        mode="contained"
-                        onPress={navigateToEditStageInfo}
-                        style={styles.editButton}
-                    >
-                        Éditer
-                    </Button>
                 </View>
             </ScrollView>
         );

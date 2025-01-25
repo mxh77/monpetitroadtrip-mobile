@@ -9,14 +9,14 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import Constants from 'expo-constants';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { formatDateTimeUTC2Digits, formatDateJJMMAA } from '../utils/dateUtils';
-
+import RadioGroup from 'react-native-radio-buttons-group';
 const GOOGLE_API_KEY = Constants.expoConfig?.extra?.apiKey || '';
 
 type Props = StackScreenProps<RootStackParamList, 'CreateStep'>;
 
 export default function CreateStepScreen({ route, navigation }: Props) {
     const { roadtripId } = route.params;
-    const [stepType, setStepType] = useState('stage'); // 'stage' or 'stop'
+    const [stepType, setStepType] = useState('1'); // 'stage' or 'stop'
     const [addressInput, setAddressInput] = useState('');
     const [showPicker, setShowPicker] = useState({ type: '', isVisible: false });
     const [pickerDate, setPickerDate] = useState(new Date());
@@ -35,9 +35,14 @@ export default function CreateStepScreen({ route, navigation }: Props) {
     const googlePlacesRef = useRef(null);
 
     const handleSave = async () => {
+        if (!formState.address) {
+            Alert.alert('Erreur', 'L\'adresse est obligatoire.');
+            return;
+        }
+
         const urlStage = `https://mon-petit-roadtrip.vercel.app/roadtrips/${roadtripId}/stages`;
         const urlStop = `https://mon-petit-roadtrip.vercel.app/roadtrips/${roadtripId}/stops`;
-        const url = stepType === 'stage' ? urlStage : urlStop;
+        const url = stepType === '1' ? urlStage : urlStop;
         const payload = {
             name: formState.title,
             address: formState.address,
@@ -101,6 +106,10 @@ export default function CreateStepScreen({ route, navigation }: Props) {
             setFormState((prevState) => ({ ...prevState, address: addressInput }));
         }
     }, [addressInput, formState.address]);
+
+    useEffect(() => {
+        console.log('stepType:', stepType);
+    }, [stepType]);
 
     const getTimeFromDate = (date: Date) =>
         `${date.getUTCHours().toString().padStart(2, '0')}:${date.getUTCMinutes().toString().padStart(2, '0')}`;
@@ -286,23 +295,17 @@ export default function CreateStepScreen({ route, navigation }: Props) {
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         >
             <View style={styles.radioContainer}>
-                <RadioButton.Group
-                    onValueChange={value => setStepType(value)}
-                    value={stepType}
-                >
-                    <View style={styles.radioButton}>
-                        <RadioButton value="stage" />
-                        <Text>Stage</Text>
-                    </View>
-                    <View style={styles.radioButton}>
-                        <RadioButton value="stop" />
-                        <Text>Stop</Text>
-                    </View>
-                </RadioButton.Group>
+                <RadioGroup radioButtons={[
+                    { id: '1', label: 'Étape', value: 'stage', size: 24 },
+                    { id: '2', label: 'Arrêt', value: 'stop', size: 24 }]}
+                    layout='row'
+                    onPress={setStepType}
+                    selectedId={stepType}
+                />
             </View>
             <SectionList
                 sections={[
-                    { title: 'Informations de l\'étape', data: ['stepTitle', 'stepAddress'] },
+                    { title: 'Informations ', data: ['stepTitle', 'stepAddress'] },
                     { title: 'Dates et heures', data: ['arrivalDate', 'arrivalTime', 'departureDate', 'departureTime'] },
                     { title: 'Notes', data: ['notes'] },
                 ]}
@@ -364,6 +367,7 @@ const styles = StyleSheet.create({
     radioContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
+        alignItems: 'center', // Ajoutez cette ligne pour centrer verticalement
         marginBottom: 20,
     },
     radioButton: {
