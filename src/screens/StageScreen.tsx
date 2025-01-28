@@ -11,6 +11,7 @@ import Constants from 'expo-constants';
 import Fontawesome5 from 'react-native-vector-icons/FontAwesome5';
 import { formatDateTimeUTC2Digits, formatDateJJMMAA } from '../utils/dateUtils';
 import { TriangleCornerTopRight } from '../components/shapes';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
 type Props = StackScreenProps<RootStackParamList, 'Stage'>;
 
@@ -20,6 +21,7 @@ Geocoder.init(GOOGLE_API_KEY);
 export default function StageScreen({ route, navigation }: Props) {
     //Récupération des paramètres de navigation
     const { type, roadtripId, stepId: stageId, refresh } = route.params;
+    console.log('Paramètres de navigation:', type, ', roadtripId:', roadtripId, ', stageId:', stageId);
 
     // États
     const [stage, setStage] = useState<Step | null>(null);
@@ -43,6 +45,20 @@ export default function StageScreen({ route, navigation }: Props) {
     useEffect(() => {
         fetchStage();
     }, []);
+
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('beforeRemove', (e: any) => {
+          // Bloquer l'action par défaut du retour
+          e.preventDefault();
+    
+          // Naviguer vers RoadtripScreen
+          console.log('Navigation vers RoadtripScreen', roadtripId);
+          navigation.navigate('RoadTrip', { roadtripId });
+        });
+    
+        // Nettoyage à la désactivation du composant
+        return unsubscribe;
+      }, [navigation]);
 
     // Fonction pour récupérer les coordonnées de l'étape
     const getCoordinates = async (address: string) => {

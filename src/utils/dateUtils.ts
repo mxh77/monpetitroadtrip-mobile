@@ -28,16 +28,20 @@ export const formatTimeHHMM = (dateString: string): string => {
     });
   }
 
+//Fonction permettant de restituer un objet Date au format JJ/MM/AA - HH:MM
+export const formatDateTimeJJMMAAHHMM = (dateString: string): string => {
+    const date = new Date(dateString);
+    return `${formatDateJJMMAA(dateString)} - ${formatTimeHHMM(dateString)}`;
+  };
+
+
   export const getTimeFromDate = (date: Date) =>
     `${date.getUTCHours().toString().padStart(2, '0')}:${date.getUTCMinutes().toString().padStart(2, '0')}`;
 //`${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
-
-  
   
   //Fonction permettant de restituer la date (String) d'un objet DateTime sans tenir compte du fuseau horaire
   export const getDateUTCFromDateTime = (date: Date) =>
     `${date.getUTCDate().toString().padStart(2, '0')}/${(date.getUTCMonth() + 1).toString().padStart(2, '0')}/${date.getUTCFullYear()}`;  
-
 
   //Fonction permettant de restituer l'heure (String) d'un objet DateTime sans tenir compte du fuseau horaire
   export const getTimeUTCFromDateTime = (date: Date) =>

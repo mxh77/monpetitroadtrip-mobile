@@ -1,0 +1,59 @@
+J'aimerais ajouter un moteur de calcul pour vérifier la cohérence dans les différentes dates des étapes de roadtrip
+
+Voici les différentes dates que j'utilise
+	- Roadtrip
+		- Date de début : startDateTime
+		- Date de fin : endDateTime
+		
+	- Stage (Etape avec nuit)
+		- Date de d'arrivée : arrivalDateTime
+		- Date de départ : departureDateTime		
+		
+		- Accommodation (rattaché à un Stage)
+			- Date de d'arrivée : arrivalDateTime
+			- Date de départ : departureDateTime		
+			
+		- Activity (rattaché à un Stage)
+			- Date de début : startDateTime
+			- Date de fin : finDateTime					
+			
+	- Stop (Arrêt sans nuit)
+		- Date de d'arrivée : arrivalDateTime
+		- Date de départ : departureDateTime
+
+Règles à implémenter
+
+	Règles globales pour le Roadtrip
+
+		Dates principales: La date de début du roadtrip doit être avant sa date de fin.
+		Inclusion temporelle: Toutes les étapes (Stages), arrêts (Stops), accommodations et activités doivent se situer dans l'intervalle des dates du roadtrip.
+
+	Règles pour les Stages (Étapes avec nuit)
+
+		Dates cohérentes: La date d'arrivée d'un Stage doit être avant ou égale à sa date de départ.
+		Accommodations et activités: Toute accommodation ou activité associée à un Stage doit se dérouler dans l'intervalle de temps défini par ce Stage.
+		Chronologie des Stages: Les Stages doivent se succéder sans chevauchements temporels.
+
+	Règles pour les Stops (Arrêts sans nuit)
+
+		Dates cohérentes: La date d'arrivée d'un Stop doit être avant ou égale à sa date de départ.
+		Inclusion temporelle: Un Stop doit se situer dans les limites temporelles du Roadtrip.
+		Chronologie des Stops: Les Stops doivent se succéder sans chevauchements temporels.
+		Chronologie avec les Stages: Les Stops et les Stages doivent être ordonnés dans le temps sans chevauchement.
+
+	Règles pour les Accommodations (Hébergements)
+
+		Dates cohérentes: La date d'arrivée d'une accommodation doit être avant ou égale à sa date de départ.
+		Inclusion temporelle: Une accommodation doit se situer dans l'intervalle de temps de son Stage.
+
+	Règles pour les Activities (Activités)
+
+		Dates cohérentes: La date de début d'une activité doit être avant ou égale à sa date de fin.
+		Inclusion temporelle: Une activité doit se situer dans l'intervalle de temps de son Stage.
+		Ordonnancement des activités: Si plusieurs activités sont associées au même Stage, elles ne doivent pas se chevaucher.
+
+	Règles de chronologie globale
+
+		Ordonnancement: Les Stages et les Stops doivent être organisés dans le temps sans chevauchement.
+		Séquence logique: Si un Stop précède ou suit un Stage (ou vice-versa), les dates de fin et de début doivent être cohérentes.
+		Aucun chevauchement: Ni les accommodations ni les activités ne doivent se chevaucher dans un même Stage.

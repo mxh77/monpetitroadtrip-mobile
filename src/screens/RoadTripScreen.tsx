@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Button, StyleSheet, View, Text, FlatList, ActivityIndicator, TouchableOpacity, Alert } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/FontAwesome5'; // Importer les icônes
-import { RootStackParamList, Roadtrip, StepType} from '../../types';
+import { RootStackParamList, Roadtrip, StepType } from '../../types';
 import { FAB } from 'react-native-paper'; // Importer le bouton flottant
-import  Swipeable  from 'react-native-gesture-handler/Swipeable'; // Importer Swipeable de react-native-gesture-handler
-
+import Swipeable from 'react-native-gesture-handler/Swipeable'; // Importer Swipeable de react-native-gesture-handler
+import { checkDateConsistency } from '../utils/controls'; // Importer la fonction checkDateConsistency
 
 type Props = StackScreenProps<RootStackParamList, 'RoadTrip'>;
 
@@ -13,14 +13,23 @@ export default function RoadTripScreen({ route, navigation }: Props) {
   const { roadtripId } = route.params;
   const [roadtrip, setRoadtrip] = useState<Roadtrip | null>(null);
   const [loading, setLoading] = useState(true);
+  const [alertCount, setAlertCount] = useState(0);
+  const [errors, setErrors] = useState<{ message: string, stepId: string, stepType: string }[]>([]);
 
   const fetchRoadtrip = async () => {
     setLoading(true); // Commencez le chargement
     try {
       const response = await fetch(`https://mon-petit-roadtrip.vercel.app/roadtrips/${roadtripId}`);
       const data = await response.json();
-      console.log('Données de l\'API:', data); // Ajoutez ce log
- 
+      console.log('Données de l\'API:');
+      //console.log('Données de l\'API:', data);
+
+      // Vérifiez la cohérence des dates et mettez à jour le nombre d'alertes
+      const { alerts, errorMessages } = checkDateConsistency(data);
+      console.log('Alertes:', alerts);
+      setAlertCount(alerts);
+      setErrors(errorMessages);
+
       // Filtrer les données pour ne conserver que les champs nécessaires
       const filteredData: Roadtrip = {
         idRoadtrip: data._id,
@@ -42,7 +51,10 @@ export default function RoadTripScreen({ route, navigation }: Props) {
       };
 
       setRoadtrip(filteredData);
-      console.log('Roadtrip récupéré:', filteredData);
+      console.log('Roadtrip récupéré:');
+      //console.log('Roadtrip récupéré:', filteredData);
+
+
     } catch (error) {
       console.error('Erreur lors de la récupération du roadtrip:', error);
     } finally {
@@ -50,16 +62,45 @@ export default function RoadTripScreen({ route, navigation }: Props) {
     }
   };
 
-  // Charger les données initiales
   useEffect(() => {
-    fetchRoadtrip();
-  }, [roadtripId]);
-
-  // Recharger les données lorsqu'on revient sur cet écran
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', fetchRoadtrip);
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchRoadtrip();
+    });
     return unsubscribe;
   }, [navigation, roadtripId]);
+
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('beforeRemove', (e: any) => {
+          // Bloquer l'action par défaut du retour
+          e.preventDefault();
+    
+          // Naviguer vers RoadtripScreen
+          console.log('Navigation vers RoadtripsScreen');
+          navigation.navigate('RoadTrips');
+        });
+    
+        // Nettoyage à la désactivation du composant
+        return unsubscribe;
+      }, [navigation]);
+
+  // Afficher une icône de notification en haut à droite
+  useEffect(() => {
+    console.log('Mise à jour de la barre de navigation');
+    navigation.setOptions({
+      headerRight: () => (
+        alertCount > 0 ? (
+          <TouchableOpacity onPress={() => navigation.navigate('Errors', {roadtripId, errors})}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 10 }}>
+              <Icon name="bell" size={24} color={alertCount > 0 ? 'red' : 'gray'} />
+              {alertCount > 0 && (
+                <Text style={{ color: 'red', marginLeft: 10 }}>{alertCount}</Text>
+              )}
+            </View>
+          </TouchableOpacity>
+        ) : null
+      ),
+    });
+  }, [navigation, alertCount, errors]);
 
   // Fonction pour gérer la navigation vers la page de détails de l'étape ou de l'arrêt
   const handleStepPress = (step: any) => {
@@ -88,7 +129,7 @@ export default function RoadTripScreen({ route, navigation }: Props) {
     });
   }
 
-    // Fonction pour gérer la suppression d'un step selon le type (Stage ou Stop)
+  // Fonction pour gérer la suppression d'un step selon le type (Stage ou Stop)
   const handleDeleteStep = async (stepId: string, type: string) => {
     try {
       let response;
@@ -97,12 +138,12 @@ export default function RoadTripScreen({ route, navigation }: Props) {
         response = await fetch(`https://mon-petit-roadtrip.vercel.app/stages/${stepId}`, {
           method: 'DELETE',
         });
-      } else {  
+      } else {
         response = await fetch(`https://mon-petit-roadtrip.vercel.app/stops/${stepId}`, {
           method: 'DELETE',
         });
       }
-      
+
       if (response.ok) {
         fetchRoadtrip(); // Recharger les données
         Alert.alert('Succès', 'L\'étape a été supprimée.');
@@ -113,7 +154,6 @@ export default function RoadTripScreen({ route, navigation }: Props) {
       Alert.alert('Erreur', 'Une erreur est survenue. Veuillez réessayer.');
     }
   }
-
 
   // Fonction pour afficher une alerte de confirmation avant suppression du stage ou du stop
   const confirmDeleteStep = (stepId: string, type: string) => {
@@ -129,7 +169,7 @@ export default function RoadTripScreen({ route, navigation }: Props) {
   };
 
   const renderRightActions = (stageId: string, type: any) => (
-    <TouchableOpacity style={styles.deleteButton} onPress={() =>  confirmDeleteStep(stageId, type)}>
+    <TouchableOpacity style={styles.deleteButton} onPress={() => confirmDeleteStep(stageId, type)}>
       <Icon name="trash" size={24} color="white" />
     </TouchableOpacity>
   );

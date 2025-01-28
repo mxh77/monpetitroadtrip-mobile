@@ -108,6 +108,10 @@ export type RootStackParamList = {
     refresh: () => void;
 
   };
+  Errors: {
+    roadtripId: string;
+    errors: { message: string, stepId: string, stepType: string }[];
+  };
   WebView: { url: string };
   Maps: undefined;
 };
