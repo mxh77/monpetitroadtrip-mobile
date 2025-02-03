@@ -1,4 +1,5 @@
 import {formatDateTimeJJMMAAHHMM} from '../utils/dateUtils';
+import Icon from 'react-native-vector-icons/FontAwesome5'; // Importer les icônes
 
 // Fonction pour vérifier la cohérence des dates des étapes
 export const checkDateConsistency = (roadtrip) => {
@@ -21,30 +22,30 @@ export const checkDateConsistency = (roadtrip) => {
       if (step.type === 'stage') {
         if (new Date(step.arrivalDateTime) > new Date(step.departureDateTime)) {
           alertCount++;
-          errorMessages.push({ message: `Incohérence de date pour le stage ${step.name}: arrivalDateTime > departureDateTime`, stepId: step.id, stepType: step.type });
+          errorMessages.push({ message: `${step.name}\n - Date d'arrivée > Date de départ`, stepId: step.id, stepType: step.type });
         }
   
         step.accommodations?.forEach((accommodation) => {
           if (new Date(accommodation.arrivalDateTime) > new Date(accommodation.departureDateTime)) {
             alertCount++;
-            errorMessages.push({ message: `Incohérence de date pour l'hébergement ${accommodation.name} dans le stage ${step.name}: arrivalDateTime > departureDateTime`, stepId: step.id, stepType: step.type });
+            errorMessages.push({ message: `Date d'arrivée > Date de départ :\n  - ${accommodation.name} dans l'étape ${step.name}`, stepId: step.id, stepType: step.type });
           }
           if (new Date(accommodation.arrivalDateTime) < new Date(step.arrivalDateTime) ||
               new Date(accommodation.departureDateTime) > new Date(step.departureDateTime)) {
             alertCount++;
-            errorMessages.push({ message: `Incohérence de date pour l'hébergement ${accommodation.name} dans le stage ${step.name}: hors des dates du stage`, stepId: step.id, stepType: step.type });
+            errorMessages.push({ message: `Hors des dates de l'étape :\n  - ${accommodation.name}`, stepId: step.id, stepType: step.type });
           }
         });
   
         step.activities?.forEach((activity) => {
           if (new Date(activity.startDateTime) > new Date(activity.endDateTime)) {
             alertCount++;
-            errorMessages.push({ message: `Incohérence de date pour l'activité ${activity.name} dans le stage ${step.name}: startDateTime > endDateTime`, stepId: step._id, stepType: step.type });
+            errorMessages.push({ message: `Date de début > Date de fin :\n  - ${activity.name} dans l'étape ${step.name}`, stepId: step.id, stepType: step.type });
           }
           if (new Date(activity.startDateTime) < new Date(step.arrivalDateTime) ||
               new Date(activity.endDateTime) > new Date(step.departureDateTime)) {
             alertCount++;
-            errorMessages.push({ message: `Incohérence de date pour l'activité ${activity.name} dans le stage ${step.name}: hors des dates du stage`, stepId: step._id, stepType: step.type });
+            errorMessages.push({ message: `Hors des dates de l'étape :\n  - ${activity.name}`, stepId: step.id, stepType: step.type });
           }
         });
       }

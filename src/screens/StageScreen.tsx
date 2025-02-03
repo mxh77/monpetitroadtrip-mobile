@@ -12,6 +12,11 @@ import Fontawesome5 from 'react-native-vector-icons/FontAwesome5';
 import { formatDateTimeUTC2Digits, formatDateJJMMAA } from '../utils/dateUtils';
 import { TriangleCornerTopRight } from '../components/shapes';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import Timetable from 'react-native-timetable';
+import GeneralInfo from '../components/GeneralInfo';
+import Accommodations from '../components/Accommodations';
+import Activities from '../components/Activities';
+import Planning from '../components/Planning';
 
 type Props = StackScreenProps<RootStackParamList, 'Stage'>;
 
@@ -38,6 +43,7 @@ export default function StageScreen({ route, navigation }: Props) {
         { key: 'infos', title: 'Infos' },
         { key: 'accommodations', title: 'Hébergements' },
         { key: 'activities', title: 'Activités' },
+        { key: 'planning', title: 'Planning' },
     ]);
 
 
@@ -48,17 +54,17 @@ export default function StageScreen({ route, navigation }: Props) {
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('beforeRemove', (e: any) => {
-          // Bloquer l'action par défaut du retour
-          e.preventDefault();
-    
-          // Naviguer vers RoadtripScreen
-          console.log('Navigation vers RoadtripScreen', roadtripId);
-          navigation.navigate('RoadTrip', { roadtripId });
+            // Bloquer l'action par défaut du retour
+            e.preventDefault();
+
+            // Naviguer vers RoadtripScreen
+            console.log('Navigation vers RoadtripScreen', roadtripId);
+            navigation.navigate('RoadTrip', { roadtripId });
         });
-    
+
         // Nettoyage à la désactivation du composant
         return unsubscribe;
-      }, [navigation]);
+    }, [navigation]);
 
     // Fonction pour récupérer les coordonnées de l'étape
     const getCoordinates = async (address: string) => {
@@ -206,141 +212,12 @@ export default function StageScreen({ route, navigation }: Props) {
         navigation.navigate('EditStageInfo', { stage: stage, refresh: fetchStage });
     }
 
-    const GeneralInfo = () => {
-        const formattedArrivalDateTime = stage.arrivalDateTime ? formatDateTimeUTC2Digits(stage.arrivalDateTime) : 'N/A';
-        const formattedDepartureDateTime = stage.departureDateTime ? formatDateTimeUTC2Digits(stage.departureDateTime) : 'N/A';
-
-        return (
-            <ScrollView style={styles.tabContent}>
-                <View style={styles.generalInfoContainer}>
-                    <View style={styles.infoRow}>
-                        <Text style={styles.infoLabel}>Nom de l'étape :</Text>
-                        <Text style={styles.infoValue}>{stage.name}</Text>
-                    </View>
-                    <View style={styles.infoRow}>
-                        <Text style={styles.infoLabel}>Adresse :</Text>
-                        <Text style={styles.infoValue}>{stage.address}</Text>
-                    </View>
-                    <TouchableOpacity onPress={() => navigation.navigate('EditStageInfo', { stage: stage, refresh: fetchStage })}>
-                                <Image
-                                    source={stage.thumbnail ? { uri: stage.thumbnail.url } : require('../../assets/default-thumbnail.png')}
-                                    style={styles.thumbnail}
-                                />
-                            </TouchableOpacity>
-                    <View style={styles.infoRow}>
-                        <Text style={styles.infoLabel}>Date et heure d'arrivée :</Text>
-                        <Text style={styles.infoValue}>{formattedArrivalDateTime}</Text>
-                    </View>
-                    <View style={styles.infoRow}>
-                        <Text style={styles.infoLabel}>Date et heure de départ :</Text>
-                        <Text style={styles.infoValue}>{formattedDepartureDateTime}</Text>
-                    </View>
-                    <View style={styles.infoRow}>
-                        <Text style={styles.infoLabel}>Notes :</Text>
-                        <Text style={styles.infoValue}>{stage.notes}</Text>
-                    </View>
-                </View>
-            </ScrollView>
-        );
-    };
-
-    const Accommodations = () => (
-        <View style={{ flex: 1 }}>
-            <ScrollView style={styles.tabContent}>
-                {stage.accommodations.map((accommodation, index) => (
-                    <Card key={index} style={styles.card}>
-                        <Card.Title titleStyle={styles.cardTitle} title={accommodation.name} />
-                        <Card.Content>
-                            <Text style={styles.infoText}>Du {formatDateJJMMAA(accommodation.arrivalDateTime)} au {formatDateJJMMAA(accommodation.departureDateTime)}</Text>
-                        </Card.Content>
-                        <Card.Content>
-                            <TouchableOpacity onPress={() => navigation.navigate('EditAccommodation', { stage: null, accommodation, refresh: fetchStage })}>
-                                <Image
-                                    source={accommodation.thumbnail ? { uri: accommodation.thumbnail.url } : require('../../assets/default-thumbnail.png')}
-                                    style={styles.thumbnail}
-                                />
-                            </TouchableOpacity>
-                            <Text style={styles.infoText}>{accommodation.address}</Text>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                <Button
-                                    mode="contained"
-                                    onPress={() => openWebsite(accommodation.website)}
-                                    style={styles.mapButton}
-                                >
-                                    Ouvrir Site Web
-                                </Button>
-                                <Button
-                                    mode="contained"
-                                    onPress={() => openInGoogleMaps(accommodation.address)}
-                                    style={styles.mapButton}
-                                >
-                                    Ouvrir dans Google Maps
-                                </Button>
-                            </View>
-                        </Card.Content>
-                    </Card>
-                ))}
-            </ScrollView>
-            <TouchableOpacity
-                style={styles.triangleButtonContainer}
-                onPress={() => navigation.navigate('EditAccommodation', { stage, accommodation: null, refresh: fetchStage })}
-            >
-                <TriangleCornerTopRight style={styles.triangleButton} />
-            </TouchableOpacity>
-        </View>
-
-    );
-
-    const Activities = () => (
-        <View style={{ flex: 1 }}>
-            <ScrollView style={styles.tabContent}>
-                {stage.activities.map((activity, index) => (
-                    <Card key={index} style={styles.card}>
-                        <Card.Title titleStyle={styles.cardTitle} title={activity.name} />
-                        <Card.Content>
-                            <Text style={styles.infoText}>Du {formatDateJJMMAA(activity.startDateTime)} au {formatDateJJMMAA(activity.endDateTime)}</Text>
-                        </Card.Content>
-                        <Card.Content>
-                            <TouchableOpacity onPress={() => navigation.navigate('EditActivity', { stage: null, activity, refresh: fetchStage })}>
-                                <Image
-                                    source={activity.thumbnail ? { uri: activity.thumbnail.url } : require('../../assets/default-thumbnail.png')}
-                                    style={styles.thumbnail}
-                                />
-                            </TouchableOpacity>
-                            <Text style={styles.infoText}>{activity.address}</Text>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                <Button
-                                    mode="contained"
-                                    onPress={() => openWebsite(activity.website)}
-                                    style={styles.mapButton}
-                                >
-                                    Ouvrir Site Web
-                                </Button>
-                                <Button
-                                    mode="contained"
-                                    onPress={() => openInGoogleMaps(activity.address)}
-                                    style={styles.mapButton}
-                                >
-                                    Ouvrir dans Google Maps
-                                </Button>
-                            </View>
-                        </Card.Content>
-                    </Card>
-                ))}
-            </ScrollView>
-            <TouchableOpacity
-                style={styles.triangleButtonContainer}
-                onPress={() => navigation.navigate('EditActivity', { stage, activity: null, refresh: fetchStage })}
-            >
-                <TriangleCornerTopRight style={styles.triangleButton} />
-            </TouchableOpacity>
-        </View>
-    );
-
     const renderScene = SceneMap({
-        infos: GeneralInfo,
-        activities: Activities,
-        accommodations: Accommodations,
+        infos: () => <GeneralInfo stage={stage} navigation={navigation} fetchStage={fetchStage} />,
+        activities: () => <Activities stage={stage} navigation={navigation} fetchStage={fetchStage} />,
+        accommodations:() => <Accommodations stage={stage} navigation={navigation} fetchStage={fetchStage} />,
+        planning:() => <Planning stage={stage} handleEventChange={() => {}} />,
+
     });
 
     const onRefresh = useCallback(() => {
@@ -393,7 +270,8 @@ export default function StageScreen({ route, navigation }: Props) {
                     routes: [
                         { key: 'infos', title: 'Infos' },
                         { key: 'accommodations', title: 'Hébergements' },
-                        { key: 'activities', title: 'Activités' }
+                        { key: 'activities', title: 'Activités' },
+                        { key: 'planning', title: 'Planning' }
                     ]
                 }}
                 renderScene={renderScene}
