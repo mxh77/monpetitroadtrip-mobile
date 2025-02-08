@@ -1,4 +1,4 @@
-import { formatDateTimeJJMMAAHHMM,formatDuration } from '../utils/dateUtils';
+import { formatDateTimeJJMMAAHHMM, formatDuration, formatDateTimeUTC2Digits } from '../utils/dateUtils';
 import Icon from 'react-native-vector-icons/FontAwesome5'; // Importer les icônes
 
 // Fonction pour vérifier la cohérence des dates des étapes
@@ -74,7 +74,7 @@ export const checkDateConsistency = (roadtrip) => {
     if (new Date(currentStep.departureDateTime) > new Date(nextStep.arrivalDateTime)) {
       alertCount++;
       errorMessages.push({
-        message: `Chevauchement de dates :\n  - ${currentStep.name} - Départ : ${formatDateTimeJJMMAAHHMM(currentStep.departureDateTime)}\n  - ${nextStep.name} - Arrivée : ${formatDateTimeJJMMAAHHMM(nextStep.arrivalDateTime)}`,
+        message: `Chevauchement de dates :\n  - ${currentStep.name} - Départ : ${formatDateTimeUTC2Digits(currentStep.departureDateTime)}\n  - ${nextStep.name} - Arrivée : ${formatDateTimeUTC2Digits(nextStep.arrivalDateTime)}`,
         stepId: currentStep.id,
         stepType: currentStep.type
       });
@@ -82,21 +82,21 @@ export const checkDateConsistency = (roadtrip) => {
     }
   }
 
-  
-    // Vérification de la cohérence de la date d'arrivée avec le temps de trajet estimé
-    for (let i = 1; i < steps.length; i++) {
-      const previousStep = steps[i - 1];
-      const currentStep = steps[i];
 
-      const estimatedArrivalTime = new Date(previousStep.departureDateTime).getTime() + (currentStep.travelTime * 60 * 1000);
-      if (new Date(currentStep.arrivalDateTime).getTime() < estimatedArrivalTime) {
-          alertCount++;
-          errorMessages.push({
-              message: `Incohérence de la date d'arrivée :\n  - ${currentStep.name} - Arrivée : ${formatDateTimeJJMMAAHHMM(currentStep.arrivalDateTime)}\n  - Temps de trajet estimé : ${formatDuration(currentStep.travelTime)}\n  - Step précédent : ${previousStep.name} - Départ : ${formatDateTimeJJMMAAHHMM(previousStep.departureDateTime)}`,
-              stepId: currentStep.id,
-              stepType: currentStep.type
-          });
-      }
+  // Vérification de la cohérence de la date d'arrivée avec le temps de trajet estimé
+  for (let i = 1; i < steps.length; i++) {
+    const previousStep = steps[i - 1];
+    const currentStep = steps[i];
+
+    const estimatedArrivalTime = new Date(previousStep.departureDateTime).getTime() + (currentStep.travelTime * 60 * 1000);
+    if (new Date(currentStep.arrivalDateTime).getTime() < estimatedArrivalTime) {
+      alertCount++;
+      errorMessages.push({
+        message: `Incohérence de la date d'arrivée :\n  - ${currentStep.name} - Arrivée : ${formatDateTimeUTC2Digits(currentStep.arrivalDateTime)}\n  - Temps de trajet estimé : ${formatDuration(currentStep.travelTime)}\n  - Step précédent : ${previousStep.name} - Départ : ${formatDateTimeUTC2Digits(previousStep.departureDateTime)}`,
+        stepId: currentStep.id,
+        stepType: currentStep.type
+      });
+    }
   }
 
   console.log('Messages d\'erreur:', errorMessages);
