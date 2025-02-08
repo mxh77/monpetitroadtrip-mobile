@@ -212,12 +212,45 @@ export default function StageScreen({ route, navigation }: Props) {
         navigation.navigate('EditStageInfo', { stage: stage, refresh: fetchStage });
     }
 
+    const handleEventChange = async (event) => {
+        const { id, startTime, endTime, type } = event;
+        const updatedEvent = {
+            startDateTime: startTime.toISOString(),
+            endDateTime: endTime.toISOString(),
+        };
+
+        let uri = '';
+        if (type === 'accommodation') {
+            uri = `https://mon-petit-roadtrip.vercel.app/accommodations/${id}`;
+        } else if (type === 'activity') {
+            uri = `https://mon-petit-roadtrip.vercel.app/activities/${id}/dates`;
+        }
+
+        try {
+            const response = await fetch(uri, {
+                method: 'PATCH', // Utilisez PATCH au lieu de PUT
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(updatedEvent),
+            });
+
+            if (response.ok) {
+                console.log('Event updated successfully');
+                fetchStage(); // Refresh the stage data
+            } else {
+                console.error('Failed to update event');
+            }
+        } catch (error) {
+            console.error('Error updating event:', error);
+        }
+    };
+
     const renderScene = SceneMap({
         infos: () => <GeneralInfo stage={stage} navigation={navigation} fetchStage={fetchStage} />,
         activities: () => <Activities stage={stage} navigation={navigation} fetchStage={fetchStage} />,
-        accommodations:() => <Accommodations stage={stage} navigation={navigation} fetchStage={fetchStage} />,
-        planning:() => <Planning stage={stage} handleEventChange={() => {}} />,
-
+        accommodations: () => <Accommodations stage={stage} navigation={navigation} fetchStage={fetchStage} />,
+        planning: () => <Planning stage={stage} handleEventChange={handleEventChange} />,
     });
 
     const onRefresh = useCallback(() => {

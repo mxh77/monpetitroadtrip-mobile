@@ -59,3 +59,9 @@ export const createTimeFromHHMM = (timeString: string): Date => {
     const timeParts = timeString.split(':');
     return new Date(0, 0, 0, parseInt(timeParts[0]), parseInt(timeParts[1]));
   };
+
+  export const formatDuration = (minutes: number) => {
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+    return `${minutes} minutes (${hours}h${remainingMinutes.toString().padStart(2, '0')})`;
+};

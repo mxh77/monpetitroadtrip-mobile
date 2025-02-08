@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import Timetable from 'react-native-timetable';
+//import Timetable from 'react-native-timetable';
+import Timetable from '../components/timetable/src/index';
 import { openInGoogleMaps } from '../utils/utils';
 
 const Planning = ({ stage, handleEventChange }) => {
@@ -11,6 +12,9 @@ const Planning = ({ stage, handleEventChange }) => {
             startTime: new Date(accommodation.arrivalDateTime),
             endTime: new Date(accommodation.departureDateTime),
             location: accommodation.address,
+            color: 'green',
+            type: 'accommodation',
+
         })),
         ...stage.activities.map(activity => ({
             id: activity._id,
@@ -18,8 +22,13 @@ const Planning = ({ stage, handleEventChange }) => {
             startTime: new Date(activity.startDateTime),
             endTime: new Date(activity.endDateTime),
             location: activity.address,
+            color: 'orange',
+            type: 'activity',
+
         })),
     ];
+
+    console.log("Events", events);
 
     return (
         <View style={{ flex: 1 }}>
@@ -28,6 +37,8 @@ const Planning = ({ stage, handleEventChange }) => {
                 mode="day"
                 startHour={0}
                 endHour={24}
+                defaultScrollHour={10}
+                currentDate={events[0].startTime}
                 onEventChange={handleEventChange}
             />
         </View>
